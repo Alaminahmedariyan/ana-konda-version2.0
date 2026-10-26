@@ -1,0 +1,1402 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>আনা গন্ডা ক্যালকুলেটর – খতিয়ান অংশ ও জমির হিসাব অনলাইন</title>
+<meta name="description" content="আনা গন্ডা ক্যালকুলেটর দিয়ে খতিয়ান, জমির হিস্যা ও মালিকানার অংশ কয়েক সেকেন্ডে হিসাব করুন। আনা, গণ্ডা, কড়া, ক্রান্তি ও তিলের নির্ভুল হিসাব, ওয়ারিশ ভাগ ও রূপান্তর সহ।">
+<meta property="og:title" content="আনা গন্ডা ক্যালকুলেটর – খতিয়ান ও জমির হিসাব সহজে করুন">
+<meta property="og:description" content="খতিয়ানের অংশ, জমির হিস্যা ও ওয়ারিশ ভাগ অনলাইনে নির্ভুলভাবে হিসাব করুন।">
+<meta property="og:type" content="website">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;600;700&display=swap">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"আনা গন্ডা ক্যালকুলেটর কী?","acceptedAnswer":{"@type":"Answer","text":"আনা গন্ডা ক্যালকুলেটর হলো জমির অংশ, হিস্যা এবং খতিয়ানের হিসাব করার অনলাইন টুল।"}},
+{"@type":"Question","name":"১ আনা কত গণ্ডা?","acceptedAnswer":{"@type":"Answer","text":"১ আনা = ২০ গণ্ডা।"}},
+{"@type":"Question","name":"জমির হিস্যা কীভাবে বের করবো?","acceptedAnswer":{"@type":"Answer","text":"জমির মোট অংশ এবং মালিকের অংশের তথ্য দিয়ে আনা গন্ডা ক্যালকুলেটরের মাধ্যমে হিসাব করা যায়।"}},
+{"@type":"Question","name":"মোবাইল দিয়ে জমির হিসাব করা যাবে?","acceptedAnswer":{"@type":"Answer","text":"হ্যাঁ, মোবাইল, ট্যাব এবং কম্পিউটার থেকে সহজেই ব্যবহার করা যায়।"}},
+{"@type":"Question","name":"খতিয়ান হিসাব করার জন্য কোন ক্যালকুলেটর ব্যবহার করবো?","acceptedAnswer":{"@type":"Answer","text":"খতিয়ান ও ভূমির পরিমাপ ক্যালকুলেটর ব্যবহার করে আনা, গণ্ডা, কড়া, ক্রান্তি ও তিলের হিসাব করা যায়।"}},
+{"@type":"Question","name":"১ কড়া কত ক্রান্তি এবং ১ ক্রান্তি কত তিল?","acceptedAnswer":{"@type":"Answer","text":"১ কড়া = ৩ ক্রান্তি এবং ১ ক্রান্তি = ২০ তিল।"}},
+{"@type":"Question","name":"ওয়ারিশদের মধ্যে জমি ভাগ কীভাবে করবো?","acceptedAnswer":{"@type":"Answer","text":"ক্যালকুলেটরের ওয়ারিশ ভাগ টুলে ছেলে-মেয়ের সংখ্যা ও মোট জমি দিলে প্রাথমিক ভাগ বের হবে। চূড়ান্ত আইনি কাজে সরকারি নথি ও আইনজীবীর পরামর্শ নিন।"}}
+]}
+</script>
+<style>
+:root{--blue:#3b9ae1}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#f1f5f9;color:#0f172a;font-family:'Noto Sans Bengali','Kalpurush',system-ui,sans-serif}
+html.dark{filter:invert(1) hue-rotate(180deg)}
+html.dark iframe{filter:invert(1) hue-rotate(180deg)}
+#layout{display:flex;align-items:flex-start;min-height:100vh}
+#app{flex:1;min-width:0;font-size:var(--fs,12px);position:relative}
+button{font:inherit;cursor:pointer;border:0;color:#fff;border-radius:.5em;padding:.35em .6em;font-weight:700;white-space:nowrap}
+button:disabled{opacity:.45;cursor:not-allowed}
+input,select{font:inherit;color:#0f172a;background:#fff;border:1px solid #cbd5e1;border-radius:.4em;padding:.25em .3em;min-width:0;width:100%}
+input:focus,select:focus{outline:2px solid var(--blue);border-color:transparent}
+input.copied,.pill.copied,.nt.copied{background:#bbf7d0!important;color:#14532d!important;border-color:#16a34a!important}
+#top{background:#fff;border-bottom:1px solid #d5dde6;padding:.2em .6em}
+#top h1{font-size:13px;font-weight:700;color:#1d4ed8}
+/* ---- খতিয়ান ব্লক ---- */
+.kb{background:#f8fbff;border-bottom:2px solid #cfe0f0;margin-bottom:.3em}
+.kb.temp{outline:2px dashed #f59e0b;outline-offset:-2px}
+.kh{display:flex;align-items:center;gap:.4em;padding:.2em .25em;flex-wrap:wrap}
+.kno{width:7em;text-align:center;font-weight:700}
+.si{background:#e0ecf8;border:1px solid #9bb8d4;border-radius:.4em;padding:.1em .5em;font-weight:700}
+.kdel{background:#c0392b;border-radius:2em;font-size:.8em}
+.kok{display:none;color:#15803d;font-weight:700}
+.kb.full .kok{display:inline}
+.tmpmsg{color:#b45309;font-weight:700;font-size:.9em}
+.rows{background:#fff}
+.row{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));align-items:center;border-top:1px solid #e5e9f0;padding:.15em 0}
+.row:nth-child(even){background:#f8fafc}
+.row.dropt{box-shadow:inset 0 3px 0 var(--blue)}
+.row.dragging{opacity:.4}
+.row>div{padding:.1em .15em;min-width:0}
+.c-nm{grid-row:1;grid-column:1/5;display:flex;align-items:center;gap:.25em}
+.c-act{grid-row:1;grid-column:5;display:flex;gap:.25em;justify-content:flex-end}
+.f{grid-row:2;display:flex;flex-direction:column;gap:.15em}
+.c-sh{grid-row:3;grid-column:1/3}
+.c-ld{grid-row:3;grid-column:3/6}
+.th{display:none}
+.sn{font-weight:700;min-width:1.3em;text-align:center;cursor:grab;user-select:none}
+.nmw{display:flex;flex-wrap:wrap;gap:.2em;flex:1;min-width:0;align-items:center}
+.nmw .name{flex:1 1 6em;width:auto}
+.rel{display:flex;align-items:center;gap:.2em;flex:0 0 auto}
+.rel.on{flex:1 1 100%}
+.relname{flex:1}
+.rbtn{width:1.7em;height:1.7em;border-radius:50%;padding:0;background:linear-gradient(135deg,#ec4899,#6366f1);line-height:1}
+.rpick{background:#6366f1;padding:.15em .5em}
+.rx{background:#94a3b8;padding:.05em .45em;border-radius:50%}
+.rchip{background:#e0e7ff;color:#3730a3;border-radius:.4em;padding:.05em .4em;font-weight:700;white-space:nowrap}
+.gadd,.gdel{width:1.9em;height:1.9em;border-radius:50%;padding:0;line-height:1;font-size:1.1em}
+.gadd{background:#22a35a}.gdel{background:#ef4444}
+.sel{padding:.1em;background:#fffbe0;border-color:#e5dca0;font-size:.85em}
+.n{text-align:center}
+.kb.full .n{display:none}
+.pill{display:block;text-align:center;padding:.3em .2em;border-radius:.5em;font-weight:700;background:#e2e8f0;color:#334155;cursor:pointer;font-variant-numeric:tabular-nums}
+.pill.bad{background:#ef4444;color:#fff}
+.pill.over{background:#b91c1c;color:#fff}
+.pill.ok{background:#16a34a;color:#fff}
+.pill.w{background:#fff;border:1px solid #cbd5e1;color:#0f172a}
+/* ফুটার */
+.tf{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:.15em;padding:.2em;background:#eef2f7;border-top:1px solid #cfd8e3;align-items:center}
+.t-add{grid-row:1;grid-column:1}
+.t-li{grid-row:1;grid-column:2/6}
+.t-nb{grid-row:2;grid-column:1/-1;display:flex;align-items:center;gap:.4em;justify-content:space-between}
+.t-sh{grid-row:3;grid-column:1/3}
+.t-ld{grid-row:3;grid-column:3/6}
+.nb{flex:1;text-align:center;border-radius:.5em;padding:.25em .4em;font-weight:700}
+.nb:empty{display:none}
+.nb.bad{background:#fef3c7;color:#92400e;border:1px solid #f59e0b}
+.nb.over{background:#fee2e2;color:#991b1b;border:1px solid #ef4444}
+.tl{margin-left:auto}
+#app.no-owner .nmw{display:none}
+#app.no-land .c-ld,#app.no-land .th-ld,#app.no-land .t-ld{display:none}
+#app.no-land .c-sh{grid-column:1/6}
+#app.no-land .t-sh{grid-column:1/6}
+@media(min-width:820px){
+  #app{--cols:var(--cnm,14em) repeat(5,minmax(0,1fr)) 6.5em var(--cld,8em) 8.5em}
+  .th,.row,.tf{display:grid;grid-template-columns:var(--cols);align-items:center;gap:0}
+  .th{background:var(--blue);color:#fff;font-weight:700;text-align:center;padding:.3em 0}
+  .c-nm,.c-act,.f,.c-sh,.c-ld{grid-row:auto;grid-column:auto}
+  .c-act{justify-content:center}
+  .tf .t-add,.tf .t-sh,.tf .t-ld,.tf .t-li{grid-row:auto;grid-column:auto}
+  .tf .t-nb{grid-row:auto;grid-column:span 5}
+  #app.no-owner{--cnm:2.6em}
+  #app.no-land{--cld:0px}
+  #app.no-land .c-sh,#app.no-land .t-sh{grid-column:auto}
+}
+/* ---- নিচের টুলবার ---- */
+#bar{position:sticky;bottom:0;z-index:15;display:flex;flex-wrap:wrap;gap:.25em;background:#fff;padding:.25em;border-top:1px solid #d5dde6;justify-content:center;align-items:center}
+.tb{font-size:.85em;padding:.4em .6em}
+.g{background:#16a34a}.r{background:#dc2626}.bl{background:#2f7fb8}.ind{background:#6366f1}.sl{background:#64748b}.tl2{background:#0f766e}.nv{background:#334155}.cy{background:#0891b2}.or{background:#d97706}.pk{background:#be185d}
+.tb.on{outline:2px solid #fde047}
+.hid{display:none!important}
+/* Mini Window: কমপ্যাক্ট ফুটার — "মোট" বামে, জমির ঘর ছোট, বাড়তি + বাটন নেই */
+#app.mini .t-add{display:none}
+#app.mini .tf{grid-template-columns:auto repeat(3,minmax(0,1fr));gap:.2em .25em;padding:.15em .2em}
+#app.mini .t-nb{display:contents}
+#app.mini .nb{grid-row:1;grid-column:1/-1}
+#app.mini .tl{grid-row:2;grid-column:1;margin:0;white-space:nowrap}
+#app.mini .t-sh{grid-row:2;grid-column:2}
+#app.mini .t-ld{grid-row:2;grid-column:3}
+#app.mini .t-li{grid-row:2;grid-column:4}
+#app.mini.no-land .t-sh{grid-column:2/4}
+#app.mini .row{padding:.1em 0}
+#app.mini .f{gap:.1em}
+.slot{display:inline-flex}
+.bslot{background:#0d9488;border-radius:.5em 0 0 .5em;font-size:.85em}
+.bslotx{background:#115e59;border-radius:0 .5em .5em 0;padding:.35em .4em;font-size:.85em}
+.fsv{font-weight:700;font-size:.85em;min-width:2.6em;text-align:center}
+#toast{position:fixed;left:50%;bottom:5em;transform:translateX(-50%);background:#111827;color:#fff;padding:.4em 1em;border-radius:1.5em;font-size:.9em;opacity:0;pointer-events:none;transition:opacity .2s;z-index:60;white-space:nowrap}
+#toast.show{opacity:.95}
+/* ---- ভাসমান উইন্ডো ---- */
+.fw{position:fixed;z-index:30;background:#fff;border:1px solid #94a3b8;border-radius:.6em;box-shadow:0 10px 30px rgba(0,0,0,.3);max-width:98vw;max-height:92vh;display:flex;flex-direction:column}
+.fwh{background:var(--blue);color:#fff;padding:.3em .5em;display:flex;justify-content:space-between;align-items:center;cursor:move;touch-action:none;border-radius:.6em .6em 0 0;gap:.5em}
+.fwx{background:rgba(255,255,255,.25);padding:0 .5em;font-size:1.2em}
+.fwb{padding:.4em;overflow:auto}
+.fw.big{width:min(96vw,62em)}
+.fw.mid{width:min(96vw,26em)}
+.fbar{display:flex;flex-wrap:wrap;gap:.25em;align-items:center;margin-bottom:.3em}
+.guide{white-space:pre-wrap;line-height:1.55;font-size:.95em}
+.guide b{display:block;margin-top:.5em;color:#1d4ed8}
+.setrow{display:flex;gap:.5em;align-items:center;padding:.35em 0;border-bottom:1px solid #eef2f7}
+.setrow input{width:auto}
+.cdisp{font-size:1.4em;text-align:right;margin-bottom:.3em}
+.ckeys{display:grid;grid-template-columns:repeat(4,1fr);gap:.25em}
+.ckeys button{background:#334155;font-size:1.1em;padding:.5em 0}
+.ckeys .op{background:#2f7fb8}.ckeys .eq{background:#16a34a}.ckeys .cl{background:#dc2626}
+/* রূপান্তর / ওয়ারিশ */
+.tsec{font-weight:700;color:#1d4ed8;margin:.5em 0 .2em}
+.g5{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:.25em;margin-bottom:.3em}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:.25em;margin-bottom:.3em}
+.lbl{font-size:.8em;font-weight:700;color:#475569}
+.small{font-size:.85em;color:#64748b;margin-top:.3em;line-height:1.5}
+/* অংশ বের করুন */
+.abt{display:flex;flex-direction:column;gap:.2em}
+.abh,.abr{display:grid;grid-template-columns:1.4em repeat(3,minmax(0,1fr)) minmax(0,1.1fr) 1.8em;gap:.25em;align-items:center}
+.abh{background:var(--blue);color:#fff;font-weight:700;text-align:center;padding:.25em 0;font-size:.85em}
+.dh{cursor:grab;text-align:center;user-select:none}
+.abr.dropt{box-shadow:inset 0 3px 0 var(--blue)}
+/* দাগে জমি কর্তন */
+.hb{border:1px solid #cbd5e1;border-radius:.5em;margin-bottom:.4em;background:#f8fafc}
+.hh{display:flex;gap:.4em;align-items:center;padding:.25em;background:#e0ecf8;flex-wrap:wrap}
+.hh input{width:8em}
+.dg{display:grid;grid-template-columns:1fr 1.2fr 2fr 2fr 1.6fr auto;gap:.3em;padding:.3em;border-top:1px solid #e2e8f0;align-items:start}
+.dcol{display:flex;flex-direction:column;gap:.2em}
+.dcol label{font-size:.8em;font-weight:700;color:#475569}
+.warn{color:#b91c1c;font-weight:700;font-size:.85em}
+.dbtn{display:flex;gap:.25em}
+@media(max-width:819px){.dg{grid-template-columns:1fr 1fr}.dg>.dcut,.dg>.din,.dg>.drem{grid-column:1/-1}}
+/* ভাসমান Visible / Notepad */
+.vroot{font-size:14px;padding:4px;background:#fff;min-height:100vh}
+.vk{background:#e0ecf8;font-weight:700;padding:3px 6px;margin-top:4px;border-radius:5px;cursor:pointer}
+.vl{display:flex;gap:6px;align-items:center;padding:2px 4px;border-bottom:1px solid #eef2f7}
+.vl .vn{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.vl .pill{min-width:6em;padding:2px 6px}
+.vbar{position:sticky;bottom:0;background:#fff;display:flex;gap:4px;align-items:center;padding:3px 0}
+.ninp{margin-bottom:4px}
+.nitem{display:flex;gap:6px;align-items:flex-start;padding:3px 4px;border-bottom:1px solid #eef2f7}
+.nt{flex:1;cursor:pointer;word-break:break-word;border-radius:4px;padding:1px 3px}
+.nx{background:#ef4444;padding:0 6px;border-radius:50%}
+/* PDF */
+#pdfPane,#divider{display:none}
+#pdfPane.show{display:flex;flex-direction:column;width:var(--pw,45%);position:sticky;top:0;height:100vh;background:#fff}
+#divider.show{display:block;width:7px;cursor:col-resize;background:#cbd5e1;align-self:stretch;touch-action:none}
+.pbar{display:flex;gap:.4em;align-items:center;padding:.25em;background:#e2e8f0;font-size:12px}
+#pdfFrame{flex:1;width:100%;border:0}
+@media(max-width:819px){#layout{flex-direction:column}#pdfPane.show{width:100%;height:70vh;position:static}#divider.show{display:none}}
+#ph{display:none;padding:14px;text-align:center}
+#ph button{background:#dc2626;margin-top:6px;padding:.5em 1em}
+/* ---- SEO আর্টিকেল ---- */
+#seo{max-width:58em;margin:0 auto;padding:1.5em 1em 4em;font-size:16px;line-height:1.85;background:#fff;border-top:3px solid var(--blue)}
+#seo h1{font-size:1.6em;color:#1d4ed8;margin-bottom:.4em;line-height:1.4}
+#seo h2{font-size:1.25em;color:#0f172a;margin:1.4em 0 .4em;border-left:4px solid var(--blue);padding-left:.5em}
+#seo p{margin-bottom:.7em}
+#seo ul,#seo ol{margin:0 0 .8em 1.4em}
+#seo li{margin-bottom:.25em}
+#seo table{border-collapse:collapse;width:100%;max-width:30em;margin:.5em 0 1em}
+#seo th,#seo td{border:1px solid #cbd5e1;padding:.4em .7em;text-align:left}
+#seo th{background:var(--blue);color:#fff}
+#seo tr:nth-child(even) td{background:#f8fafc}
+#seo details{border:1px solid #cbd5e1;border-radius:.5em;margin-bottom:.5em;padding:.5em .8em;background:#f8fafc}
+#seo summary{font-weight:700;cursor:pointer}
+#seo details p{margin:.4em 0 0}
+.note{background:#fef3c7;border:1px solid #f59e0b;border-radius:.5em;padding:.6em .9em;margin:.8em 0}
+/* প্রিন্ট */
+@media print{
+  #bar,#seo,#pdfPane,#divider,.fw,#toast,#top,.kdel,.gadd,.gdel,.rbtn,.rx{display:none!important}
+  html,body{background:#fff}
+  #app{font-size:11px}
+  .kb{break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<div id="top"><h1>আনা গন্ডা ক্যালকুলেটর – খতিয়ান ও জমির হিসাব</h1></div>
+<div id="ph"><div>🔒 ক্যালকুলেটর ভাসমান উইন্ডোতে লক আছে</div><button data-a="lock">🔓 আনলক / এখানে ফিরিয়ে আনুন</button></div>
+<div id="layout">
+  <div id="app">
+    <div id="blocks"></div>
+    <div id="bar">
+      <button class="tb sl" id="custBtn" data-a="custom" title="কোন বাটন/লেখা দেখাবে বা লুকাবে ঠিক করুন">🙈 Hide / Show</button>
+      <button class="tb g" id="kaddBtn" data-a="kadd">খতিয়ান +</button>
+      <button class="tb or" id="newBtn" data-a="newfield">New Field</button>
+      <button class="tb tl2" data-a="save">Save</button>
+      <span id="slots"></span>
+      <button class="tb sl" id="undoBtn" data-a="undo" title="শেষ পরিবর্তন ফিরিয়ে আনুন">↶ Undo</button>
+      <button class="tb sl" id="redoBtn" data-a="redo" title="আবার করুন">↷ Redo</button>
+      <button class="tb g" id="apBtn" data-a="ap">Auto Paste ON</button>
+      <button class="tb ind" data-a="pdf">Upload PDF</button>
+      <button class="tb r" id="noteBtn" data-a="note">Notepad: OFF</button>
+      <button class="tb bl" data-a="ab">অংশ বের করুন</button>
+      <button class="tb tl2" data-a="dk">দাগে জমি কর্তন</button>
+      <button class="tb pk" data-a="conv">Converter</button>
+      <button class="tb pk" data-a="heir">ওয়ারিশ ভাগ</button>
+      <button class="tb nv" data-a="calc">🧮 Calculator</button>
+      <button class="tb cy" data-a="guide">Guideline</button>
+      <button class="tb sl" data-a="settings">⚙</button>
+      <button class="tb ind" id="visBtn" data-a="visible">👁 Visible</button>
+      <button class="tb g" data-a="copyall">📋 Copy All</button>
+      <button class="tb nv" data-a="print">🖨 Print/PDF</button>
+      <button class="tb sl" id="darkBtn" data-a="dark">🌙 Dark</button>
+      <button class="tb ind" id="lockBtn" data-a="lock" title="ব্রাউজারের বাইরে সবার উপরে ছোট উইন্ডোতে রাখুন">📌 Mini Window</button>
+      <button class="tb sl" data-a="fontm">Font −</button><span class="fsv" id="fsv">12px</span><button class="tb sl" data-a="fontp">Font +</button>
+    </div>
+    <div id="toast"></div>
+  </div>
+  <div id="divider" title="টেনে প্রস্থ বদলান / ডাবল ক্লিকে ডিফল্ট"></div>
+  <div id="pdfPane"><div class="pbar"><b>PDF</b><button class="tb sl" data-a="pdfhide">Hide</button><button class="tb r" data-a="pdfclear">Clear</button></div><iframe id="pdfFrame" title="PDF"></iframe></div>
+</div>
+<input type="file" id="pdfInput" accept="application/pdf" hidden>
+
+<main id="seo">
+<article>
+<h1>আনা গন্ডা ক্যালকুলেটর – খতিয়ান ও জমির হিসাব সহজে করুন</h1>
+<p>আনা গন্ডা ক্যালকুলেটর হলো বাংলাদেশের জমির মালিক, ক্রেতা-বিক্রেতা, দলিল লেখক এবং ভূমি সংক্রান্ত কাজের জন্য একটি সহজ অনলাইন টুল। এই ক্যালকুলেটরের মাধ্যমে আপনি খুব সহজেই জমির আনা, গণ্ডা, কড়া, ক্রান্তি ও তিলের হিসাব বের করতে পারবেন।</p>
+<p>পুরাতন খতিয়ান বা জমির অংশীদারির হিসাব করতে অনেক সময় জটিলতা তৈরি হয়। বিশেষ করে একাধিক মালিকের মধ্যে জমির অংশ ভাগ করার সময় সঠিক হিসাব জানা প্রয়োজন। এই সমস্যার সমাধানের জন্য তৈরি করা হয়েছে আনা গন্ডা হিসাব ক্যালকুলেটর। খতিয়ান ও ভূমির পরিমাপ ক্যালকুলেটর ব্যবহার করে কয়েক সেকেন্ডের মধ্যেই জমির অংশের সঠিক হিসাব বের করা যায়।</p>
+
+<h2>আনা গন্ডা ক্যালকুলেটর কী?</h2>
+<p>আনা গন্ডা ক্যালকুলেটর হলো একটি অনলাইন জমির হিসাব করার সফটওয়্যার, যার মাধ্যমে জমির মালিকানার অংশ বা হিস্যা সহজে নির্ণয় করা যায়। বাংলাদেশে জমির হিসাব সাধারণত আনা, গণ্ডা, কড়া, ক্রান্তি ও তিল এই এককগুলোর মাধ্যমে প্রকাশ করা হয়। আগে এই হিসাব হাতে-কলমে করতে অনেক সময় লাগতো; এখন অনলাইন ক্যালকুলেটরে দ্রুত ও নির্ভুলভাবে করা যায়।</p>
+
+<h2>আনা, গন্ডা, কড়া, ক্রান্তি ও তিল কী?</h2>
+<table>
+<thead><tr><th>জমির একক</th><th>পরিমাণ</th></tr></thead>
+<tbody>
+<tr><td>১ টাকা</td><td>১৬ আনা</td></tr>
+<tr><td>১ আনা</td><td>২০ গণ্ডা</td></tr>
+<tr><td>১ গণ্ডা</td><td>৪ কড়া</td></tr>
+<tr><td>১ কড়া</td><td>৩ ক্রান্তি</td></tr>
+<tr><td>১ ক্রান্তি</td><td>২০ তিল</td></tr>
+</tbody>
+</table>
+<p>অর্থাৎ ১ আনা = ৪,৮০০ তিল এবং পূর্ণ ১৬ আনা = ৭৬,৮০০ তিল। ক্যালকুলেটর এই তিলের হিসাবেই সব অংশ যোগ-বিয়োগ করে, তাই ফলাফল নির্ভুল হয়।</p>
+
+<h2>আনা গন্ডা হিসাব কেন প্রয়োজন?</h2>
+<ul>
+<li>উত্তরাধিকার সূত্রে জমি ভাগ করা</li>
+<li>একাধিক মালিকের জমির অংশ বের করা</li>
+<li>খতিয়ানের হিস্যা নির্ণয় করা</li>
+<li>জমি কেনাবেচার আগে অংশ যাচাই করা</li>
+<li>দলিল তৈরির সময় সঠিক হিসাব করা</li>
+<li>জমির মালিকানা যাচাই করা</li>
+</ul>
+<p>ভুল হিসাবের কারণে জমি নিয়ে ভবিষ্যতে বিরোধ তৈরি হতে পারে। তাই সঠিক হিসাব করা প্রয়োজন।</p>
+
+<h2>আনা গন্ডা ক্যালকুলেটর কীভাবে ব্যবহার করবেন?</h2>
+<ol>
+<li>খতিয়ান নম্বর লিখুন এবং মালিকের নাম দিন।</li>
+<li>প্রতিটি মালিকের অংশ আনা, গণ্ডা, কড়া, ক্রান্তি ও তিল ঘরে লিখুন বা ড্রপডাউন থেকে বাছাই করুন।</li>
+<li>খতিয়ানের মোট জমির পরিমাণ লিখুন।</li>
+<li>ক্যালকুলেটর স্বয়ংক্রিয়ভাবে প্রতিটি মালিকের অংশ ও জমির পরিমাণ হিসাব করে দেখাবে। মোট ১৬ আনা না হলে কত বাকি বা বেশি তা NB বার্তায় জানাবে।</li>
+</ol>
+
+<h2>খতিয়ান হিস্যা হিসাব করার সহজ উপায়</h2>
+<p>একটি খতিয়ানে একাধিক মালিক থাকলে প্রত্যেকের অংশ আলাদা হতে পারে। কাগজে হিসাব করলে বারবার যোগ-বিয়োগ করতে হয় এবং ভুলের সম্ভাবনা থাকে। খতিয়ান ক্যালকুলেটর ব্যবহার করলে মোট জমি, মালিকের অংশ, অবশিষ্ট অংশ ও ভাগের পরিমাণ খুব সহজেই নির্ণয় করা যায়।</p>
+
+<h2>এই ক্যালকুলেটরের অতিরিক্ত সুবিধা</h2>
+<ul>
+<li><b>রূপান্তর:</b> দশমিক বা ভগ্নাংশ (যেমন ০.৩১২৫ বা ৫/১৬) থেকে আনা–তিল এবং আনা–তিল থেকে দশমিক অংশ।</li>
+<li><b>ওয়ারিশ ভাগ:</b> ছেলে-মেয়ের সংখ্যা দিয়ে সমান ভাগ বা ২:১ অনুপাতে প্রাথমিক হিসাব।</li>
+<li><b>অংশ বের করুন:</b> দাগের মোট জমি ও প্রাপ্ত জমি থেকে আনুপাতিক অংশ।</li>
+<li><b>দাগে জমি কর্তন:</b> কর্তন ও আগত জমি বাদ-যোগ করে অবশিষ্ট জমি।</li>
+<li><b>প্রিন্ট/PDF, Save, Undo/Redo, ডার্ক মোড</b> ও মোবাইল-বান্ধব ডিজাইন।</li>
+</ul>
+
+<h2>জমির হিসাব ক্যালকুলেটরের সুবিধা</h2>
+<ul>
+<li><b>দ্রুত হিসাব:</b> কয়েক সেকেন্ডের মধ্যে জমির অংশ বের করা যায়।</li>
+<li><b>নির্ভুল ফলাফল:</b> ম্যানুয়াল হিসাবের ভুল কমে যায়।</li>
+<li><b>মোবাইলে ব্যবহার:</b> যেকোনো জায়গা থেকে মোবাইল, ট্যাব বা কম্পিউটারে হিসাব করা যায়।</li>
+<li><b>একাধিক মালিক:</b> একাধিক অংশীদারের জমির হিসাব সহজে করা যায়।</li>
+<li><b>সময় বাঁচায়:</b> দলিল অফিস বা অন্য কারো সাহায্য ছাড়াই প্রাথমিক হিসাব করা যায়।</li>
+</ul>
+
+<h2>আনা গন্ডা ক্যালকুলেটর কারা ব্যবহার করবেন?</h2>
+<p>জমির মালিক, ক্রেতা, বিক্রেতা, কৃষক, দলিল লেখক, ভূমি ব্যবসায়ী, আইনজীবী, সার্ভেয়ার এবং উত্তরাধিকার সম্পত্তির অংশীদার—সবাই এটি ব্যবহার করতে পারেন।</p>
+
+<h2>জমির হিসাব করার সময় যে বিষয়গুলো মনে রাখবেন</h2>
+<ul>
+<li>খতিয়ানের তথ্য সঠিক হতে হবে</li>
+<li>দাগ নম্বর যাচাই করতে হবে</li>
+<li>জমির পরিমাণ নিশ্চিত করতে হবে</li>
+<li>সরকারি রেকর্ডের সাথে মিলিয়ে দেখতে হবে</li>
+</ul>
+<div class="note">অনলাইন ক্যালকুলেটর প্রাথমিক হিসাবের জন্য ব্যবহার করা যায়। তবে চূড়ান্ত আইনি কাজের জন্য সরকারি নথি যাচাই করা এবং প্রয়োজনে আইনজীবীর পরামর্শ নেওয়া প্রয়োজন।</div>
+
+<h2>Frequently Asked Questions (FAQ)</h2>
+<details><summary>আনা গন্ডা ক্যালকুলেটর কী?</summary><p>আনা গন্ডা ক্যালকুলেটর হলো জমির অংশ, হিস্যা এবং খতিয়ানের হিসাব করার অনলাইন টুল।</p></details>
+<details><summary>১ আনা কত গণ্ডা?</summary><p>১ আনা = ২০ গণ্ডা।</p></details>
+<details><summary>জমির হিস্যা কীভাবে বের করবো?</summary><p>জমির মোট অংশ এবং মালিকের অংশের তথ্য দিয়ে আনা গন্ডা ক্যালকুলেটরের মাধ্যমে হিসাব করা যায়।</p></details>
+<details><summary>মোবাইল দিয়ে জমির হিসাব করা যাবে?</summary><p>হ্যাঁ, মোবাইল, ট্যাব এবং কম্পিউটার থেকে সহজেই ব্যবহার করা যায়।</p></details>
+<details><summary>খতিয়ান হিসাব করার জন্য কোন ক্যালকুলেটর ব্যবহার করবো?</summary><p>খতিয়ান ও ভূমির পরিমাপ ক্যালকুলেটর ব্যবহার করে আনা, গণ্ডা, কড়া, ক্রান্তি ও তিলের হিসাব করা যায়।</p></details>
+<details><summary>১ কড়া কত ক্রান্তি এবং ১ ক্রান্তি কত তিল?</summary><p>১ কড়া = ৩ ক্রান্তি এবং ১ ক্রান্তি = ২০ তিল।</p></details>
+<details><summary>ওয়ারিশদের মধ্যে জমি ভাগ কীভাবে করবো?</summary><p>ক্যালকুলেটরের "ওয়ারিশ ভাগ" টুলে ছেলে-মেয়ের সংখ্যা ও মোট জমি দিলে প্রাথমিক ভাগ বের হবে। চূড়ান্ত আইনি কাজে সরকারি নথি ও আইনজীবীর পরামর্শ নিন।</p></details>
+
+<h2>উপসংহার</h2>
+<p>জমির হিসাব এখন আর কঠিন নয়। আনা গন্ডা ক্যালকুলেটর ব্যবহার করে আপনি খুব সহজেই খতিয়ান, জমির অংশ এবং মালিকানার হিসাব বের করতে পারবেন। বাংলাদেশের প্রচলিত ভূমি পরিমাপ পদ্ধতি অনুযায়ী তৈরি এই ক্যালকুলেটর জমি সংক্রান্ত হিসাবকে করেছে আরও সহজ, দ্রুত এবং নির্ভুল। আজই ব্যবহার করুন আনা গন্ডা ক্যালকুলেটর এবং আপনার জমির হিসাব করুন কয়েক সেকেন্ডে।</p>
+</article>
+</main>
+
+<script>
+'use strict';
+/* ================= ধ্রুবক ও ছোট সহায়ক ================= */
+const U = [4800, 240, 60, 20, 1];            // ১ আনা=২০ গণ্ডা, ১ গণ্ডা=৪ কড়া, ১ কড়া=৩ ক্রান্তি, ১ ক্রান্তি=২০ তিল
+const FULL = 16 * U[0];                       // ১৬ আনা (তিলে)
+const UN = ['আনা', 'গণ্ডা', 'কড়া', 'ক্রান্তি', 'তিল'];
+const MAXV = [16, 19, 3, 2, 19];
+const SYM = {
+  0: {1:'/',2:'৵',3:'৶',4:'৷',5:'৷⁄',6:'৷৵',7:'৷৶',8:'৷৷',9:'৷৷⁄',10:'৷৷৵',11:'৷৷৶',12:'৸',13:'৸⁄',14:'৸৵',15:'৸৶',16:'১্'},
+  2: {1:'৷',2:'৷৷',3:'৸'},
+  3: {1:'৴',2:'৴৴'}
+};
+const BND = '০১২৩৪৫৬৭৮৯';
+const bn = s => String(s).replace(/\d/g, d => BND[d]);
+const en = s => String(s).replace(/[০-৯]/g, d => BND.indexOf(d));
+const pad2 = n => String(n).padStart(2, '0');
+const toTil = v => v.reduce((s, x, i) => s + x * U[i], 0);
+const norm = t => U.map(u => { const q = Math.floor(t / u); t %= u; return q; });
+const num = s => { const n = parseFloat(en(String(s == null ? '' : s)).replace(/,/g, '')); return isNaN(n) ? 0 : n; };
+const newId = () => Math.random().toString(36).slice(2, 9);
+const $ = (s, r) => { if (r) return r.querySelector(s); return document.querySelector(s) || (typeof app !== 'undefined' && app ? app.querySelector(s) : null); };
+const unitsText = v => { const p = v.map((x, k) => x ? x + ' ' + UN[k] : '').filter(Boolean); return p.length ? p.join(' ') : '0'; };
+
+function h(tag, props, ...kids) {
+  const e = document.createElement(tag);
+  if (props) for (const [k, v] of Object.entries(props)) {
+    if (v == null || v === false) continue;
+    if (k === 'class') e.className = v;
+    else if (k === 'text') e.textContent = v;
+    else if (k === 'value') e.value = v;
+    else if (k === 'dataset') Object.assign(e.dataset, v);
+    else if (k.startsWith('on')) e.addEventListener(k.slice(2), v);
+    else e.setAttribute(k, v === true ? '' : v);
+  }
+  for (const c of kids.flat()) if (c != null && c !== false) e.append(c.nodeType ? c : document.createTextNode(c));
+  return e;
+}
+
+/* ================= অবস্থা (State) ================= */
+const KEY = 'khotian_suit_v1';
+const blankOwner = () => ({ id: newId(), name: '', rel: '', relName: '', v: [0, 0, 0, 0, 0] });
+const blankK = (no = '') => ({ id: newId(), no, temp: false, owners: [blankOwner()], land: '' });
+const blankAb = () => ({ id: newId(), dag: '', total: '', got: '', auto: false });
+const blankDag = () => ({ id: newId(), no: '', total: '', cuts: [''], ins: [] });
+const blankHolding = () => ({ id: newId(), no: '', dags: [blankDag()] });
+const defaults = () => ({
+  khotians: [blankK()], saves: [null, null, null, null, null],
+  settings: { hideOwner: false, hideLand: false, pasteBlocked: false },
+  autoPaste: true, font: 12, notes: [], noteFont: 14, vf: 14, pdfW: 45, dark: false, hidden: {},
+  ab: { rows: [blankAb()], font: 12 }, dk: { holdings: [blankHolding()], font: 12 }
+});
+let S;
+function loadState() {
+  S = defaults();
+  try {
+    const s = JSON.parse(localStorage.getItem(KEY) || 'null');
+    if (s && typeof s === 'object') {
+      S = Object.assign(S, s);
+      S.settings = Object.assign(defaults().settings, s.settings || {});
+      if (!Array.isArray(S.khotians) || !S.khotians.length) S.khotians = [blankK()];
+      S.khotians = S.khotians.filter(k => !k.temp);
+      if (!S.khotians.length) S.khotians = [blankK()];
+      while (S.saves.length < 5) S.saves.push(null);
+      if (!S.hidden || typeof S.hidden !== 'object') S.hidden = {};
+      if (!S.ab || !Array.isArray(S.ab.rows) || !S.ab.rows.length) S.ab = defaults().ab;
+      if (!S.dk || !Array.isArray(S.dk.holdings) || !S.dk.holdings.length) S.dk = defaults().dk;
+    }
+  } catch (e) {}
+}
+const repl = (key, val) => (typeof key === 'string' && key.startsWith('_')) ? undefined : val;
+
+/* ---- Undo / Redo ইতিহাস ---- */
+let hist = [], hi = -1, hT = 0, restoring = false;
+function snapNow() {
+  const s = JSON.stringify(S.khotians.filter(k => !k.temp), repl);
+  if (hist[hi] === s) return;
+  hist = hist.slice(0, hi + 1); hist.push(s);
+  if (hist.length > 60) hist.shift();
+  hi = hist.length - 1;
+}
+function snapLater() { if (restoring) return; clearTimeout(hT); hT = setTimeout(snapNow, 600); }
+
+function save() {
+  try {
+    const p = Object.assign({}, S, { khotians: S.khotians.filter(k => !k.temp) });
+    localStorage.setItem(KEY, JSON.stringify(p, repl));
+  } catch (e) {}
+  snapLater();
+}
+
+/* ================= সাধারণ UI সহায়ক ================= */
+const app = $('#app'), blocksEl = $('#blocks'), toastEl = $('#toast'), ph = $('#ph');
+let toastTimer;
+function toast(m) {
+  toastEl.textContent = m; toastEl.classList.add('show');
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => toastEl.classList.remove('show'), 1800);
+}
+function withFocus(fn) {
+  const d = app.ownerDocument, a = d.activeElement;
+  const key = a && a.dataset && a.dataset.fk;
+  let s = null, e = null;
+  try { s = a.selectionStart; e = a.selectionEnd; } catch (x) {}
+  fn();
+  if (key) {
+    const n = [...app.querySelectorAll('[data-fk]')].find(x => x.dataset.fk === key);
+    if (n) { n.focus(); try { if (s != null) n.setSelectionRange(s, e); } catch (x) {} }
+  }
+}
+function extMsg(type, detail) {
+  try {
+    window.postMessage(Object.assign({ source: 'khotian-calc', type }, detail), '*');
+    document.dispatchEvent(new CustomEvent('khotian:' + type.toLowerCase(), { detail }));
+  } catch (e) {}
+}
+async function copyEl(el, text) {
+  text = String(text == null ? '' : text);
+  if (!text) return;
+  const d = el.ownerDocument, w = d.defaultView || window;
+  let ok = false;
+  try { await w.navigator.clipboard.writeText(text); ok = true; }
+  catch (e) {
+    try {
+      const ta = d.createElement('textarea'); ta.value = text; ta.style.cssText = 'position:fixed;opacity:0';
+      d.body.appendChild(ta); ta.select(); ok = d.execCommand('copy'); ta.remove();
+    } catch (e2) {}
+  }
+  if (ok) {
+    el.classList.add('copied'); setTimeout(() => el.classList.remove('copied'), 800);
+    if (S.autoPaste) extMsg('AUTO_PASTE', { text });
+    toast('✅ কপি হয়েছে');
+  } else toast('কপি ব্যর্থ — Clipboard অনুমতি দিন');
+}
+let tq = new Set(), tqT = 0;
+function touch(kind) {
+  tq.add(kind);
+  if (tqT) return;
+  tqT = setTimeout(() => { tqT = 0; tq.forEach(k => { const v = viewers[k]; if (v && k !== 'note') v.refresh(); }); tq.clear(); }, 60);
+}
+function navList(root) { return [...root.querySelectorAll('input.nav')].filter(i => i.getClientRects().length > 0 && !i.disabled); }
+function focusNext(el, dir) {
+  const root = el.closest('.fw') || el.closest('#app'); if (!root) return;
+  const l = navList(root), i = l.indexOf(el), n = l[i + dir];
+  if (n) { n.focus(); if (n.select) n.select(); return true; }
+  return false;
+}
+function nextNo(s) {
+  s = String(s || '');
+  const m = /([0-9০-৯]+)\s*$/.exec(s); if (!m) return '';
+  const isBn = /[০-৯]/.test(m[1]);
+  let t = String(parseInt(en(m[1]), 10) + 1).padStart(m[1].length, '0');
+  if (isBn) t = bn(t);
+  return s.slice(0, m.index) + t;
+}
+
+/* ================= খতিয়ান ব্লক ================= */
+let noSpawn = false, dragO = null;
+const totalTil = k => k.owners.reduce((s, o) => s + toTil(o.v), 0);
+const blockEl = k => blocksEl.querySelector('[data-kid="' + k.id + '"]');
+
+function renumber() {
+  [...blocksEl.children].forEach((b, i) => { const si = b.querySelector('.si'); if (si) si.textContent = 'SI-' + bn(i + 1); });
+  $('#kaddBtn').disabled = S.khotians.length >= 20;
+}
+function renderAll() {
+  S.khotians = S.khotians.filter(k => { if (k.temp) { clearInterval(k._iv); return false; } return true; });
+  if (!S.khotians.length) S.khotians = [blankK()];
+  noSpawn = true;
+  blocksEl.textContent = '';
+  S.khotians.forEach(k => blocksEl.append(renderBlock(k)));
+  noSpawn = false;
+  renumber();
+}
+function renderBlock(k) {
+  const blk = h('div', { class: 'kb' + (k.temp ? ' temp' : ''), dataset: { kid: k.id } });
+  blk._k = k;
+  const kno = h('input', { class: 'kno nav copyable', value: k.no, placeholder: '০০০০', dataset: { fk: 'k' + k.id + '.no' } });
+  kno.addEventListener('input', () => { k.no = kno.value; save(); touch('main'); });
+  const del = h('button', { class: 'kdel', text: 'Delete', title: 'এই খতিয়ান মুছুন' });
+  let arm = 0;
+  del.onclick = () => {
+    if (!arm) { arm = 1; del.textContent = 'নিশ্চিত?'; setTimeout(() => { arm = 0; del.textContent = 'Delete'; }, 2500); return; }
+    deleteK(k);
+  };
+  const head = h('div', { class: 'kh' }, h('b', { text: 'খতিয়ান নং' }), kno, h('span', { class: 'si' }), del,
+    h('span', { class: 'kok', text: '✅ পূর্ণ ১৬ আনা' }), h('span', { class: 'tmpmsg' }));
+  const th = h('div', { class: 'th' }, h('div', { class: 'th-nm', text: 'মালিক' }), ...UN.map(u => h('div', { text: u })),
+    h('div', { text: 'অংশ' }), h('div', { class: 'th-ld', text: 'জমির পরিমাণ' }), h('div', { text: '①' }));
+  const rows = h('div', { class: 'rows' });
+  const add = h('button', { class: 'gadd t-add', text: '+', title: 'শেষে নতুন মালিক যোগ করুন' });
+  add.onclick = () => {
+    const o = blankOwner(); k.owners.push(o); rebuildRows(blk, k); save(); touch('main');
+    const el = [...blk.querySelectorAll('[data-fk]')].find(x => x.dataset.fk === 'o' + o.id + '.name'); if (el) el.focus();
+  };
+  const land = h('input', { class: 'land nav copyable', inputmode: 'decimal', placeholder: 'মোট জমির পরিমাণ', value: k.land, dataset: { fk: 'k' + k.id + '.land' } });
+  land.addEventListener('input', () => { k.land = land.value; calcBlock(blk); save(); touch('main'); });
+  const foot = h('div', { class: 'tf' }, add,
+    h('div', { class: 't-nb' }, h('span', { class: 'nb' }), h('b', { class: 'tl', text: 'মোট' })),
+    h('div', { class: 't-sh' }, h('span', { class: 'pill tsh copyable' })),
+    h('div', { class: 't-ld' }, h('span', { class: 'pill w tld copyable' })),
+    h('div', { class: 't-li' }, land));
+  blk.append(head, th, rows, foot);
+  blk.addEventListener('input', () => markPermanent(blk, k));
+  rebuildRows(blk, k);
+  return blk;
+}
+function rebuildRows(blk, k) {
+  const rows = blk.querySelector('.rows');
+  withFocus(() => {
+    rows.textContent = '';
+    k.owners.forEach((o, i) => rows.append(buildRow(blk, k, o, i)));
+    calcBlock(blk);
+  });
+}
+function syncCell(c, o) {
+  const i = c.i, mx = Math.max(MAXV[i], o.v[i]);
+  c.sel.textContent = '';
+  c.sel.append(h('option', { value: '', text: '▼ ' + UN[i] }));
+  for (let n = 1; n <= mx; n++) { const s = (SYM[i] || {})[n]; c.sel.append(h('option', { value: String(n), text: bn(n) + ' ' + UN[i] + (s ? '-' + s : '') })); }
+  c.sel.value = o.v[i] ? String(o.v[i]) : '';
+  const want = o.v[i] ? String(o.v[i]) : '';
+  if (c.inp.value !== want) c.inp.value = want;
+}
+function syncRow(row) { row._cells.forEach(c => syncCell(c, row._o)); }
+const shouldAdvance = (i, s) => s !== '' && (i === 2 || i === 3 || parseInt(s, 10) >= 2 || s.length === 2);
+
+function buildRow(blk, k, o, idx) {
+  const row = h('div', { class: 'row', dataset: { oid: o.id } });
+  row._o = o; row._cells = [];
+  const sn = h('span', { class: 'sn', title: 'ধরে টেনে ক্রম বদলান', text: bn(idx + 1) });
+  sn.addEventListener('mousedown', () => { row.draggable = true; });
+  sn.addEventListener('mouseup', () => { row.draggable = false; });
+  row.addEventListener('dragstart', e => { dragO = { k, o }; row.classList.add('dragging'); try { e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', o.id); } catch (x) {} });
+  row.addEventListener('dragend', () => { row.draggable = false; row.classList.remove('dragging'); dragO = null; });
+  row.addEventListener('dragover', e => { if (dragO && dragO.k === k) { e.preventDefault(); row.classList.add('dropt'); } });
+  row.addEventListener('dragleave', () => row.classList.remove('dropt'));
+  row.addEventListener('drop', e => {
+    e.preventDefault(); row.classList.remove('dropt');
+    if (!dragO || dragO.k !== k || dragO.o === o) return;
+    const from = k.owners.indexOf(dragO.o), to = k.owners.indexOf(o);
+    k.owners.splice(to, 0, k.owners.splice(from, 1)[0]);
+    rebuildRows(blk, k); save(); touch('main');
+  });
+  const name = h('input', { class: 'name nav copyable', value: o.name, placeholder: 'মালিকের নাম', dataset: { fk: 'o' + o.id + '.name' } });
+  name.addEventListener('input', () => { o.name = name.value; save(); touch('main'); });
+  const rel = h('span', { class: 'rel' });
+  const drawRel = () => {
+    rel.textContent = ''; rel.classList.toggle('on', !!o.rel);
+    if (!o.rel) {
+      const b = h('button', { class: 'rbtn', title: 'পিতা / স্বামী যোগ করুন', text: '+' });
+      b.onclick = () => {
+        rel.textContent = ''; rel.classList.add('on');
+        ['পিতা', 'স্বামী'].forEach(t => rel.append(h('button', { class: 'rpick', text: t, onclick: () => { o.rel = t; o.relName = ''; save(); drawRel(); const i = rel.querySelector('input'); if (i) i.focus(); } })));
+        rel.append(h('button', { class: 'rx', text: '×', onclick: () => drawRel() }));
+      };
+      rel.append(b);
+    } else {
+      const ri = h('input', { class: 'relname nav copyable', value: o.relName, placeholder: o.rel === 'পিতা' ? 'পিতার নাম' : 'স্বামীর নাম', dataset: { fk: 'o' + o.id + '.rel' } });
+      ri.addEventListener('input', () => { o.relName = ri.value; save(); touch('main'); });
+      rel.append(h('span', { class: 'rchip', text: o.rel }), ri,
+        h('button', { class: 'rx', text: '×', title: 'সম্পর্ক মুছুন', onclick: () => { o.rel = ''; o.relName = ''; save(); drawRel(); touch('main'); } }));
+    }
+  };
+  drawRel();
+
+  const fcells = [0, 1, 2, 3, 4].map(i => {
+    const sel = h('select', { class: 'sel', title: UN[i] });
+    const inp = h('input', { class: 'n nav', inputmode: 'numeric', maxlength: '2', placeholder: '0', dataset: { fk: 'o' + o.id + '.f' + i } });
+    const c = { sel, inp, i }; row._cells.push(c);
+    inp.addEventListener('input', () => {
+      const s = en(inp.value).replace(/\D/g, '').slice(0, 2);
+      if (s !== inp.value) inp.value = s;
+      o.v[i] = s === '' ? 0 : parseInt(s, 10);
+      syncCell(c, o);
+      afterEdit(blk, k, o, { val: true, adv: shouldAdvance(i, s) ? i : -1 });
+    });
+    inp.addEventListener('change', () => {
+      const nv = norm(toTil(o.v));
+      if (nv.some((x, j) => x !== o.v[j])) { o.v = nv; syncRow(row); }
+      afterEdit(blk, k, o, { adv: -1 });
+    });
+    sel.addEventListener('change', () => {
+      o.v[i] = parseInt(sel.value, 10) || 0; o.v = norm(toTil(o.v)); syncRow(row);
+      afterEdit(blk, k, o, { val: true, adv: -1 });
+    });
+    syncCell(c, o);
+    return h('div', { class: 'f' }, sel, inp);
+  });
+
+  const dup = h('button', { class: 'gadd', title: 'এই সারির ঠিক নিচে নতুন সারি (মান সহ কপি)', text: '+' });
+  dup.onclick = () => {
+    const c = JSON.parse(JSON.stringify(o, repl)); c.id = newId();
+    k.owners.splice(k.owners.indexOf(o) + 1, 0, c);
+    rebuildRows(blk, k); save(); touch('main');
+  };
+  const rm = h('button', { class: 'gdel', title: 'এই সারি মুছুন', text: '−' });
+  rm.onclick = () => {
+    if (k.owners.length === 1) k.owners[0] = blankOwner(); else k.owners.splice(k.owners.indexOf(o), 1);
+    rebuildRows(blk, k); save(); touch('main');
+  };
+  row.append(h('div', { class: 'c-nm' }, sn, h('div', { class: 'nmw' }, name, rel)), ...fcells,
+    h('div', { class: 'c-sh' }, h('span', { class: 'pill sh copyable' })),
+    h('div', { class: 'c-ld' }, h('span', { class: 'pill w ldv copyable' })),
+    h('div', { class: 'c-act' }, dup, rm));
+  return row;
+}
+function afterEdit(blk, k, o, info) {
+  calcBlock(blk); save(); touch('main');
+  const last = k.owners[k.owners.length - 1];
+  if (info.val && o === last && toTil(o.v) > 0 && totalTil(k) < FULL) { k.owners.push(blankOwner()); rebuildRows(blk, k); }
+  if (info.adv >= 0) {
+    const el = [...blk.querySelectorAll('[data-fk]')].find(x => x.dataset.fk === 'o' + o.id + '.f' + info.adv);
+    if (el) focusNext(el, 1);
+  }
+}
+function calcBlock(blk) {
+  const k = blk._k, ts = k.owners.map(o => toTil(o.v)), T = ts.reduce((a, b) => a + b, 0), L = num(k.land);
+  const st = T === 0 ? 'empty' : T === FULL ? 'ok' : T > FULL ? 'over' : 'bad';
+  blk.dataset.st = st; blk.classList.toggle('full', st === 'ok');
+  blk.querySelectorAll('.row').forEach((row, i) => {
+    const sv = ts[i] / FULL, lv = L * sv;
+    const p = row.querySelector('.sh'); p.className = 'pill sh copyable ' + st; p.textContent = bn(sv.toFixed(5)); p.dataset.copy = sv.toFixed(5);
+    const l = row.querySelector('.ldv'); l.textContent = bn(lv.toFixed(5)); l.dataset.copy = lv.toFixed(5);
+  });
+  const tsh = blk.querySelector('.tsh'); tsh.className = 'pill tsh copyable ' + st;
+  if (st === 'ok') { tsh.textContent = '১ (পূর্ণ ১৬ আনা)'; tsh.dataset.copy = '1'; }
+  else { tsh.textContent = bn((T / FULL).toFixed(5)); tsh.dataset.copy = (T / FULL).toFixed(5); }
+  const tl = L * T / FULL, tld = blk.querySelector('.tld'); tld.textContent = bn(tl.toFixed(5)); tld.dataset.copy = tl.toFixed(5);
+  const nb = blk.querySelector('.nb'); nb.className = 'nb ' + st;
+  nb.textContent = st === 'bad' ? bn('NB: ' + unitsText(norm(FULL - T)) + ' প্রয়োজন!') : st === 'over' ? bn('NB: ' + unitsText(norm(T - FULL)) + ' বেশি হয়েছে!') : '';
+  maybeSpawn(blk, st === 'ok');
+}
+function maybeSpawn(blk, ok) {
+  const k = blk._k;
+  if (!ok) { k._sp = false; return; }
+  if (noSpawn) { k._sp = true; return; }
+  if (k.temp || k._sp) return;
+  if (S.khotians[S.khotians.length - 1] !== k || S.khotians.length >= 20 || S.khotians.some(x => x.temp)) return;
+  k._sp = true;
+  const nk = blankK(nextNo(k.no)); nk.temp = true; nk._left = 10;
+  S.khotians.push(nk);
+  const nb = renderBlock(nk); blocksEl.append(nb); renumber();
+  const msg = nb.querySelector('.tmpmsg');
+  const upd = () => { msg.textContent = 'সাময়িক — ' + bn(nk._left) + ' সেকেন্ডে সরে যাবে (কিছু লিখলে স্থায়ী হবে)'; };
+  upd();
+  nk._iv = setInterval(() => {
+    nk._left--;
+    if (nk._left <= 0) { clearInterval(nk._iv); S.khotians = S.khotians.filter(x => x !== nk); nb.remove(); renumber(); touch('main'); }
+    else upd();
+  }, 1000);
+  touch('main');
+}
+function markPermanent(blk, k) {
+  if (!k.temp) return;
+  k.temp = false; clearInterval(k._iv); blk.classList.remove('temp');
+  blk.querySelector('.tmpmsg').textContent = ''; save();
+}
+function deleteK(k) {
+  clearInterval(k._iv);
+  const i = S.khotians.indexOf(k);
+  if (S.khotians.length === 1) S.khotians[0] = blankK(); else S.khotians.splice(i, 1);
+  renderAll(); save(); touch('main');
+}
+function addK() {
+  if (S.khotians.length >= 20) { toast('সর্বোচ্চ ২০টি খতিয়ান'); return; }
+  const last = S.khotians[S.khotians.length - 1];
+  if (last.temp) { markPermanent(blockEl(last), last); const e = blockEl(last).querySelector('.kno'); if (e) e.focus(); return; }
+  const nk = blankK(nextNo(last.no)); S.khotians.push(nk);
+  const b = renderBlock(nk); blocksEl.append(b); renumber(); save(); touch('main');
+  b.querySelector('.kno').focus();
+}
+
+/* ================= Undo / Redo ================= */
+function restoreHist() {
+  restoring = true;
+  try {
+    S.khotians = JSON.parse(hist[hi]);
+    if (!S.khotians.length) S.khotians = [blankK()];
+    renderAll(); save(); touch('main');
+  } finally { restoring = false; }
+}
+function undo() {
+  clearTimeout(hT); snapNow();
+  if (hi <= 0) { toast('আর Undo করার কিছু নেই'); return; }
+  hi--; restoreHist(); toast('↶ Undo');
+}
+function redo() {
+  clearTimeout(hT); snapNow();
+  if (hi >= hist.length - 1) { toast('আর Redo করার কিছু নেই'); return; }
+  hi++; restoreHist(); toast('↷ Redo');
+}
+
+/* ================= Save / New Field ================= */
+function renderSlots() {
+  const box = $('#slots'); box.textContent = '';
+  S.saves.forEach((s, i) => {
+    if (!s) return;
+    box.append(h('span', { class: 'slot' },
+      h('button', { class: 'bslot', text: 'Save-' + bn(i + 1), onclick: () => loadSlot(i) }),
+      h('button', { class: 'bslotx', text: '×', title: 'এই Save মুছুন', onclick: () => { S.saves[i] = null; save(); renderSlots(); } })));
+  });
+}
+function doSave() {
+  const i = [0, 1, 2, 3, 4].find(x => !S.saves[x]);
+  if (i === undefined) { toast('সর্বোচ্চ ৫টি Save রাখা যায়'); return; }
+  S.saves[i] = { k: JSON.parse(JSON.stringify(S.khotians.filter(k => !k.temp), repl)) };
+  save(); renderSlots(); toast('✅ Save-' + bn(i + 1) + ' এ রাখা হয়েছে');
+}
+function loadSlot(i) {
+  if (!S.saves[i]) return;
+  S.khotians = JSON.parse(JSON.stringify(S.saves[i].k));
+  renderAll(); save(); touch('main'); toast('Save-' + bn(i + 1) + ' লোড হয়েছে');
+}
+let newArm = 0;
+function newField() {
+  const b = $('#newBtn');
+  if (!newArm) { newArm = 1; b.textContent = 'নিশ্চিত? (Save করেছেন?)'; setTimeout(() => { newArm = 0; b.textContent = 'New Field'; }, 3000); return; }
+  newArm = 0; b.textContent = 'New Field';
+  S.khotians = [blankK()]; renderAll(); save(); touch('main');
+}
+
+/* ================= কপি সব ================= */
+function buildAllText() {
+  const out = [];
+  S.khotians.filter(k => !k.temp).forEach((k, ki) => {
+    const ts = k.owners.map(o => toTil(o.v)), T = ts.reduce((a, b) => a + b, 0), L = num(k.land);
+    const st = T === FULL ? 'ঠিক (১৬ আনা)' : T < FULL ? 'ভুল: ' + unitsText(norm(FULL - T)) + ' প্রয়োজন' : 'ভুল: ' + unitsText(norm(T - FULL)) + ' বেশি';
+    out.push('খতিয়ান ' + (k.no || '-') + ' (SI-' + (ki + 1) + ') | মোট জমি: ' + L + ' | মোট ভাগ: ' + unitsText(norm(T)) + ' | ' + st);
+    k.owners.forEach((o, i) => {
+      const sv = ts[i] / FULL;
+      out.push((i + 1) + '. ' + (o.name || 'মালিক ' + (i + 1)) + (o.rel && o.relName ? ' (' + o.rel + ': ' + o.relName + ')' : '') +
+        ' | ' + unitsText(norm(ts[i])) + ' | অংশ: ' + sv.toFixed(5) + ' | জমি: ' + (sv * L).toFixed(5));
+    });
+  });
+  return out.join('\n');
+}
+
+/* ================= সেটিংস / ফন্ট / Auto Paste / ডার্ক ================= */
+function applySettings() {
+  app.classList.toggle('no-owner', !!S.settings.hideOwner);
+  app.classList.toggle('no-land', !!S.settings.hideLand);
+}
+function applyFont() { app.style.setProperty('--fs', S.font + 'px'); $('#fsv').textContent = S.font + 'px'; }
+function fontStep(d) { S.font = Math.min(20, Math.max(1, S.font + d)); applyFont(); save(); }
+function applyAP() { const b = $('#apBtn'); b.textContent = 'Auto Paste ' + (S.autoPaste ? 'ON' : 'OFF'); b.className = 'tb ' + (S.autoPaste ? 'g' : 'r'); }
+function toggleAP() { S.autoPaste = !S.autoPaste; applyAP(); save(); extMsg('AUTO_PASTE_SWITCH', { on: S.autoPaste }); toast('Auto Paste ' + (S.autoPaste ? 'ON (সব জায়গায়)' : 'OFF (সব জায়গায়)')); }
+function applyDark() { document.documentElement.classList.toggle('dark', !!S.dark); if (typeof pipWin !== 'undefined' && pipWin) pipWin.document.documentElement.classList.toggle('dark', !!S.dark); $('#darkBtn').textContent = S.dark ? '☀ Light' : '🌙 Dark'; }
+function toggleDark() { S.dark = !S.dark; applyDark(); save(); }
+function doPrint() { try { window.print(); } catch (e) { toast('প্রিন্ট চালু করা যায়নি'); } }
+
+/* ================= ভাসমান ছোট উইন্ডো (app-এর ভেতরে) ================= */
+const floats = {};
+function makeDrag(w, handle) {
+  handle.addEventListener('pointerdown', e => {
+    if (e.target.closest('button,input')) return;
+    const d = e.target.ownerDocument, sx = e.clientX, sy = e.clientY, r = w.getBoundingClientRect();
+    const mv = ev => { w.style.left = Math.max(0, r.left + ev.clientX - sx) + 'px'; w.style.top = Math.max(0, r.top + ev.clientY - sy) + 'px'; };
+    const up = () => { d.removeEventListener('pointermove', mv); d.removeEventListener('pointerup', up); };
+    d.addEventListener('pointermove', mv); d.addEventListener('pointerup', up); e.preventDefault();
+  });
+}
+function openFloat(id, title, build, cls) {
+  if (floats[id]) { closeFloat(id); return null; }
+  const body = h('div', { class: 'fwb' });
+  const w = h('div', { class: 'fw ' + (cls || ''), dataset: { fid: id } });
+  const head = h('div', { class: 'fwh' }, h('b', { text: title }), h('button', { class: 'fwx', text: '×', onclick: () => closeFloat(id) }));
+  w.append(head, body); app.append(w);
+  w._body = body; w._build = build; build(body);
+  const vw = (app.ownerDocument.defaultView || window).innerWidth;
+  w.style.left = Math.max(4, (vw - w.offsetWidth) / 2) + 'px'; w.style.top = '40px';
+  makeDrag(w, head); floats[id] = w; return w;
+}
+function closeFloat(id) { if (floats[id]) { floats[id].remove(); delete floats[id]; } }
+const escClose = () => ['guide', 'calc', 'conv', 'heir'].forEach(closeFloat);
+function rerender(id) { const w = floats[id]; if (!w) return; withFocus(() => { w._body.textContent = ''; w._build(w._body); }); }
+const btn = (t, c, f) => h('button', { class: 'tb ' + c, text: t, onclick: f });
+
+/* ---- সাধারণ ক্যালকুলেটর ---- */
+function evalExpr(s) {
+  s = en(s).replace(/×/g, '*').replace(/÷/g, '/').replace(/−/g, '-'); let p = 0;
+  const ws = () => { while (s[p] === ' ') p++; };
+  function number() {
+    ws(); let neg = false; if (s[p] === '-') { neg = true; p++; }
+    const m = /^(\d*\.?\d+|\d+\.?)/.exec(s.slice(p)); if (!m) throw new Error('x');
+    p += m[0].length; return neg ? -parseFloat(m[0]) : parseFloat(m[0]);
+  }
+  function term() { let v = number(); ws(); while (s[p] === '*' || s[p] === '/') { const o = s[p++]; const r = number(); v = o === '*' ? v * r : v / r; ws(); } return v; }
+  function expr() { let v = term(); ws(); while (s[p] === '+' || s[p] === '-') { const o = s[p++]; const r = term(); v = o === '+' ? v + r : v - r; ws(); } return v; }
+  const v = expr(); ws(); if (p !== s.length) throw new Error('x'); return v;
+}
+function openCalc() {
+  openFloat('calc', '🧮 Calculator', body => {
+    const disp = h('input', { class: 'cdisp', placeholder: '0', inputmode: 'decimal' });
+    const eq = () => { try { const r = evalExpr(disp.value); disp.value = String(Math.round(r * 1e10) / 1e10); } catch (e) { disp.value = 'ত্রুটি'; setTimeout(() => { disp.value = ''; }, 700); } };
+    const press = k => { if (disp.value === 'ত্রুটি') disp.value = ''; if (k === '=') eq(); else disp.value += k; disp.focus(); };
+    disp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); eq(); } });
+    const keys = h('div', { class: 'ckeys' });
+    ['7', '8', '9', '÷', '4', '5', '6', '×', '1', '2', '3', '−', '0', '.', '=', '+'].forEach(k =>
+      keys.append(h('button', { class: /[÷×−+]/.test(k) ? 'op' : k === '=' ? 'eq' : '', text: k, onclick: () => press(k) })));
+    keys.append(h('button', { class: 'cl', text: 'C', onclick: () => { disp.value = ''; disp.focus(); } }),
+      h('button', { class: 'cl', text: 'DEL', onclick: () => { disp.value = disp.value.slice(0, -1); disp.focus(); } }));
+    body.append(disp, keys); setTimeout(() => disp.focus(), 0);
+  }, 'mid');
+}
+
+/* ================= রূপান্তর (দশমিক/ভগ্নাংশ ↔ আনা–তিল) ================= */
+function parseFrac(s) {
+  s = en(String(s == null ? '' : s)).replace(/\s/g, '').replace(/,/g, '');
+  if (!s) return NaN;
+  if (s.includes('/')) { const [a, b] = s.split('/'); const x = parseFloat(a), y = parseFloat(b); return y ? x / y : NaN; }
+  return parseFloat(s);
+}
+const copyPill = (text, copy) => h('span', { class: 'pill w copyable', text, dataset: { copy: copy == null ? text : copy } });
+function setPill(p, text, copy) { p.textContent = text; p.dataset.copy = copy == null ? text : copy; }
+function openConv() {
+  openFloat('conv', 'Converter', body => {
+    const a = h('input', { class: 'nav', placeholder: 'যেমন 0.3125 বা 5/16', inputmode: 'decimal' });
+    const ra = copyPill('—', '');
+    const upA = () => {
+      const v = parseFrac(a.value);
+      if (isNaN(v) || v < 0) { setPill(ra, '—', ''); return; }
+      if (v > 1) { setPill(ra, 'অংশ ১-এর বেশি হতে পারে না', ''); return; }
+      const ex = v * FULL, t = Math.round(ex), txt = unitsText(norm(t));
+      setPill(ra, (Math.abs(ex - t) > 1e-6 ? 'প্রায় ' : '') + bn(txt), txt);
+    };
+    a.addEventListener('input', upA);
+    const ins = UN.map(u => { const i = h('input', { class: 'nav n', placeholder: u, inputmode: 'numeric' }); i.addEventListener('input', upB); return i; });
+    const rb = copyPill('০.০০০০০', '0.00000');
+    function upB() {
+      const t = toTil(ins.map(i => num(i.value))), d = t / FULL;
+      setPill(rb, bn(d.toFixed(5)), d.toFixed(5));
+    }
+    body.append(
+      h('div', { class: 'tsec', text: '১) দশমিক/ভগ্নাংশ → আনা–তিল' }), a, h('div', { style: 'margin-top:.3em' }, ra),
+      h('div', { class: 'tsec', text: '২) আনা–তিল → দশমিক অংশ' }),
+      h('div', { class: 'g5' }, ...ins), rb,
+      h('div', { class: 'small', text: 'ফলাফলে ক্লিক করলে কপি হবে। ১৬ আনা = ১।' }));
+    setTimeout(() => a.focus(), 0);
+  }, 'mid');
+}
+
+/* ================= ওয়ারিশ ভাগ ================= */
+function openHeir() {
+  openFloat('heir', 'ওয়ারিশ ভাগ', body => {
+    const mk = (ph, val) => h('input', { class: 'nav', placeholder: ph, inputmode: 'decimal', value: val || '' });
+    const sons = mk('ছেলে', ''), dau = mk('মেয়ে', ''), por = mk('১', '1'), land = mk('মোট জমি (ঐচ্ছিক)', '');
+    const mode = h('select', {}, h('option', { value: 'eq', text: 'সমান ভাগ' }), h('option', { value: 'r21', text: 'ছেলে : মেয়ে = ২ : ১' }));
+    const out = h('div');
+    const line = (label, text, copy) => h('div', { class: 'vl' }, h('span', { class: 'vn', text: label }), h('span', { class: 'pill w copyable', text, dataset: { copy } }));
+    const calc = () => {
+      out.textContent = '';
+      const s = Math.max(0, Math.floor(num(sons.value))), d = Math.max(0, Math.floor(num(dau.value)));
+      let p = parseFrac(por.value); if (isNaN(p) || p <= 0) p = 1;
+      const ws = mode.value === 'r21' ? 2 : 1, wd = 1, W = ws * s + wd * d, L = num(land.value);
+      if (W === 0) { out.append(h('div', { class: 'small', text: 'ছেলে বা মেয়ের সংখ্যা দিন।' })); return; }
+      const grp = (label, cnt, w) => {
+        if (!cnt) return;
+        const sh = p * w / W, t = Math.round(sh * FULL), txt = unitsText(norm(t));
+        out.append(h('div', { class: 'tsec', text: label + ' (' + bn(cnt) + ' জন)' }),
+          line('প্রত্যেকের অংশ', bn(sh.toFixed(5)), sh.toFixed(5)),
+          line('আনা–তিল', (Math.abs(sh * FULL - t) > 1e-6 ? 'প্রায় ' : '') + bn(txt), txt));
+        if (L > 0) out.append(line('প্রত্যেকের জমি', bn((L * sh).toFixed(5)), (L * sh).toFixed(5)));
+      };
+      grp('ছেলে', s, ws); grp('মেয়ে', d, wd);
+      out.append(h('div', { class: 'small', text: 'মোট যাচাই: ' + bn((p * (ws * s + wd * d) / W).toFixed(5)) + ' (ভাগ করা অংশ ' + bn(p.toFixed(5)) + ')। তিলের নিচে ভগ্নাংশ থাকলে দশমিক অংশ ব্যবহার করুন।' }));
+    };
+    [sons, dau, por, land].forEach(i => i.addEventListener('input', calc)); mode.addEventListener('change', calc);
+    body.append(
+      h('div', { class: 'g2' }, h('div', {}, h('div', { class: 'lbl', text: 'ছেলের সংখ্যা' }), sons), h('div', {}, h('div', { class: 'lbl', text: 'মেয়ের সংখ্যা' }), dau)),
+      h('div', { class: 'g2' }, h('div', {}, h('div', { class: 'lbl', text: 'ভাগের ধরন' }), mode), h('div', {}, h('div', { class: 'lbl', text: 'ভাগ করার অংশ (১ = পূর্ণ ১৬ আনা)' }), por)),
+      h('div', { class: 'lbl', text: 'মোট জমি' }), land, out,
+      h('div', { class: 'small', text: '⚠ এটি শুধু প্রাথমিক হিসাব। স্ত্রী, পিতা-মাতা ইত্যাদি ওয়ারিশের অংশ এখানে ধরা হয়নি; চূড়ান্ত আইনি কাজে আইনজীবী ও সরকারি নথির সাহায্য নিন।' }));
+    calc(); setTimeout(() => sons.focus(), 0);
+  }, 'mid');
+}
+
+/* ---- Guideline ---- */
+const GUIDE = `এই নির্দেশিকায় মূল খতিয়ান ও অংশ হিসাব, মালিক যোগ, জমির পরিমাণ, কপি/Auto Paste, Save/Visible, Quick Copy Notepad, PDF Preview, Settings, সাধারণ ক্যালকুলেটর, “অংশ বের করুন” এবং “দাগে জমি কর্তন”—সব ফিচার ধাপে ধাপে আলাদা করে দেওয়া হয়েছে।
+
+১. দ্রুত শুরু — একটি খতিয়ানের হিসাব কীভাবে করবেন
+খতিয়ান নং ঘরে খতিয়ান নম্বর লিখুন। খতিয়ান নম্বরের পাশে SI স্বয়ংক্রিয় সিরিয়াল দেখাবে। খতিয়ান নম্বরে ক্লিক করলে সেটি কপি হবে।
+প্রথম সারিতে মালিকের নাম লিখুন। নামের পাশের রঙিন + চাপলে পিতা বা স্বামী নির্বাচন করে সংশ্লিষ্ট নাম লিখতে পারবেন।
+মালিকের অংশ আনা, গণ্ডা, কড়া, ক্রান্তি ও তিল ঘরে লিখুন বা উপরের ড্রপডাউন থেকে নির্বাচন করুন। প্রতিটি ঘরের সংখ্যার সঙ্গে ড্রপডাউন স্বয়ংক্রিয়ভাবে মিলবে।
+টেবিলের সর্বশেষ ডান পাশের মোট জমির পরিমাণ ঘরে ওই খতিয়ানের মোট জমি লিখুন। এরপর প্রতিটি মালিকের জমির পরিমাণ তার অংশ অনুযায়ী স্বয়ংক্রিয়ভাবে বের হবে।
+মোট অংশ ১৬ আনা না হওয়া পর্যন্ত NB: বার্তায় কত আনা/গণ্ডা/কড়া/ক্রান্তি/তিল প্রয়োজন বা বেশি হয়েছে তা দেখাবে। ঠিক ১৬ আনা হলে মোট অংশে “১ (পূর্ণ ১৬ আনা)” দেখাবে।
+টিপ: সর্বশেষ মালিকের অংশ পূরণ করলে এবং মোট ১৬ আনা না হলে প্রয়োজন অনুযায়ী পরবর্তী খালি মালিকের সারি স্বয়ংক্রিয়ভাবে তৈরি হয়।
+২. অংশের একক ও হিসাবের নিয়ম
+১৬ আনা = পূর্ণ ১ অংশ
+২০ গণ্ডা = ১ আনা
+৪ কড়া = ১ গণ্ডা
+৩ ক্রান্তি = ১ কড়া
+২০ তিল = ১ ক্রান্তি
+মালিকের অংশ = তার আনা–তিলের মোট মান ÷ পূর্ণ ১৬ আনার মান
+মালিকের প্রাপ্য জমি = খতিয়ানের মোট জমি × মালিকের অংশ
+প্রতিটি সারির অংশ পাঁচ দশমিক পর্যন্ত দেখানো হয়। মোট জমি লেখা না থাকলে অংশ বের হবে, কিন্তু জমির পরিমাণ ০ থাকবে।
+
+৩. মালিক, সারি, Duplicate, Delete ও Drag
+মালিক কলামের নিচের সবুজ +: নতুন মালিকের সারি যোগ করে।
+মালিকের নামের পাশের +: পিতা/স্বামী নির্বাচন করে সম্পর্কের নামের ঘর খোলে। পাশের × চাপলে সম্পর্কের তথ্য মুছে যায়।
+Duplicate (+): বর্তমান সারির মালিক, সম্পর্ক এবং আনা–তিলের মানসহ একটি কপি সারি ঠিক তার নিচে তৈরি করে।
+Delete (−): সেই সারি মুছে দেয়। যদি একটিমাত্র সারি থাকে, সেটি পুরো মুছে না গিয়ে খালি হয়ে যায়।
+Drag: মালিকের সিরিয়াল নম্বর মাউস দিয়ে ধরে উপরে/নিচে টেনে ক্রম পরিবর্তন করা যায়; সিরিয়াল আবার স্বয়ংক্রিয়ভাবে সাজে।
+৪. পূর্ণ ১৬ আনা হলে কী হবে
+মোট অংশ ঠিক ১৬ আনা হলে সফলতার চিহ্ন দেখাবে এবং আনা–তিলের নিচের ম্যানুয়াল সংখ্যার ইনপুটগুলো লুকিয়ে যাবে।
+এরপর পরবর্তী খতিয়ানের একটি সাময়িক খালি ব্লক স্বয়ংক্রিয়ভাবে খুলতে পারে। সেখানে ১০ সেকেন্ডের কাউন্টডাউন থাকবে।
+সাময়িক খতিয়ানে কোনো মান লিখলে সেটি স্থায়ী হয়ে যাবে। কিছু না করলে কাউন্টডাউন শেষে সেটি নিজে থেকে সরবে।
+মোট অংশ ১৬ আনার বেশি হলে লাল সতর্কতা/চিহ্ন দেখাবে এবং NB বার্তায় কতটুকু বেশি হয়েছে তা জানাবে।
+৫. নতুন খতিয়ান, খতিয়ান Delete ও সর্বোচ্চ সীমা
+খতিয়ান +: নতুন খতিয়ান যোগ করে। আগের সর্বশেষ খতিয়ান নম্বরের শেষে সংখ্যা থাকলে পরবর্তী নম্বর স্বয়ংক্রিয়ভাবে বসানোর চেষ্টা করে।
+কোনো খতিয়ান নম্বর হাতে পরিবর্তন করলে অন্য খতিয়ানের নম্বর স্বয়ংক্রিয়ভাবে পরিবর্তন করা হয় না।
+খতিয়ান নম্বরের পাশের Delete বাটন পুরো খতিয়ান ব্লক মুছে দেয়।
+একবারে সর্বোচ্চ ২০টি খতিয়ান রাখা/হিসাব করা যাবে। সীমা পূর্ণ হলে “খতিয়ান +” নিষ্ক্রিয় হবে।
+৬. কপি, Auto Paste এবং Paste on Blocked Field
+খতিয়ান নম্বর, মালিক/পিতা/স্বামীর নাম, অংশ, মোট অংশ এবং কপিযোগ্য ফলাফলে একবার ক্লিক করলে কপি করার চেষ্টা হয়। সফল কপি করা ফিল্ড সবুজ দেখাতে পারে।
+Auto Paste ON (Global): এটি একটি Master Switch। ON থাকলে মূল খতিয়ান ক্যালকুলেটর, “অংশ বের করুন” এবং “দাগে জমি কর্তন”—সব জায়গায় Auto Paste একসাথে ON থাকবে। কপি করার পর সংশ্লিষ্ট স্থানে অটো-পেস্টের চেষ্টা করবে এবং প্রয়োজন হলে extension auto-paste event/message পাঠাবে।
+Auto Paste OFF (Global): OFF করলে মূল ক্যালকুলেটর, “অংশ বের করুন” এবং “দাগে জমি কর্তন”—সব জায়গার Auto Paste একসাথে বন্ধ হবে। কপি সুবিধা চালু থাকবে, কিন্তু কোনো স্বয়ংক্রিয় পেস্ট বা auto-paste event/message যাবে না। সুইচ OFF হলে লাল, ON হলে সবুজ দেখায়।
+⚙ Settings → Paste on Blocked Field চালু থাকলে এক্সটেনশন সক্রিয় ওয়েবপেজে paste/copy/text-select/right-click ব্লক সরানোর চেষ্টা করবে। ব্রাউজারের সুরক্ষিত বা সিস্টেম পেজে এটি কাজ নাও করতে পারে।
+গুরুত্বপূর্ণ: Clipboard, Auto Paste, popup এবং Picture-in-Picture ব্রাউজারের permission/security policy-এর ওপর নির্ভরশীল। কোনো ফিচার কাজ না করলে সংশ্লিষ্ট সাইটে Clipboard/Popup অনুমতি পরীক্ষা করুন।
+৭. New Field, Save এবং Save-1…Save-5
+New Field: নিশ্চিতকরণের পর বর্তমান কাজের জায়গা নতুন খালি হিসাব দিয়ে শুরু করে। প্রয়োজনীয় কাজ আগে Save করে নিন।
+Save: বর্তমান সম্পূর্ণ হিসাব প্রথম খালি Save slot-এ রাখে। সর্বোচ্চ ৫টি আলাদা Save রাখা যায়।
+Save-1…Save-5: যে Save বাটনে ক্লিক করবেন, সেই সংরক্ষিত হিসাব আবার লোড হবে। প্রতিটি Save-এর ছোট × দিয়ে সেই Save মুছতে পারবেন।
+Save এবং চলমান অ্যাপ-স্টেট ব্রাউজারের local storage-এ রাখা হয়। ব্রাউজারের site data/storage পরিষ্কার করলে সংরক্ষিত তথ্য হারাতে পারে।
+৮. Visible
+Visible চাপলে সমর্থিত ব্রাউজারে Always-on-top/Picture-in-Picture ধরনের ছোট উইন্ডো খোলার চেষ্টা করবে; না হলে আলাদা popup window খুলবে।
+Visible view মূল হিসাবের সঙ্গে live sync থাকে। এটি কমপ্যাক্ট রাখার জন্য প্রধানত খতিয়ান নম্বর, SI, মালিক এবং অংশ দেখায়; আনা–তিল, জমির পরিমাণ ও action কলাম লুকানো থাকে।
+Visible-এ অংশে ক্লিক করে কপি করা যায়। নিচের − / + দিয়ে ফন্ট ছোট-বড় করা যায়।
+Popup blocked দেখালে ব্রাউজারে এই ফাইল/সাইটের popup অনুমতি দিয়ে আবার Visible চাপুন।
+৯. Quick Copy Notepad
+Notepad: OFF (লাল) বাটনে ক্লিক করলে সমর্থিত ব্রাউজারে ছোট Always-on-top notepad খোলে এবং বাটন Notepad: ON (সবুজ) হয়।
+উপরের ইনপুটে লেখা লিখে Enter চাপলে নতুন নোট তালিকার উপরে যোগ হবে।
+কোনো নোটে ক্লিক করলে লেখা কপি হবে; নোটের × চাপলে সেটি মুছে যাবে।
+নোটপ্যাডের − / + দিয়ে সংরক্ষিত লেখার ফন্ট ১–১০০px পর্যন্ত পরিবর্তন করা যায়। উইন্ডোর কোণা ধরে ছোট-বড় করা যায়।
+নোটগুলোর তালিকা এবং ফন্ট সাইজ local storage-এ সংরক্ষিত থাকে।
+১০. Upload PDF / PDF Preview
+Upload PDF চাপলে একটি PDF নির্বাচন করুন। PDF ডান পাশে preview pane-এ দেখা যাবে।
+ক্যালকুলেটর ও PDF-এর মাঝের divider ডানে-বামে টেনে PDF অংশের প্রস্থ পরিবর্তন করা যায়; divider-এ double-click করলে ডিফল্ট প্রস্থে ফেরে।
+Hide: PDF লুকায়, কিন্তু নির্বাচিত PDF মুছে না। পরে Upload PDF বাটন চাপলে আবার দেখানো যায়।
+Clear: বর্তমান PDF preview সম্পূর্ণ সরিয়ে দেয়। নতুন PDF নিতে আবার Upload PDF ব্যবহার করুন।
+১১. ⚙ Settings
+মালিক কলাম বন্ধ করুন: মালিকের নাম ও সম্পর্কের ইনপুট লুকিয়ে শুধু সিরিয়াল দেখায়।
+জমির পরিমাপ কলাম বন্ধ করুন: সারির জমির পরিমাণ, মোট জমির ফলাফল এবং সংশ্লিষ্ট কলাম লুকায়।
+Paste on Blocked Field: এক্সটেনশন থাকলে ব্লক করা paste/copy/text selection/right-click ব্যবহারের বাধা সরানোর চেষ্টা করে।
+Settings window-এর header ধরে টেনে অবস্থান পরিবর্তন করা যায়।
+১২. Font, Keyboard এবং সাধারণ 🧮 Calculator
+Font − / Font +: মূল অ্যাপের ফন্ট ১–২০px-এর মধ্যে পরিবর্তন করে।
+Enter / Tab: পরবর্তী লিখনযোগ্য ঘরে যায়; Shift+Tab আগের লিখনযোগ্য ঘরে যায়। আনা/গণ্ডা/কড়া/ক্রান্তি/তিলের সংখ্যা লিখলে নির্ধারিত নিয়মে পরবর্তী ঘরে অটো-অ্যাডভান্স হতে পারে।
+🧮 Calculator: সাধারণ যোগ, বিয়োগ, গুণ, ভাগ, দশমিক, C এবং DEL ব্যবহার করা যায়। ক্যালকুলেটরের header ধরে টেনে অন্য জায়গায় নেওয়া যায়।
+Esc: Guideline এবং সাধারণ ক্যালকুলেটর বন্ধ করতে ব্যবহার করা যায়।
+১৩. “অংশ বের করুন” — আলাদা নির্দেশনা
+এই ফিচারটি ব্যবহার করবেন যখন কোনো দাগের মোট জমি এবং কোনো ব্যক্তির/অংশীদারের প্রাপ্ত জমির পরিমাণ জানা আছে, কিন্তু তার আনুপাতিক অংশ কত তা বের করতে চান।
+নিচের “অংশ বের করুন” বাটনে ক্লিক করুন। আলাদা টেবিল খুলবে।
+দাগ নাম্বার ঘরে দাগ নম্বর লিখুন।
+দাগে মোট জমির পরিমাণ (একরে) ঘরে সম্পূর্ণ দাগের জমি লিখুন। অস্পষ্টতা এড়াতে 1.25 ধরনের acre decimal বা 1 একর 25 শতাংশ ধরনের পরিষ্কার ফরম্যাট ব্যবহার করা ভালো।
+অংশ অনুযায়ী জমির পরিমাণ (একরে) ঘরে ওই ব্যক্তির/অংশের প্রাপ্ত জমি লিখুন।
+প্রাপ্ত অংশ কলামে ফলাফল স্বয়ংক্রিয়ভাবে পাঁচ দশমিক পর্যন্ত বের হবে।
+প্রাপ্ত অংশ = অংশ অনুযায়ী প্রাপ্ত জমি ÷ দাগের মোট জমি
+অতিরিক্ত সুবিধা
+দাগ নম্বর, মোট জমি, প্রাপ্ত অংশ ও প্রাপ্ত জমির কপিযোগ্য ঘরে ক্লিক করলে কপি/অটো-পেস্টের চেষ্টা হয়।
+শেষ সারির প্রাপ্ত জমির ঘর পূরণ করার প্রায় ৩ সেকেন্ড পর একটি নতুন দাগের সারি স্বয়ংক্রিয়ভাবে যোগ হতে পারে। নতুন অটো-সারি খালি থাকলে প্রায় ৩ সেকেন্ড পর নিজে থেকে সরতে পারে।
++ দাগ যুক্ত করুন: হাতে নতুন সারি যোগ করে। রিসেট করুন: সব সারি পরিষ্কার করে একটি খালি সারি রাখে।
+সারি ধরে Drag করে দাগের ক্রম পরিবর্তন করা যায়।
+Visible: শুধু দাগ নম্বর + প্রাপ্ত অংশ নিয়ে কমপ্যাক্ট live view দেখায়। Visible view-এ এই মানগুলো এক ক্লিকে কপি করা যায়।
+এই সাব-ক্যালকুলেটরের নিজস্ব Font − / Font + আছে।
+সতর্কতা: মোট জমি ০ বা খালি থাকলে প্রাপ্ত অংশ ০ দেখাবে। একই ধরনের unit/format ব্যবহার করে মোট জমি ও প্রাপ্ত জমি লিখুন।
+১৪. “দাগে জমি কর্তন” — আলাদা নির্দেশনা
+একটি দাগ/হোল্ডিংয়ের মোট জমি থেকে এক বা একাধিক কর্তন বাদ দিয়ে, প্রয়োজনে আগত/যোগ হওয়া জমি যোগ করে অবশিষ্ট জমি বের করতে এই ফিচার ব্যবহার করুন।
+নিচের “দাগে জমি কর্তন” বাটনে ক্লিক করুন। জমি কর্তন ক্যালকুলেটর খুলবে।
+হোল্ডিং নং লিখুন। একটি হোল্ডিংয়ের মধ্যে একাধিক দাগ রাখা যায়।
+দাগ নং এবং মোট জমি লিখুন। এখানে সংখ্যার নিয়ম: 99 = ৯৯ শতাংশ, 100 = ১ একর ০০ শতাংশ, 1.25 = ১ একর ২৫ শতাংশ, 2.05 = ২ একর ৫ শতাংশ। বাংলা বা ইংরেজি সংখ্যা দুটোই ব্যবহার করা যায়।
+কর্তন ঘরে বাদ দিতে চাওয়া জমির পরিমাণ লিখুন। একটি কর্তন পূরণ হলে পরবর্তী খালি কর্তনের ঘর স্বয়ংক্রিয়ভাবে তৈরি হয়; লাল/কর্তন + দিয়েও নতুন কর্তন ঘর খোলা যায়।
+যদি ওই দাগে নতুন জমি যোগ/আগত হয়, আগত + চাপুন এবং আগত জমির পরিমাণ লিখুন। একাধিক আগত ঘর যোগ করা যায়।
+অবশিষ্ট জমি স্বয়ংক্রিয়ভাবে বের হবে। ফলাফলে ক্লিক করলে কপি/অটো-পেস্টের চেষ্টা হবে।
+অবশিষ্ট জমি = মোট জমি − সব কর্তনের যোগফল + সব আগত জমির যোগফল
+দাগ ও হোল্ডিং নিয়ন্ত্রণ
+দাগের ডান পাশের + দিয়ে একই হোল্ডিংয়ে ঠিক ওই দাগের নিচে আরেকটি দাগ যোগ করুন; − দিয়ে সেই দাগ মুছুন। একটিমাত্র দাগ থাকলে সেটি মুছে না গিয়ে খালি হবে।
+হোল্ডিং +: নতুন হোল্ডিং যোগ করে। হোল্ডিংয়ের × দিয়ে হোল্ডিং সরানো যায়; একটিমাত্র হোল্ডিং থাকলে সেটি খালি হয়।
+প্রতিটি হোল্ডিংয়ের নিচে সর্বমোট অবশিষ্ট জমি দেখায়—অর্থাৎ ওই হোল্ডিংয়ের সব দাগের অবশিষ্ট জমির যোগফল।
+কর্তনের মোট পরিমাণ কোনো দাগের মোট জমির চেয়ে বেশি হলে সতর্কবার্তায় কত জমি বেশি কর্তন হয়েছে তা দেখাবে এবং অবশিষ্ট ঋণাত্মক হতে পারে।
+Delete All: নিশ্চিতকরণের পর সব হোল্ডিং/দাগের হিসাব পরিষ্কার করে।
++ / − Font: এই সাব-ক্যালকুলেটরের ফন্ট ৪–২০px পর্যন্ত পরিবর্তন করে।
+Visible: synchronized compact view খোলে। Visible view-এ মূল হিসাবের পরিবর্তন লাইভ দেখা যায় এবং অবশিষ্ট জমি এক ক্লিকে কপি করা যায়।
+এই সাব-ক্যালকুলেটরের তথ্যও browser local storage-এ সংরক্ষিত থাকে এবং পরে আবার খুললে আগের state ফিরে আসতে পারে।
+ইনপুট ফরম্যাট মনে রাখুন: “দাগে জমি কর্তন” ক্যালকুলেটরে decimal point-এর বাম অংশ একর এবং ডান অংশ শতাংশ হিসেবে ধরা হয়। তাই ১ একর ৫ শতাংশ লিখতে 1.05 ব্যবহার করুন।
+১৫. লক ও সব কপি
+📌 Mini Window (আগের লক): পুরো ক্যালকুলেটর একটি ছোট ভাসমান (Always-on-top) উইন্ডোতে চলে যায়, অন্য স্ক্রিনে ক্লিক করলেও সেটি উপরেই থাকে। উইন্ডো টেনে সরানো ও ছোট-বড় করা যায়। শুধু কম্পিউটারের Chrome/Edge এ চলে। আবার চাপলে (Back to Full Window) আগের জায়গায় ফিরে আসে।
+📋 Copy All: সব খতিয়ানের সব মালিকের নাম, অংশ, জমি এক ক্লিকে কপি হয়; তারপর যেকোনো জায়গায় Ctrl+V।
+১৬. সমস্যা হলে দ্রুত পরীক্ষা করুন
+কপি/পেস্ট হচ্ছে না → Clipboard permission এবং Auto Paste setting পরীক্ষা করুন।
+Visible/Notepad খুলছে না → Popup ও Picture-in-Picture permission/সমর্থন পরীক্ষা করুন।
+PDF দেখা যাচ্ছে না → শুধুমাত্র PDF ফাইল নির্বাচন হয়েছে কি না দেখুন; Clear করে পুনরায় Upload করুন।
+অংশের হিসাব মিলছে না → সব মালিকের আনা–তিলের যোগ ১৬ আনা হয়েছে কি না এবং NB বার্তা কী দেখাচ্ছে তা পরীক্ষা করুন।
+জমি কর্তনের ফল ভুল মনে হলে → মোট জমি, কর্তন ও আগত জমি একই একর.শতাংশ ফরম্যাটে লিখেছেন কি না যাচাই করুন।
+১৭. নতুন ফিচার
+↶ Undo / ↷ Redo: খতিয়ান ব্লকের শেষ পরিবর্তনগুলো ফিরিয়ে আনে বা আবার করে (সর্বোচ্চ ৬০ ধাপ)। New Field বা মোছার পরেও Undo করা যায়।
+Converter: দশমিক বা ভগ্নাংশ (যেমন 0.3125 বা 5/16) থেকে আনা–তিল, এবং আনা–তিল থেকে দশমিক অংশ বের করে। ফলাফলে ক্লিক করলে কপি হয়।
+ওয়ারিশ ভাগ: ছেলে ও মেয়ের সংখ্যা দিয়ে সমান ভাগ বা ২:১ অনুপাতে প্রাথমিক ভাগ বের করে। চাইলে শুধু একটি অংশ (যেমন 1/4) এবং মোট জমি দিয়ে ভাগ করা যায়। এটি প্রাথমিক হিসাব; আইনি কাজে আইনজীবীর পরামর্শ নিন।
+🖨 Print/PDF: খতিয়ানের হিসাব প্রিন্ট করে বা “Save as PDF” দিয়ে ফাইল করে রাখা যায়। বাটন ও আর্টিকেল প্রিন্টে আসে না।
+🌙 Dark / ☀ Light: রাতে চোখের আরামের জন্য থিম বদলায়; পছন্দ মনে রাখা হয়।
+📌 Mini Window: পুরো ক্যালকুলেটর ব্রাউজারের বাইরে একটা ছোট উইন্ডোতে চলে যায় যা অন্য সব উইন্ডোর (এমনকি অন্য অ্যাপের) উপরে থাকে; সেখানে সব বাটনই থাকে (Calculator, Converter, Dark/Light, Copy All, Print/PDF ইত্যাদি)। অন্য কোথাও ক্লিক করলেও এটি লুকায় না। ফাইলটি সরাসরি Chrome/Edge/Opera-তে খুলে ব্যবহার করুন; ফিরতে “Back to Full Window” চাপুন।
+🙈 Hide / Show: সবসময় থাকা এই বাটনে ক্লিক করে যে বাটন বা লেখা (উপরের হেডিং, নিচের আর্টিকেল সহ) দেখতে চান না তার টিক তুলে দিন; আবার দেখাতে টিক দিন। পছন্দ মনে রাখা হয়।`;
+function openGuide() {
+  openFloat('guide', 'Guideline', body => {
+    const box = h('div', { class: 'guide' });
+    GUIDE.split('\n').forEach(l => {
+      if (/^[০-৯]+\.\s/.test(l)) box.append(h('b', { text: l })); else box.append(document.createTextNode(l + '\n'));
+    });
+    body.append(box);
+  }, 'big');
+}
+
+/* ---- Settings ---- */
+function openSettings() {
+  openFloat('settings', '⚙ Settings', body => {
+    const row = (label, key, onchg) => {
+      const cb = h('input', { type: 'checkbox' }); cb.checked = !!S.settings[key];
+      cb.addEventListener('change', () => { S.settings[key] = cb.checked; applySettings(); save(); if (onchg) onchg(cb.checked); });
+      return h('label', { class: 'setrow' }, cb, h('span', { text: label }));
+    };
+    body.append(
+      row('মালিক কলাম বন্ধ করুন', 'hideOwner'),
+      row('জমির পরিমাপ কলাম বন্ধ করুন', 'hideLand'),
+      row('Paste on Blocked Field (এক্সটেনশন লাগবে)', 'pasteBlocked', v => extMsg('PASTE_ON_BLOCKED', { on: v })));
+  }, 'mid');
+}
+
+/* ================= Hide / Show (কাস্টমাইজ) ================= */
+const HIDE_ITEMS = [
+  ['kadd', 'খতিয়ান +'], ['newfield', 'New Field'], ['save', 'Save'], ['slots', 'Save-১…৫ বাটনগুলো'],
+  ['undo', 'Undo'], ['redo', 'Redo'], ['ap', 'Auto Paste'], ['pdf', 'Upload PDF'], ['note', 'Notepad'],
+  ['ab', 'অংশ বের করুন'], ['dk', 'দাগে জমি কর্তন'], ['conv', 'Converter'], ['heir', 'ওয়ারিশ ভাগ'],
+  ['calc', '🧮 Calculator'], ['guide', 'Guideline'], ['settings', '⚙ Settings'], ['visible', 'Visible'],
+  ['copyall', 'Copy All'], ['print', 'Print / PDF'], ['dark', 'Dark / Light'], ['lock', 'Mini Window (always on top)'], ['font', 'Font − / +'],
+  ['h1', 'Top Heading'], ['article', 'Bottom Text (Article & FAQ)']
+];
+function hideEls(k) {
+  if (k === 'slots') return [$('#slots')];
+  if (k === 'font') return [...app.querySelectorAll('#bar [data-a="fontm"], #bar #fsv, #bar [data-a="fontp"]')];
+  if (k === 'article') return [$('#seo')];
+  if (k === 'h1') return [$('#top')];
+  return [...app.querySelectorAll('#bar [data-a="' + k + '"]')];
+}
+function applyHidden() { HIDE_ITEMS.forEach(([k]) => hideEls(k).forEach(e => e && e.classList.toggle('hid', !!S.hidden[k]))); }
+function openCustom() {
+  openFloat('custom', '🙈 Hide / Show', body => {
+    body.append(
+      h('div', { class: 'fbar' },
+        btn('Show All', 'g', () => { S.hidden = {}; applyHidden(); save(); rerender('custom'); }),
+        btn('Hide All', 'r', () => { S.hidden = {}; HIDE_ITEMS.forEach(([k]) => { S.hidden[k] = true; }); applyHidden(); save(); rerender('custom'); })),
+      h('div', { class: 'small', text: 'টিক দেওয়া = দেখাবে, টিক তুললে লুকাবে। এই Hide / Show বাটনটি সবসময় থাকবে।' }));
+    HIDE_ITEMS.forEach(([k, label]) => {
+      const cb = h('input', { type: 'checkbox' }); cb.checked = !S.hidden[k];
+      cb.addEventListener('change', () => { if (cb.checked) delete S.hidden[k]; else S.hidden[k] = true; applyHidden(); save(); });
+      body.append(h('label', { class: 'setrow' }, cb, h('span', { text: label })));
+    });
+  }, 'mid');
+}
+
+/* ================= অংশ বের করুন ================= */
+const abShare = r => { const t = num(r.total), g = num(r.got); return t > 0 ? g / t : 0; };
+let abTimer = 0, dragAb = null;
+function autoAddAb(r) {
+  clearTimeout(abTimer);
+  const A = S.ab; if (A.rows[A.rows.length - 1] !== r || String(r.got).trim() === '') return;
+  abTimer = setTimeout(() => {
+    if (A.rows[A.rows.length - 1] !== r || String(r.got).trim() === '') return;
+    const nr = blankAb(); nr.auto = true; A.rows.push(nr); save(); rerender('ab');
+    setTimeout(() => {
+      if (nr.auto && !nr.dag && !nr.total && !nr.got && A.rows.includes(nr) && A.rows.length > 1) { A.rows = A.rows.filter(x => x !== nr); save(); rerender('ab'); touch('ab'); }
+    }, 3000);
+  }, 3000);
+}
+function buildAb(body) {
+  const A = S.ab; body.style.fontSize = A.font + 'px';
+  body.append(h('div', { class: 'fbar' },
+    btn('+ দাগ যুক্ত করুন', 'g', () => { A.rows.push(blankAb()); save(); rerender('ab'); touch('ab'); }),
+    btn('রিসেট করুন', 'sl', () => { A.rows = [blankAb()]; save(); rerender('ab'); touch('ab'); }),
+    btn('Visible', 'ind', () => toggleViewer('ab')),
+    btn('Font −', 'sl', () => { A.font = Math.max(4, A.font - 1); save(); rerender('ab'); }),
+    h('span', { class: 'fsv', text: A.font + 'px' }),
+    btn('Font +', 'sl', () => { A.font = Math.min(24, A.font + 1); save(); rerender('ab'); })));
+  const tbl = h('div', { class: 'abt' });
+  tbl.append(h('div', { class: 'abh' }, h('div', { text: '⋮' }), h('div', { text: 'দাগ নম্বর' }), h('div', { text: 'দাগে মোট জমি (একরে)' }), h('div', { text: 'অংশ অনুযায়ী জমি (একরে)' }), h('div', { text: 'প্রাপ্ত অংশ' }), h('div', { text: '' })));
+  A.rows.forEach(r => {
+    const row = h('div', { class: 'abr' });
+    const dh = h('span', { class: 'dh', text: '⋮⋮', title: 'ধরে টেনে ক্রম বদলান' });
+    dh.addEventListener('mousedown', () => { row.draggable = true; });
+    dh.addEventListener('mouseup', () => { row.draggable = false; });
+    row.addEventListener('dragstart', e => { dragAb = r; try { e.dataTransfer.setData('text/plain', r.id); } catch (x) {} });
+    row.addEventListener('dragend', () => { row.draggable = false; dragAb = null; });
+    row.addEventListener('dragover', e => { if (dragAb) { e.preventDefault(); row.classList.add('dropt'); } });
+    row.addEventListener('dragleave', () => row.classList.remove('dropt'));
+    row.addEventListener('drop', e => {
+      e.preventDefault(); if (!dragAb || dragAb === r) return;
+      const from = A.rows.indexOf(dragAb), to = A.rows.indexOf(r);
+      A.rows.splice(to, 0, A.rows.splice(from, 1)[0]); save(); rerender('ab'); touch('ab');
+    });
+    const res = h('span', { class: 'pill w copyable' });
+    const upd = () => { const s = abShare(r); res.textContent = bn(s.toFixed(5)); res.dataset.copy = s.toFixed(5); };
+    const mk = (key, ph) => {
+      const i = h('input', { class: 'nav copyable', value: r[key], placeholder: ph, inputmode: key === 'dag' ? 'text' : 'decimal', dataset: { fk: 'a' + r.id + '.' + key } });
+      i.addEventListener('input', () => { r[key] = i.value; r.auto = false; upd(); save(); touch('ab'); if (key === 'got') autoAddAb(r); });
+      return i;
+    };
+    upd();
+    row.append(dh, mk('dag', 'দাগ'), mk('total', 'মোট জমি'), mk('got', 'প্রাপ্ত জমি'), res,
+      h('button', { class: 'gdel', text: '×', title: 'সারি মুছুন', onclick: () => { if (A.rows.length === 1) A.rows = [blankAb()]; else A.rows = A.rows.filter(x => x !== r); save(); rerender('ab'); touch('ab'); } }));
+    tbl.append(row);
+  });
+  body.append(tbl);
+}
+const openAb = () => openFloat('ab', 'অংশ বের করুন', buildAb, 'big');
+
+/* ================= দাগে জমি কর্তন ================= */
+function parseArea(s) {
+  s = en(String(s == null ? '' : s)).trim().replace(/,/g, ''); if (!s) return 0;
+  if (!s.includes('.')) return parseFloat(s) || 0;
+  const parts = s.split('.'), ac = parseInt(parts[0] || '0', 10) || 0, b = (parts[1] || '').replace(/\D/g, '');
+  let sh = 0;
+  if (b) { const d = b.padEnd(2, '0'); sh = parseInt(d.slice(0, 2), 10) + (d.length > 2 ? parseFloat('0.' + d.slice(2)) : 0); }
+  return ac * 100 + sh;
+}
+function fmtArea(t) {
+  const neg = t < 0; t = Math.abs(Math.round(t * 10000) / 10000);
+  const ac = Math.floor(t / 100), sh = Math.round((t - ac * 100) * 10000) / 10000, ip = Math.floor(sh), fr = Math.round((sh - ip) * 100);
+  const code = (neg ? '-' : '') + ac + '.' + pad2(ip) + (fr ? pad2(fr).replace(/0+$/, '') : '');
+  return { txt: (neg ? '−' : '') + bn(ac) + ' একর ' + bn(sh) + ' শতাংশ', code };
+}
+const dagCut = d => d.cuts.reduce((s, c) => s + parseArea(c), 0);
+const dagIn = d => d.ins.reduce((s, c) => s + parseArea(c), 0);
+const dagRem = d => parseArea(d.total) - dagCut(d) + dagIn(d);
+let dkArm = 0;
+function buildDk(body) {
+  const D = S.dk; body.style.fontSize = D.font + 'px';
+  const upds = [];
+  const clearBtn = btn('Delete All', 'r', () => {
+    if (!dkArm) { dkArm = 1; clearBtn.textContent = 'নিশ্চিত?'; setTimeout(() => { dkArm = 0; clearBtn.textContent = 'Delete All'; }, 2500); return; }
+    dkArm = 0; D.holdings = [blankHolding()]; save(); rerender('dk'); touch('dk');
+  });
+  body.append(h('div', { class: 'fbar' },
+    btn('হোল্ডিং +', 'g', () => { D.holdings.push(blankHolding()); save(); rerender('dk'); touch('dk'); }), clearBtn,
+    btn('Visible', 'ind', () => toggleViewer('dk')),
+    btn('Font −', 'sl', () => { D.font = Math.max(4, D.font - 1); save(); rerender('dk'); }),
+    h('span', { class: 'fsv', text: D.font + 'px' }),
+    btn('Font +', 'sl', () => { D.font = Math.min(20, D.font + 1); save(); rerender('dk'); })));
+  D.holdings.forEach(hd => {
+    const hb = h('div', { class: 'hb' });
+    const hno = h('input', { class: 'nav copyable', placeholder: 'হোল্ডিং নং', value: hd.no, dataset: { fk: 'h' + hd.id } });
+    hno.addEventListener('input', () => { hd.no = hno.value; save(); touch('dk'); });
+    const htot = h('span', { class: 'pill ok copyable' });
+    hb.append(h('div', { class: 'hh' }, h('b', { text: 'হোল্ডিং' }), hno, h('span', { text: 'সর্বমোট অবশিষ্ট:' }), htot,
+      h('button', { class: 'gdel', text: '×', title: 'হোল্ডিং সরান', onclick: () => { if (D.holdings.length === 1) D.holdings = [blankHolding()]; else D.holdings = D.holdings.filter(x => x !== hd); save(); rerender('dk'); touch('dk'); } })));
+    const dagUpds = [];
+    const updHold = () => { const t = hd.dags.reduce((s, d) => s + dagRem(d), 0), f = fmtArea(t); htot.textContent = f.txt; htot.dataset.copy = f.code; htot.className = 'pill copyable ' + (t < 0 ? 'bad' : 'ok'); };
+    hd.dags.forEach(d => {
+      const dno = h('input', { class: 'nav', placeholder: 'দাগ নং', value: d.no, dataset: { fk: 'd' + d.id + '.no' } });
+      dno.addEventListener('input', () => { d.no = dno.value; save(); touch('dk'); });
+      const tot = h('input', { class: 'nav', placeholder: 'মোট জমি', inputmode: 'decimal', value: d.total, dataset: { fk: 'd' + d.id + '.total' } });
+      tot.addEventListener('input', () => { d.total = tot.value; upd(); save(); touch('dk'); });
+      const rem = h('span', { class: 'pill copyable' }), warn = h('div', { class: 'warn' });
+      const cutsCol = h('div', { class: 'dcol dcut' }, h('label', { text: 'কর্তন' }));
+      d.cuts.forEach((c, i) => {
+        const inp = h('input', { class: 'nav', placeholder: 'কর্তন', inputmode: 'decimal', value: c, dataset: { fk: 'd' + d.id + '.c' + i } });
+        inp.addEventListener('input', () => {
+          d.cuts[i] = inp.value;
+          if (i === d.cuts.length - 1 && inp.value.trim() !== '') { d.cuts.push(''); save(); rerender('dk'); touch('dk'); return; }
+          upd(); save(); touch('dk');
+        });
+        cutsCol.append(inp);
+      });
+      cutsCol.append(h('button', { class: 'gdel', text: '+', title: 'কর্তন ঘর যোগ', onclick: () => { d.cuts.push(''); save(); rerender('dk'); } }));
+      const inCol = h('div', { class: 'dcol din' }, h('label', { text: 'আগত' }));
+      d.ins.forEach((c, i) => {
+        const inp = h('input', { class: 'nav', placeholder: 'আগত', inputmode: 'decimal', value: c, dataset: { fk: 'd' + d.id + '.i' + i } });
+        inp.addEventListener('input', () => { d.ins[i] = inp.value; upd(); save(); touch('dk'); });
+        inCol.append(inp);
+      });
+      inCol.append(h('button', { class: 'gadd', text: '+', title: 'আগত জমি যোগ', onclick: () => { d.ins.push(''); save(); rerender('dk'); } }));
+      const upd = () => {
+        const r = dagRem(d), f = fmtArea(r), hasT = String(d.total).trim() !== '';
+        rem.textContent = f.txt; rem.dataset.copy = f.code; rem.className = 'pill copyable ' + (!hasT ? '' : r < 0 ? 'bad' : 'ok');
+        const cut = dagCut(d), tt = parseArea(d.total);
+        warn.textContent = hasT && cut > tt + dagIn(d) ? '⚠ ' + fmtArea(cut - tt - dagIn(d)).txt + ' বেশি কর্তন হয়েছে' : '';
+        updHold();
+      };
+      dagUpds.push(upd);
+      const btns = h('div', { class: 'dbtn' },
+        h('button', { class: 'gadd', text: '+', title: 'এই দাগের নিচে নতুন দাগ', onclick: () => { hd.dags.splice(hd.dags.indexOf(d) + 1, 0, blankDag()); save(); rerender('dk'); touch('dk'); } }),
+        h('button', { class: 'gdel', text: '−', title: 'এই দাগ মুছুন', onclick: () => { if (hd.dags.length === 1) hd.dags[0] = blankDag(); else hd.dags.splice(hd.dags.indexOf(d), 1); save(); rerender('dk'); touch('dk'); } }));
+      hb.append(h('div', { class: 'dg' }, h('div', { class: 'dcol' }, h('label', { text: 'দাগ নং' }), dno), h('div', { class: 'dcol' }, h('label', { text: 'মোট জমি' }), tot),
+        cutsCol, inCol, h('div', { class: 'dcol drem' }, h('label', { text: 'অবশিষ্ট' }), rem, warn), btns));
+      upd();
+    });
+    body.append(hb);
+  });
+}
+const openDk = () => openFloat('dk', 'দাগে জমি কর্তন', buildDk, 'big');
+
+/* ================= Visible / Notepad (Always-on-top উইন্ডো) ================= */
+const viewers = {};
+function copyStyles(win) {
+  const d = win.document;
+  document.head.querySelectorAll('style,link[rel=stylesheet]').forEach(n => d.head.append(n.cloneNode(true)));
+  d.documentElement.lang = 'bn';
+}
+async function openWindow(w, hh, title) {
+  let win = null;
+  if ('documentPictureInPicture' in window) { try { win = await documentPictureInPicture.requestWindow({ width: w, height: hh }); } catch (e) { win = null; } }
+  if (!win) {
+    win = window.open('', '_blank', 'popup=yes,width=' + w + ',height=' + hh);
+    if (!win) { toast('Popup blocked — ব্রাউজারে popup অনুমতি দিন'); return null; }
+    win.document.open(); win.document.write('<!doctype html><html lang="bn"><head><meta charset="utf-8"><title>' + title + '</title></head><body></body></html>'); win.document.close();
+  }
+  copyStyles(win); try { win.moveTo(0, 60); } catch (e) {}
+  return win;
+}
+function updateBtns() {
+  const on = !!viewers.note, nb = $('#noteBtn');
+  nb.textContent = 'Notepad: ' + (on ? 'ON' : 'OFF'); nb.className = 'tb ' + (on ? 'g' : 'r');
+  $('#visBtn').classList.toggle('on', !!(viewers.main || viewers.ab || viewers.dk));
+}
+async function openViewer(kind, title, w, hh) {
+  const win = await openWindow(w, hh, title); if (!win) return;
+  const root = h('div', { class: 'vroot' }); win.document.body.style.margin = '0'; win.document.body.append(root);
+  const v = { kind, win, root, refresh: () => vBuild[kind](root, v) };
+  viewers[kind] = v; v.refresh();
+  win.addEventListener('pagehide', () => { if (viewers[kind] === v) delete viewers[kind]; updateBtns(); });
+  updateBtns();
+}
+function toggleViewer(kind) {
+  if (viewers[kind]) { try { viewers[kind].win.close(); } catch (e) {} delete viewers[kind]; updateBtns(); return; }
+  const t = { main: 'Visible', ab: 'Visible — অংশ বের করুন', dk: 'Visible — জমি কর্তন', note: 'Quick Copy Notepad' }[kind];
+  openViewer(kind, t, kind === 'note' ? 300 : 340, 420);
+}
+const vline = (label, val, cls, copy) => h('div', { class: 'vl' }, h('span', { class: 'vn', text: label }),
+  h('span', { class: 'pill copyable ' + (cls || 'w'), text: val, dataset: { copy: copy != null ? copy : val }, onclick: e => copyEl(e.currentTarget, e.currentTarget.dataset.copy) }));
+function fontBar(get, set, min, max) {
+  const fz = h('span', { text: get() + 'px' });
+  return h('div', { class: 'vbar' }, h('button', { class: 'sl', text: '−', onclick: () => { set(Math.max(min, get() - 1)); fz.textContent = get() + 'px'; } }), fz,
+    h('button', { class: 'sl', text: '+', onclick: () => { set(Math.min(max, get() + 1)); fz.textContent = get() + 'px'; } }));
+}
+const vBuild = {
+  main(root, v) {
+    root.textContent = ''; root.style.fontSize = S.vf + 'px';
+    S.khotians.forEach((k, ki) => {
+      if (k.temp) return;
+      const ts = k.owners.map(o => toTil(o.v)), T = ts.reduce((a, b) => a + b, 0), st = T === 0 ? 'w' : T === FULL ? 'ok' : T > FULL ? 'over' : 'bad';
+      root.append(h('div', { class: 'vk copyable', text: 'খতিয়ান ' + (k.no || '—') + '  |  SI-' + bn(ki + 1), onclick: e => copyEl(e.currentTarget, k.no || '') }));
+      k.owners.forEach((o, i) => { const sv = ts[i] / FULL; root.append(vline(bn(i + 1) + '. ' + (o.name || 'মালিক ' + (i + 1)), bn(sv.toFixed(5)), st, sv.toFixed(5))); });
+      root.append(vline('মোট', st === 'ok' ? '১ (পূর্ণ ১৬ আনা)' : bn((T / FULL).toFixed(5)), st === 'w' ? 'w' : st, st === 'ok' ? '1' : (T / FULL).toFixed(5)));
+    });
+    root.append(fontBar(() => S.vf, x => { S.vf = x; save(); v.refresh(); }, 8, 40));
+  },
+  ab(root, v) {
+    root.textContent = ''; root.style.fontSize = S.ab.font + 'px';
+    S.ab.rows.forEach(r => { const s = abShare(r); root.append(vline('দাগ ' + (r.dag || '—'), bn(s.toFixed(5)), 'w', s.toFixed(5))); });
+    root.append(fontBar(() => S.ab.font, x => { S.ab.font = x; save(); v.refresh(); }, 4, 40));
+  },
+  dk(root, v) {
+    root.textContent = ''; root.style.fontSize = S.dk.font + 'px';
+    S.dk.holdings.forEach(hd => {
+      const t = hd.dags.reduce((s, d) => s + dagRem(d), 0), ft = fmtArea(t);
+      root.append(h('div', { class: 'vk', text: 'হোল্ডিং ' + (hd.no || '—') }));
+      hd.dags.forEach(d => { const f = fmtArea(dagRem(d)); root.append(vline('দাগ ' + (d.no || '—'), f.txt, dagRem(d) < 0 ? 'bad' : 'ok', f.code)); });
+      root.append(vline('সর্বমোট', ft.txt, t < 0 ? 'bad' : 'ok', ft.code));
+    });
+    root.append(fontBar(() => S.dk.font, x => { S.dk.font = x; save(); v.refresh(); }, 4, 40));
+  },
+  note(root) {
+    root.textContent = '';
+    const inp = h('input', { class: 'ninp', placeholder: 'লিখে Enter চাপুন…' }), list = h('div', { class: 'nlist' });
+    const fz = h('span', { text: S.noteFont + 'px' });
+    const draw = () => {
+      list.textContent = ''; list.style.fontSize = S.noteFont + 'px'; fz.textContent = S.noteFont + 'px';
+      S.notes.forEach((t, i) => list.append(h('div', { class: 'nitem' },
+        h('span', { class: 'nt', text: t, onclick: e => copyEl(e.currentTarget, t) }),
+        h('button', { class: 'nx', text: '×', onclick: () => { S.notes.splice(i, 1); save(); draw(); } }))));
+    };
+    inp.addEventListener('keydown', e => { if (e.key === 'Enter' && inp.value.trim()) { S.notes.unshift(inp.value.trim()); inp.value = ''; save(); draw(); } });
+    const bar = h('div', { class: 'vbar' }, h('button', { class: 'sl', text: '−', onclick: () => { S.noteFont = Math.max(1, S.noteFont - 1); save(); draw(); } }), fz,
+      h('button', { class: 'sl', text: '+', onclick: () => { S.noteFont = Math.min(100, S.noteFont + 1); save(); draw(); } }));
+    root.append(inp, list, bar); draw();
+  }
+};
+
+/* ================= লক (পুরো অ্যাপ সবার উপরে) ================= */
+let pipWin = null;
+function setLockUI(on) { const b = $('#lockBtn'); b.textContent = on ? '🔓 Back to Full Window' : '📌 Mini Window'; b.className = 'tb ' + (on ? 'r' : 'ind'); ph.style.display = on ? 'block' : 'none'; }
+function restoreApp() {
+  if (app.ownerDocument !== document) $('#layout').prepend(app);
+  app.classList.remove('mini'); pipWin = null; setLockUI(false);
+}
+async function toggleLock() {
+  if (pipWin) { try { pipWin.close(); } catch (e) {} setTimeout(() => { if (pipWin) restoreApp(); }, 300); return; }
+  if (!('documentPictureInPicture' in window)) { toast('এই পেজে মিনি উইন্ডো চলে না — ফাইলটি ডাউনলোড করে সরাসরি Chrome/Edge/Opera-তে খুলুন'); return; }
+  try { pipWin = await documentPictureInPicture.requestWindow({ width: 440, height: 460 }); } catch (e) { toast('লক চালু করা যায়নি'); return; }
+  copyStyles(pipWin);
+  pipWin.document.body.style.margin = '0';
+  pipWin.document.documentElement.classList.toggle('dark', !!S.dark);
+  pipWin.document.body.append(app);
+  app.classList.add('mini');
+  try { pipWin.moveTo(0, 60); } catch (e) {}
+  const w = pipWin;
+  w.addEventListener('pagehide', () => { if (pipWin === w) restoreApp(); });
+  setLockUI(true);
+}
+
+/* ================= PDF ================= */
+let pdfUrl = null;
+function applyPdf() { document.documentElement.style.setProperty('--pw', S.pdfW + '%'); }
+function showPdf(v) { const on = v && !!pdfUrl; $('#pdfPane').classList.toggle('show', on); $('#divider').classList.toggle('show', on); }
+function pdfBtn() { if (pdfUrl && !$('#pdfPane').classList.contains('show')) { showPdf(true); return; } $('#pdfInput').click(); }
+$('#pdfInput').addEventListener('change', e => {
+  const f = e.target.files[0]; if (!f) return;
+  if (f.type !== 'application/pdf' && !/\.pdf$/i.test(f.name)) { toast('শুধু PDF ফাইল নির্বাচন করুন'); e.target.value = ''; return; }
+  if (pdfUrl) URL.revokeObjectURL(pdfUrl);
+  pdfUrl = URL.createObjectURL(f); $('#pdfFrame').src = pdfUrl; showPdf(true); e.target.value = '';
+});
+$('#divider').addEventListener('pointerdown', e => {
+  e.preventDefault(); const layout = $('#layout'), rect = layout.getBoundingClientRect(), fr = $('#pdfFrame');
+  fr.style.pointerEvents = 'none';
+  const mv = ev => { S.pdfW = Math.min(80, Math.max(15, (rect.right - ev.clientX) / rect.width * 100)); applyPdf(); };
+  const up = () => { document.removeEventListener('pointermove', mv); document.removeEventListener('pointerup', up); fr.style.pointerEvents = ''; save(); };
+  document.addEventListener('pointermove', mv); document.addEventListener('pointerup', up);
+});
+$('#divider').addEventListener('dblclick', () => { S.pdfW = 45; applyPdf(); save(); });
+
+/* ================= ইভেন্ট সংযোগ ================= */
+const ACT = {
+  kadd: addK, newfield: newField, save: doSave, ap: toggleAP, pdf: pdfBtn, note: () => toggleViewer('note'),
+  ab: openAb, dk: openDk, calc: openCalc, guide: openGuide, settings: openSettings, visible: () => toggleViewer('main'),
+  custom: openCustom, conv: openConv, heir: openHeir, undo: undo, redo: redo, print: doPrint, dark: toggleDark,
+  lock: toggleLock, copyall: () => copyEl($('#bar'), buildAllText()), fontm: () => fontStep(-1), fontp: () => fontStep(1),
+  pdfhide: () => showPdf(false),
+  pdfclear: () => { if (pdfUrl) URL.revokeObjectURL(pdfUrl); pdfUrl = null; $('#pdfFrame').src = 'about:blank'; showPdf(false); }
+};
+function onClick(e) {
+  const b = e.target.closest('[data-a]');
+  if (b && ACT[b.dataset.a]) { ACT[b.dataset.a](b); return; }
+  const c = e.target.closest('.copyable');
+  if (c && !c.dataset.nocopy) {
+    const v = c.dataset.copy != null ? c.dataset.copy : (c.tagName === 'INPUT' ? c.value : c.textContent);
+    copyEl(c, v);
+  }
+}
+app.addEventListener('click', onClick);
+ph.addEventListener('click', onClick);
+$('#pdfPane').addEventListener('click', onClick);
+app.addEventListener('keydown', e => {
+  const t = e.target;
+  if (!t.classList || !t.classList.contains('nav')) { if (e.key === 'Escape') escClose(); return; }
+  if (e.key === 'Enter') { e.preventDefault(); focusNext(t, 1); }
+  else if (e.key === 'Tab') { if (focusNext(t, e.shiftKey ? -1 : 1)) e.preventDefault(); }
+  else if (e.key === 'Escape') escClose();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') escClose(); });
+
+/* ================= শুরু ================= */
+loadState(); applySettings(); applyFont(); applyAP(); applyDark(); applyHidden(); applyPdf(); renderAll(); renderSlots(); updateBtns(); snapNow();
+setInterval(() => { if (pipWin && pipWin.closed) restoreApp(); }, 1000);
+window.addEventListener('focus', () => { if (pipWin && pipWin.closed) restoreApp(); });
+</script>
+</body>
+</html>
