@@ -111,6 +111,7 @@ input.copied,.pill.copied,.nt.copied{background:#bbf7d0!important;color:#14532d!
 .g{background:#16a34a}.r{background:#dc2626}.bl{background:#2f7fb8}.ind{background:#6366f1}.sl{background:#64748b}.tl2{background:#0f766e}.nv{background:#334155}.cy{background:#0891b2}.or{background:#d97706}.pk{background:#be185d}
 .tb.on{outline:2px solid #fde047}
 .hid{display:none!important}
+.tb.copied{background:#bbf7d0!important;color:#14532d!important}
 /* Mini Window: কমপ্যাক্ট ফুটার — "মোট" বামে, জমির ঘর ছোট, বাড়তি + বাটন নেই */
 #app.mini .t-add{display:none}
 #app.mini .tf{grid-template-columns:auto repeat(3,minmax(0,1fr));gap:.2em .25em;padding:.15em .2em}
@@ -221,8 +222,6 @@ input.copied,.pill.copied,.nt.copied{background:#bbf7d0!important;color:#14532d!
       <button class="tb sl" id="custBtn" data-a="custom" title="কোন বাটন/লেখা দেখাবে বা লুকাবে ঠিক করুন">🙈 Hide / Show</button>
       <button class="tb g" id="kaddBtn" data-a="kadd">খতিয়ান +</button>
       <button class="tb or" id="newBtn" data-a="newfield">New Field</button>
-      <button class="tb tl2" data-a="save">Save</button>
-      <span id="slots"></span>
       <button class="tb sl" id="undoBtn" data-a="undo" title="শেষ পরিবর্তন ফিরিয়ে আনুন">↶ Undo</button>
       <button class="tb sl" id="redoBtn" data-a="redo" title="আবার করুন">↷ Redo</button>
       <button class="tb g" id="apBtn" data-a="ap">Auto Paste ON</button>
@@ -236,7 +235,7 @@ input.copied,.pill.copied,.nt.copied{background:#bbf7d0!important;color:#14532d!
       <button class="tb cy" data-a="guide">Guideline</button>
       <button class="tb sl" data-a="settings">⚙</button>
       <button class="tb ind" id="visBtn" data-a="visible">👁 Visible</button>
-      <button class="tb g" data-a="copyall">📋 Copy All</button>
+      <button class="tb r" id="acBtn" data-a="autocopy" title="ON থাকলে ইন্টারফেসের সব তথ্য নিজে থেকে কপি হবে">Auto Copy OFF</button>
       <button class="tb nv" data-a="print">🖨 Print/PDF</button>
       <button class="tb sl" id="darkBtn" data-a="dark">🌙 Dark</button>
       <button class="tb ind" id="lockBtn" data-a="lock" title="ব্রাউজারের বাইরে সবার উপরে ছোট উইন্ডোতে রাখুন">📌 Mini Window</button>
@@ -299,7 +298,7 @@ input.copied,.pill.copied,.nt.copied{background:#bbf7d0!important;color:#14532d!
 <li><b>ওয়ারিশ ভাগ:</b> ছেলে-মেয়ের সংখ্যা দিয়ে সমান ভাগ বা ২:১ অনুপাতে প্রাথমিক হিসাব।</li>
 <li><b>অংশ বের করুন:</b> দাগের মোট জমি ও প্রাপ্ত জমি থেকে আনুপাতিক অংশ।</li>
 <li><b>দাগে জমি কর্তন:</b> কর্তন ও আগত জমি বাদ-যোগ করে অবশিষ্ট জমি।</li>
-<li><b>প্রিন্ট/PDF, Save, Undo/Redo, ডার্ক মোড</b> ও মোবাইল-বান্ধব ডিজাইন।</li>
+<li><b>প্রিন্ট/PDF, অটো-সেভ, Undo/Redo, ডার্ক মোড</b> ও মোবাইল-বান্ধব ডিজাইন।</li>
 </ul>
 
 <h2>জমির হিসাব ক্যালকুলেটরের সুবিধা</h2>
@@ -385,7 +384,7 @@ const blankHolding = () => ({ id: newId(), no: '', dags: [blankDag()] });
 const defaults = () => ({
   khotians: [blankK()], saves: [null, null, null, null, null],
   settings: { hideOwner: false, hideLand: false, pasteBlocked: false },
-  autoPaste: true, font: 12, notes: [], noteFont: 14, vf: 14, pdfW: 45, dark: false, hidden: {},
+  autoPaste: true, font: 12, notes: [], noteFont: 14, vf: 14, pdfW: 45, dark: false, hidden: {}, autoCopy: false,
   ab: { rows: [blankAb()], font: 12 }, dk: { holdings: [blankHolding()], font: 12 }
 });
 let S;
@@ -425,6 +424,7 @@ function save() {
     localStorage.setItem(KEY, JSON.stringify(p, repl));
   } catch (e) {}
   snapLater();
+  autoCopyLater();
 }
 
 /* ================= সাধারণ UI সহায়ক ================= */
@@ -728,27 +728,7 @@ function redo() {
   hi++; restoreHist(); toast('↷ Redo');
 }
 
-/* ================= Save / New Field ================= */
-function renderSlots() {
-  const box = $('#slots'); box.textContent = '';
-  S.saves.forEach((s, i) => {
-    if (!s) return;
-    box.append(h('span', { class: 'slot' },
-      h('button', { class: 'bslot', text: 'Save-' + bn(i + 1), onclick: () => loadSlot(i) }),
-      h('button', { class: 'bslotx', text: '×', title: 'এই Save মুছুন', onclick: () => { S.saves[i] = null; save(); renderSlots(); } })));
-  });
-}
-function doSave() {
-  const i = [0, 1, 2, 3, 4].find(x => !S.saves[x]);
-  if (i === undefined) { toast('সর্বোচ্চ ৫টি Save রাখা যায়'); return; }
-  S.saves[i] = { k: JSON.parse(JSON.stringify(S.khotians.filter(k => !k.temp), repl)) };
-  save(); renderSlots(); toast('✅ Save-' + bn(i + 1) + ' এ রাখা হয়েছে');
-}
-function loadSlot(i) {
-  if (!S.saves[i]) return;
-  S.khotians = JSON.parse(JSON.stringify(S.saves[i].k));
-  renderAll(); save(); touch('main'); toast('Save-' + bn(i + 1) + ' লোড হয়েছে');
-}
+/* ================= New Field ================= */
 let newArm = 0;
 function newField() {
   const b = $('#newBtn');
@@ -772,6 +752,20 @@ function buildAllText() {
   });
   return out.join('\n');
 }
+
+/* ================= Auto Copy (ON থাকলে ইন্টারফেসের সব তথ্য নিজে থেকে কপি) ================= */
+let acT = 0, acLast = '';
+function autoCopyLater() { if (!S.autoCopy) return; clearTimeout(acT); acT = setTimeout(() => autoCopyNow(false), 500); }
+async function autoCopyNow(force) {
+  const t = buildAllText(); if (!t || (!force && t === acLast)) return;
+  const d = app.ownerDocument, w = d.defaultView || window; let ok = false;
+  try { await w.navigator.clipboard.writeText(t); ok = true; }
+  catch (e) { try { const ta = d.createElement('textarea'); ta.value = t; ta.style.cssText = 'position:fixed;opacity:0'; d.body.appendChild(ta); ta.select(); ok = d.execCommand('copy'); ta.remove(); } catch (e2) {} }
+  if (ok) { acLast = t; const b = $('#acBtn'); if (b) { b.classList.add('copied'); setTimeout(() => b.classList.remove('copied'), 600); } }
+  else toast('Auto Copy ব্যর্থ — Clipboard অনুমতি দিন');
+}
+function applyAC() { const b = $('#acBtn'); b.textContent = 'Auto Copy ' + (S.autoCopy ? 'ON' : 'OFF'); b.className = 'tb ' + (S.autoCopy ? 'g' : 'r'); }
+function toggleAC() { S.autoCopy = !S.autoCopy; applyAC(); save(); if (S.autoCopy) autoCopyNow(true); toast('Auto Copy ' + (S.autoCopy ? 'ON' : 'OFF')); }
 
 /* ================= সেটিংস / ফন্ট / Auto Paste / ডার্ক ================= */
 function applySettings() {
@@ -954,11 +948,9 @@ Auto Paste ON (Global): এটি একটি Master Switch। ON থাকল�
 Auto Paste OFF (Global): OFF করলে মূল ক্যালকুলেটর, “অংশ বের করুন” এবং “দাগে জমি কর্তন”—সব জায়গার Auto Paste একসাথে বন্ধ হবে। কপি সুবিধা চালু থাকবে, কিন্তু কোনো স্বয়ংক্রিয় পেস্ট বা auto-paste event/message যাবে না। সুইচ OFF হলে লাল, ON হলে সবুজ দেখায়।
 ⚙ Settings → Paste on Blocked Field চালু থাকলে এক্সটেনশন সক্রিয় ওয়েবপেজে paste/copy/text-select/right-click ব্লক সরানোর চেষ্টা করবে। ব্রাউজারের সুরক্ষিত বা সিস্টেম পেজে এটি কাজ নাও করতে পারে।
 গুরুত্বপূর্ণ: Clipboard, Auto Paste, popup এবং Picture-in-Picture ব্রাউজারের permission/security policy-এর ওপর নির্ভরশীল। কোনো ফিচার কাজ না করলে সংশ্লিষ্ট সাইটে Clipboard/Popup অনুমতি পরীক্ষা করুন।
-৭. New Field, Save এবং Save-1…Save-5
-New Field: নিশ্চিতকরণের পর বর্তমান কাজের জায়গা নতুন খালি হিসাব দিয়ে শুরু করে। প্রয়োজনীয় কাজ আগে Save করে নিন।
-Save: বর্তমান সম্পূর্ণ হিসাব প্রথম খালি Save slot-এ রাখে। সর্বোচ্চ ৫টি আলাদা Save রাখা যায়।
-Save-1…Save-5: যে Save বাটনে ক্লিক করবেন, সেই সংরক্ষিত হিসাব আবার লোড হবে। প্রতিটি Save-এর ছোট × দিয়ে সেই Save মুছতে পারবেন।
-Save এবং চলমান অ্যাপ-স্টেট ব্রাউজারের local storage-এ রাখা হয়। ব্রাউজারের site data/storage পরিষ্কার করলে সংরক্ষিত তথ্য হারাতে পারে।
+৭. New Field ও অটো-সেভ
+New Field: নিশ্চিতকরণের পর বর্তমান কাজের জায়গা নতুন খালি হিসাব দিয়ে শুরু করে। ভুল হলে Undo দিয়ে ফেরানো যায়।
+অটো-সেভ: আপনার সব লেখা নিজে থেকেই ব্রাউজারের local storage-এ সেভ হয়, আলাদা Save বাটন লাগে না। ব্রাউজারের site data/storage পরিষ্কার করলে তথ্য হারাতে পারে।
 ৮. Visible
 Visible চাপলে সমর্থিত ব্রাউজারে Always-on-top/Picture-in-Picture ধরনের ছোট উইন্ডো খোলার চেষ্টা করবে; না হলে আলাদা popup window খুলবে।
 Visible view মূল হিসাবের সঙ্গে live sync থাকে। এটি কমপ্যাক্ট রাখার জন্য প্রধানত খতিয়ান নম্বর, SI, মালিক এবং অংশ দেখায়; আনা–তিল, জমির পরিমাণ ও action কলাম লুকানো থাকে।
@@ -1022,7 +1014,7 @@ Visible: synchronized compact view খোলে। Visible view-এ মূল �
 ইনপুট ফরম্যাট মনে রাখুন: “দাগে জমি কর্তন” ক্যালকুলেটরে decimal point-এর বাম অংশ একর এবং ডান অংশ শতাংশ হিসেবে ধরা হয়। তাই ১ একর ৫ শতাংশ লিখতে 1.05 ব্যবহার করুন।
 ১৫. লক ও সব কপি
 📌 Mini Window (আগের লক): পুরো ক্যালকুলেটর একটি ছোট ভাসমান (Always-on-top) উইন্ডোতে চলে যায়, অন্য স্ক্রিনে ক্লিক করলেও সেটি উপরেই থাকে। উইন্ডো টেনে সরানো ও ছোট-বড় করা যায়। শুধু কম্পিউটারের Chrome/Edge এ চলে। আবার চাপলে (Back to Full Window) আগের জায়গায় ফিরে আসে।
-📋 Copy All: সব খতিয়ানের সব মালিকের নাম, অংশ, জমি এক ক্লিকে কপি হয়; তারপর যেকোনো জায়গায় Ctrl+V।
+📋 Auto Copy ON/OFF: ON থাকলে আপনি কিছু লিখলে বা বদলালে (থামার প্রায় ০.৫ সেকেন্ড পর) ইন্টারফেসের সব খতিয়ান, মালিকের নাম, অংশ ও জমি নিজে থেকে কপি হয়ে যায়; তারপর যেকোনো জায়গায় Ctrl+V। OFF করলে অটো-কপি বন্ধ।
 ১৬. সমস্যা হলে দ্রুত পরীক্ষা করুন
 কপি/পেস্ট হচ্ছে না → Clipboard permission এবং Auto Paste setting পরীক্ষা করুন।
 Visible/Notepad খুলছে না → Popup ও Picture-in-Picture permission/সমর্থন পরীক্ষা করুন।
@@ -1035,7 +1027,7 @@ Converter: দশমিক বা ভগ্নাংশ (যেমন 0.3125 ব
 ওয়ারিশ ভাগ: ছেলে ও মেয়ের সংখ্যা দিয়ে সমান ভাগ বা ২:১ অনুপাতে প্রাথমিক ভাগ বের করে। চাইলে শুধু একটি অংশ (যেমন 1/4) এবং মোট জমি দিয়ে ভাগ করা যায়। এটি প্রাথমিক হিসাব; আইনি কাজে আইনজীবীর পরামর্শ নিন।
 🖨 Print/PDF: খতিয়ানের হিসাব প্রিন্ট করে বা “Save as PDF” দিয়ে ফাইল করে রাখা যায়। বাটন ও আর্টিকেল প্রিন্টে আসে না।
 🌙 Dark / ☀ Light: রাতে চোখের আরামের জন্য থিম বদলায়; পছন্দ মনে রাখা হয়।
-📌 Mini Window: পুরো ক্যালকুলেটর ব্রাউজারের বাইরে একটা ছোট উইন্ডোতে চলে যায় যা অন্য সব উইন্ডোর (এমনকি অন্য অ্যাপের) উপরে থাকে; সেখানে সব বাটনই থাকে (Calculator, Converter, Dark/Light, Copy All, Print/PDF ইত্যাদি)। অন্য কোথাও ক্লিক করলেও এটি লুকায় না। ফাইলটি সরাসরি Chrome/Edge/Opera-তে খুলে ব্যবহার করুন; ফিরতে “Back to Full Window” চাপুন।
+📌 Mini Window: পুরো ক্যালকুলেটর ব্রাউজারের বাইরে একটা ছোট উইন্ডোতে চলে যায় যা অন্য সব উইন্ডোর (এমনকি অন্য অ্যাপের) উপরে থাকে; সেখানে সব বাটনই থাকে (Calculator, Converter, Dark/Light, Auto Copy, Print/PDF ইত্যাদি)। অন্য কোথাও ক্লিক করলেও এটি লুকায় না। ফাইলটি সরাসরি Chrome/Edge/Opera-তে খুলে ব্যবহার করুন; ফিরতে “Back to Full Window” চাপুন।
 🙈 Hide / Show: সবসময় থাকা এই বাটনে ক্লিক করে যে বাটন বা লেখা (উপরের হেডিং, নিচের আর্টিকেল সহ) দেখতে চান না তার টিক তুলে দিন; আবার দেখাতে টিক দিন। পছন্দ মনে রাখা হয়।`;
 function openGuide() {
   openFloat('guide', 'Guideline', body => {
@@ -1064,15 +1056,14 @@ function openSettings() {
 
 /* ================= Hide / Show (কাস্টমাইজ) ================= */
 const HIDE_ITEMS = [
-  ['kadd', 'খতিয়ান +'], ['newfield', 'New Field'], ['save', 'Save'], ['slots', 'Save-১…৫ বাটনগুলো'],
+  ['kadd', 'খতিয়ান +'], ['newfield', 'New Field'],
   ['undo', 'Undo'], ['redo', 'Redo'], ['ap', 'Auto Paste'], ['pdf', 'Upload PDF'], ['note', 'Notepad'],
   ['ab', 'অংশ বের করুন'], ['dk', 'দাগে জমি কর্তন'], ['conv', 'Converter'], ['heir', 'ওয়ারিশ ভাগ'],
   ['calc', '🧮 Calculator'], ['guide', 'Guideline'], ['settings', '⚙ Settings'], ['visible', 'Visible'],
-  ['copyall', 'Copy All'], ['print', 'Print / PDF'], ['dark', 'Dark / Light'], ['lock', 'Mini Window (always on top)'], ['font', 'Font − / +'],
+  ['autocopy', 'Auto Copy'], ['print', 'Print / PDF'], ['dark', 'Dark / Light'], ['lock', 'Mini Window (always on top)'], ['font', 'Font − / +'],
   ['h1', 'Top Heading'], ['article', 'Bottom Text (Article & FAQ)']
 ];
 function hideEls(k) {
-  if (k === 'slots') return [$('#slots')];
   if (k === 'font') return [...app.querySelectorAll('#bar [data-a="fontm"], #bar #fsv, #bar [data-a="fontp"]')];
   if (k === 'article') return [$('#seo')];
   if (k === 'h1') return [$('#top')];
@@ -1365,10 +1356,10 @@ $('#divider').addEventListener('dblclick', () => { S.pdfW = 45; applyPdf(); save
 
 /* ================= ইভেন্ট সংযোগ ================= */
 const ACT = {
-  kadd: addK, newfield: newField, save: doSave, ap: toggleAP, pdf: pdfBtn, note: () => toggleViewer('note'),
+  kadd: addK, newfield: newField, ap: toggleAP, pdf: pdfBtn, note: () => toggleViewer('note'),
   ab: openAb, dk: openDk, calc: openCalc, guide: openGuide, settings: openSettings, visible: () => toggleViewer('main'),
   custom: openCustom, conv: openConv, heir: openHeir, undo: undo, redo: redo, print: doPrint, dark: toggleDark,
-  lock: toggleLock, copyall: () => copyEl($('#bar'), buildAllText()), fontm: () => fontStep(-1), fontp: () => fontStep(1),
+  lock: toggleLock, autocopy: toggleAC, fontm: () => fontStep(-1), fontp: () => fontStep(1),
   pdfhide: () => showPdf(false),
   pdfclear: () => { if (pdfUrl) URL.revokeObjectURL(pdfUrl); pdfUrl = null; $('#pdfFrame').src = 'about:blank'; showPdf(false); }
 };
@@ -1394,7 +1385,7 @@ app.addEventListener('keydown', e => {
 document.addEventListener('keydown', e => { if (e.key === 'Escape') escClose(); });
 
 /* ================= শুরু ================= */
-loadState(); applySettings(); applyFont(); applyAP(); applyDark(); applyHidden(); applyPdf(); renderAll(); renderSlots(); updateBtns(); snapNow();
+loadState(); applySettings(); applyFont(); applyAP(); applyDark(); applyHidden(); applyPdf(); renderAll(); applyAC(); updateBtns(); snapNow();
 setInterval(() => { if (pipWin && pipWin.closed) restoreApp(); }, 1000);
 window.addEventListener('focus', () => { if (pipWin && pipWin.closed) restoreApp(); });
 </script>
