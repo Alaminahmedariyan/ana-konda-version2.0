@@ -54,8 +54,16 @@ input.copied,.pill.copied,.nt.copied{background:#bbf7d0!important;color:#14532d!
 .tmpmsg{color:#b45309;font-weight:700;font-size:.9em}
 .rows{background:#fff}
 .row{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));align-items:center;border-top:1px solid #e5e9f0;padding:.15em 0}
-.row:nth-child(even){background:#f8fafc}
-.row.dropt{box-shadow:inset 0 3px 0 var(--blue)}
+/* প্রতিটি সারির আলাদা হালকা রং + বাম পাশে গাঢ় রঙের দাগ (লাইট/ডার্ক দুই মোডেই আলাদা চেনা যায়) */
+.row{--rc:#3b82f6;--rb:#eef5ff;background:var(--rb);box-shadow:inset 4px 0 0 var(--rc)}
+.row:nth-child(8n+2){--rc:#16a34a;--rb:#effaf2}
+.row:nth-child(8n+3){--rc:#d97706;--rb:#fff8e8}
+.row:nth-child(8n+4){--rc:#db2777;--rb:#fff0f7}
+.row:nth-child(8n+5){--rc:#7c3aed;--rb:#f4f0ff}
+.row:nth-child(8n+6){--rc:#0891b2;--rb:#eafafd}
+.row:nth-child(8n+7){--rc:#ea580c;--rb:#fff3ea}
+.row:nth-child(8n+8){--rc:#65a30d;--rb:#f4fbe6}
+.row.dropt{box-shadow:inset 0 3px 0 var(--blue),inset 4px 0 0 var(--rc)}
 .row.dragging{opacity:.4}
 .row>div{padding:.1em .15em;min-width:0}
 .c-nm{grid-row:1;grid-column:1/5;display:flex;align-items:center;gap:.25em}
@@ -64,7 +72,7 @@ input.copied,.pill.copied,.nt.copied{background:#bbf7d0!important;color:#14532d!
 .c-sh{grid-row:3;grid-column:1/3}
 .c-ld{grid-row:3;grid-column:3/6}
 .th{display:none}
-.sn{font-weight:700;min-width:1.3em;text-align:center;cursor:grab;user-select:none}
+.sn{font-weight:700;min-width:1.3em;text-align:center;cursor:grab;user-select:none;color:var(--rc)}
 .nmw{display:flex;flex-wrap:wrap;gap:.2em;flex:1;min-width:0;align-items:center}
 .nmw .name{flex:1 1 6em;width:auto}
 .rel{display:flex;align-items:center;gap:.2em;flex:0 0 auto}
@@ -76,9 +84,19 @@ input.copied,.pill.copied,.nt.copied{background:#bbf7d0!important;color:#14532d!
 .rchip{background:#e0e7ff;color:#3730a3;border-radius:.4em;padding:.05em .4em;font-weight:700;white-space:nowrap}
 .gadd,.gdel{width:1.9em;height:1.9em;border-radius:50%;padding:0;line-height:1;font-size:1.1em}
 .gadd{background:#22a35a}.gdel{background:#ef4444}
-.sel{padding:.1em;background:#fffbe0;border-color:#e5dca0;font-size:.85em}
+/* মিনি-স্টাইল ঘর: ড্রপডাউন ঘরের ভেতরে (ডান পাশে ▾), এক লাইনে ইনপুট */
+.f{position:relative}
+.sel{display:block;position:absolute;top:0;right:0;width:1.8em;height:100%;opacity:0;cursor:pointer;z-index:2;padding:0}
+.f::after{content:'▾';position:absolute;right:.35em;top:50%;transform:translateY(-50%);pointer-events:none;color:#64748b;font-size:.9em;z-index:1}
+.f .n{display:block;width:100%;text-align:center;padding-left:1.1em;padding-right:1.1em}
+.f .n::placeholder{color:#94a3b8;opacity:1}
+/* মিনিমাল: কলামের নাম শুধু উপরের হেডারে; বড় স্ক্রিনে সারিতে নাম/প্লেসহোল্ডার বারবার দেখাবে না */
+@media(min-width:820px){.name::placeholder{color:transparent}}
+/* ছোট স্ক্রিনে (হেডার নেই) ঘরের উপরে ছোট লেবেল */
+@media(max-width:819px){#app:not(.mini) .f::before{content:attr(data-l);font-size:.75em;font-weight:700;color:#64748b;line-height:1}
+#app:not(.mini) .f::after{top:auto;bottom:.45em;transform:none}
+#app:not(.mini) .sel{top:auto;bottom:0;height:70%}}
 .n{text-align:center}
-.kb.full .n{display:none}
 .pill{display:block;text-align:center;padding:.3em .2em;border-radius:.5em;font-weight:700;background:#e2e8f0;color:#334155;cursor:pointer;font-variant-numeric:tabular-nums}
 .pill.bad{background:#ef4444;color:#fff}
 .pill.over{background:#b91c1c;color:#fff}
@@ -241,6 +259,177 @@ input.copied,.pill.copied,.nt.copied{background:#bbf7d0!important;color:#14532d!
   #app{font-size:11px}
   .kb{break-inside:avoid}
 }
+
+/* ===== চোখের আরামের থিম ===== */
+:root{--blue:#5f86b0}
+html,body{background:#eef1f4}
+html.dark{filter:invert(1) hue-rotate(180deg) brightness(.9)}
+html.dark iframe{filter:invert(1) hue-rotate(180deg)}
+#top{background:#f7f9fb;border-bottom-color:#dde4ec}
+#top h1,#seo h1,.tsec,.guide b{color:#2f4b6b}
+.kb{background:#f6f9fc;border-bottom-color:#d9e3ee}
+.kb.temp{outline-color:#e0b564}
+.kok{color:#2f7d4f}.tmpmsg{color:#9a5b13}
+.rows{background:#fbfcfd}
+.rows .row,.rows .row:nth-child(n){background:#fbfcfd!important;box-shadow:none!important}
+.rows .row:nth-child(even){background:#f4f7fa!important}
+.rows .row.dropt{box-shadow:inset 0 3px 0 var(--blue)!important}
+.sn{color:#64748b}
+.tf{background:#edf1f5;border-top-color:#d9e1ea}
+.th,.abh,.fwh,#seo th{background:#dce6f1;color:#26405c}
+.fwx{background:rgba(38,64,92,.12);color:#26405c}
+#seo{border-top-color:#c9d6e4}
+#bar{background:#f7f9fb;border-top-color:#dde4ec}
+.si{background:#e6edf5;border-color:#c5d3e2;color:#334155}
+.rchip{background:#e6e9f7;color:#3a4580}
+.note{background:#fbf3dc;border-color:#e6cf8f}
+#toast{background:#334155}
+button{color:#1e293b;font-weight:600;border:1px solid transparent;box-shadow:none}
+button:not(:disabled):hover{filter:brightness(.97);box-shadow:0 1px 3px rgba(15,23,42,.12)}
+button:not(:disabled):active{filter:brightness(.93);box-shadow:none}
+button:focus-visible{outline:2px solid #8fb0d3}
+.tb.on{outline:2px solid #e8d48a}
+.g,.gadd,.tgon,.ckeys .eq{background:#dcf0e3;color:#22573a;border-color:#bfdfcb}
+.r,.gdel,.nx,.ckeys .cl{background:#f6dcdc;color:#7f2a2a;border-color:#e5b9b9}
+.or{background:#f7e9d2;color:#7a4a12;border-color:#e8d1a8}
+.bl,.ckeys .op{background:#dbe8f6;color:#234a78;border-color:#bcd1e8}
+.tl2{background:#d6eeea;color:#1d5a54;border-color:#b5dbd5}
+.vi{background:#e6e0f4;color:#4a3a7a;border-color:#cfc5e6}
+.pk{background:#f5dfe8;color:#7a2c52;border-color:#e6c2d2}
+.sl,.tgoff,.ckeys button{background:#e4e8ee;color:#334155;border-color:#cdd5df}
+.nv{background:#d9dfe8;color:#1e293b;border-color:#c2cbd8}
+.ind,.rpick{background:#e0e4f6;color:#38428a;border-color:#c5cbea}
+.cy{background:#d8eaf4;color:#1d5473;border-color:#b9d7e8}
+.rbtn{background:#e3e6f6;color:#3f4a8c;border-color:#c8cdea}
+.rx{background:#e4e8ee;color:#475569}
+.kdel{background:#f3dada;color:#7c2d2d;border-color:#e6bcbc}
+.krst{background:#efd0d0}
+.tb.copied,.pill.copied,.nt.copied{background:#cdeedb!important;color:#14532d!important}
+.ckeys .op{background:#dbe8f6}.ckeys .eq{background:#dcf0e3}.ckeys .cl{background:#f6dcdc}
+.tb,.kic,.kdel{display:inline-flex;align-items:center;justify-content:center;gap:.35em}
+button svg{width:1.2em;height:1.2em;flex:none;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.kic{padding:.3em .45em}
+.clrg{display:inline-flex;align-items:center;gap:.25em}
+.kdel:not(.krst){order:90;margin-left:auto}
+.krst{order:91;margin-left:.35em}
+#app input,#app select,.vroot input{background:#fdfdfe;border-color:#c5cfda;color:var(--ic,#0f172a);font-weight:var(--iw,700);text-shadow:var(--is,none)}
+#app input:focus,#app select:focus{outline:2px solid #8fb0d3}
+#app input::placeholder{color:#8a96a6;font-weight:400;text-shadow:none}
+.pill{background:#e8edf2;color:#334155;font-weight:var(--iw,700);text-shadow:var(--is,none)}
+.pill.w{background:#fdfdfe;border:1px solid #c9d3de;color:var(--ic,#0f172a)}
+.pill.ok{background:#d3efe0;color:#14532d}
+.pill.bad{background:#fbe6c4;color:#7c3f0a}
+.pill.over{background:#f6cfcf;color:#7f1d1d}
+
+/* Mini Window: প্রতিটি মালিকের নিচে দ্বিতীয় লাইনে অংশ ও জমির পরিমাণ */
+#app.mini .c-sh,#app.mini .c-ld{display:flex;align-items:center;gap:.3em;grid-row:2;min-width:0}
+#app.mini .c-sh{grid-column:2/5}
+#app.mini .c-ld{grid-column:5/8}
+#app.mini .c-sh .pill,#app.mini .c-ld .pill{flex:1;min-width:0;padding:.15em .2em}
+#app.mini .c-sh::before{content:'অংশ';font-weight:700;color:#64748b;font-size:.85em}
+#app.mini .c-ld::before{content:'জমি';font-weight:700;color:#64748b;font-size:.85em}
+#app.mini.no-land .c-ld{display:none}
+#app.mini.no-land .c-sh{grid-column:2/8}
+
+/* ===== মিনি উইন্ডো: অংশ ও জমির পরিমাণ তিলের পরেই একই লাইনে (ফিক্স) ===== */
+#app.mini .row,#app.mini .th{grid-template-columns:2em repeat(5,minmax(0,1fr)) 6em 6.5em 3.9em}
+#app.mini .c-sh,#app.mini .c-ld{display:block;grid-row:1;grid-column:auto;min-width:0}
+#app.mini .c-sh::before,#app.mini .c-ld::before{content:none}
+#app.mini .c-sh .pill,#app.mini .c-ld .pill{font-size:.9em;padding:.25em .15em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#app.mini .th>div:nth-child(7),#app.mini .th>div:nth-child(8){display:block}
+#app.mini .th>div:nth-child(9){display:none}
+#app.mini.no-land .row,#app.mini.no-land .th{grid-template-columns:2em repeat(5,minmax(0,1fr)) 6em 3.9em}
+#app.mini.no-land .c-sh{grid-column:auto}
+#app.mini.no-land .th>.th-ld,#app.mini.no-land .c-ld{display:none}
+
+/* ===== মিনি উইন্ডো ফিক্স ২: জমির পরিমাণ বাদ, অংশ বড় ও উজ্জ্বল লেখা ===== */
+#app.mini .row,#app.mini .th,#app.mini.no-land .row,#app.mini.no-land .th{grid-template-columns:2em repeat(5,minmax(0,1fr)) 8em 3.9em;gap:.12em}
+#app.mini .c-ld,#app.mini .th>.th-ld,#app.mini .t-ld{display:none!important}
+#app.mini .c-sh,#app.mini.no-land .c-sh{display:block;grid-row:1;grid-column:auto;min-width:0;padding:0}
+#app.mini .c-sh .pill{font-size:1.45em;line-height:1.15;font-weight:800;padding:.08em .1em;color:#000;letter-spacing:.2px}
+#app.mini .pill.ok{background:#bff0d2;color:#052e16}
+#app.mini .pill.bad{background:#fbd9a0;color:#3b1a03}
+#app.mini .pill.over{background:#f5b5b5;color:#450a0a}
+#app.mini .pill.w{color:#000}
+#app.mini .row input,#app.mini .th,#app.mini .sn{color:#000;font-weight:800}
+#app.mini .row .f .n{font-size:1.1em;font-weight:800;color:#000;text-shadow:0 0 .5px #000}
+#app.mini .row .f .n::placeholder{color:#475569;opacity:1;font-weight:600}
+#app.mini .row .f::after{color:#0f172a}
+#app.mini .th{color:#0b2540;font-weight:800;font-size:.95em}
+#app.mini .tf .pill{font-size:1.2em;font-weight:800;color:#000}
+#app.mini .tl{font-size:1.1em;font-weight:800;color:#000}
+#app.mini .t-sh,#app.mini.no-land .t-sh{grid-column:2/3}
+#app.mini .t-li{grid-column:3/5}
+/* ===== + এবং − বাটন: উজ্জ্বল ও একটু বড় ===== */
+.gadd,.gdel{
+  width:1.7em;height:1.7em;font-size:1.35em;font-weight:900;line-height:1;
+  color:#fff;border:1px solid rgba(0,0,0,.18);
+  text-shadow:0 1px 1px rgba(0,0,0,.4);
+  box-shadow:0 2px 6px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.5);
+}
+.gadd{background:linear-gradient(145deg,#4ade80,#16a34a)}
+.gdel{background:linear-gradient(145deg,#f87171,#dc2626)}
+.gadd:not(:disabled):hover{filter:brightness(1.12);box-shadow:0 3px 9px rgba(22,163,74,.55),inset 0 1px 0 rgba(255,255,255,.5)}
+.gdel:not(:disabled):hover{filter:brightness(1.12);box-shadow:0 3px 9px rgba(220,38,38,.55),inset 0 1px 0 rgba(255,255,255,.5)}
+
+/* Mini Window: বড় বাটনের জন্য শেষ কলাম একটু চওড়া */
+#app.mini .row,#app.mini .th,#app.mini.no-land .row,#app.mini.no-land .th{
+  grid-template-columns:2em repeat(5,minmax(0,1fr)) 8em 4.9em;
+}
+#app.mini .c-act .gadd,#app.mini .c-act .gdel{width:1.6em;height:1.6em;font-size:1.3em}
+
+/* ===== সর্বোচ্চ স্পষ্টতা: অংশ ও সব লেখা ===== */
+/* Dark মোডে অতিরিক্ত brightness কমানো বন্ধ */
+html.dark{filter:invert(1) hue-rotate(180deg)}
+
+/* অংশ / মোট / জমির ঘর: গাঢ় কালো লেখা, উজ্জ্বল ব্যাকগ্রাউন্ড, বড় ফন্ট */
+#app .pill,#app.mini .pill{
+  color:#000;font-weight:800;text-shadow:none;
+  border:1px solid rgba(0,0,0,.4);letter-spacing:.3px;
+}
+#app .pill.w,#app.mini .pill.w{background:#ffffff;color:#000}
+#app .pill.ok,#app.mini .pill.ok{background:#86efac;color:#00240f}
+#app .pill.bad,#app.mini .pill.bad{background:#fcd34d;color:#2b1200}
+#app .pill.over,#app.mini .pill.over{background:#fca5a5;color:#330000}
+
+/* Full মোডে অংশের ঘর বড় */
+#app .c-sh .pill,#app .t-sh .pill{font-size:1.3em;padding:.2em .15em}
+#app .c-ld .pill,#app .t-ld .pill{font-size:1.15em;padding:.2em .15em}
+
+/* Mini মোডে অংশের ঘর আরও বড় */
+#app.mini .c-sh .pill{font-size:1.5em;padding:.1em .1em}
+#app.mini .tf .pill{font-size:1.3em}
+
+/* ইনপুট ঘরের লেখা: সবসময় গাঢ় */
+#app input,#app select,#app.mini .row .f .n{
+  color:#000!important;font-weight:800!important;text-shadow:none!important;
+}
+#app input::placeholder,#app.mini .row .f .n::placeholder{
+  color:#334155;opacity:1;font-weight:600;
+}
+
+/* হেডার, সিরিয়াল, মোট, লেবেল */
+#app .th,#app .th>div,#app.mini .th,.abh,.fwh,.fwh b{color:#000;font-weight:800}
+#app .sn,#app .tl,#app .kh b,#app .si{color:#000;font-weight:800}
+#app .lbl,#app .small,#app .vn{color:#1e293b;font-weight:700}
+#app .rchip{color:#1e1b4b;font-weight:800}
+
+/* NB বার্তা */
+#app .nb{font-weight:800;font-size:1.05em}
+#app .nb.bad{background:#fde68a;color:#2b1200;border-color:#b45309}
+#app .nb.over{background:#fecaca;color:#330000;border-color:#b91c1c}
+/* ===== অংশের রং: ভুল হলে হালকা লাল, ঠিক হলে সবুজ ===== */
+#app .pill.bad,#app.mini .pill.bad,.vroot .pill.bad{
+  background:#fecaca;color:#7f1d1d;border:1px solid #ef4444;
+}
+#app .pill.over,#app.mini .pill.over,.vroot .pill.over{
+  background:#f87171;color:#450a0a;border:1px solid #b91c1c;
+}
+#app .pill.ok,#app.mini .pill.ok,.vroot .pill.ok{
+  background:#86efac;color:#052e16;border:1px solid #16a34a;
+}
+/* NB বার্তাও লালচে (ঐচ্ছিক) */
+#app .nb.bad{background:#fee2e2;color:#7f1d1d;border-color:#ef4444}
 </style>
 </head>
 <body>
@@ -314,7 +503,7 @@ input.copied,.pill.copied,.nt.copied{background:#bbf7d0!important;color:#14532d!
 <li>খতিয়ান নম্বর লিখুন এবং মালিকের নাম দিন।</li>
 <li>প্রতিটি মালিকের অংশ আনা, গণ্ডা, কড়া, ক্রান্তি ও তিল ঘরে লিখুন বা ড্রপডাউন থেকে বাছাই করুন।</li>
 <li>খতিয়ানের মোট জমির পরিমাণ লিখুন।</li>
-<li>ক্যালকুলেটর স্বয়ংক্রিয়ভাবে প্রতিটি মালিকের অংশ ও জমির পরিমাণ হিসাব করে দেখাবে। মোট ১৬ আনা না হলে কত বাকি বা বেশি তা NB বার্তায় জানাবে।</li>
+<li>ক্যালকুলেটর স্বয়ংক্রিয়ভাবে প্রতিটি মালিকের অংশ ও জমির পরিমাণ হিসাব করে দেখাবে। মোট ১৬ আনা না হলে কত বাকি তা NB বার্তায় জানাবে। মোট ১৬ আনার বেশি দেওয়া যাবে না।</li>
 </ol>
 
 <h2>খতিয়ান হিস্যা হিসাব করার সহজ উপায়</h2>
@@ -505,7 +694,13 @@ function touch(kind) {
 function navList(root) { return [...root.querySelectorAll('input.nav')].filter(i => i.getClientRects().length > 0 && !i.disabled); }
 function focusNext(el, dir) {
   const root = el.closest('.fw') || el.closest('#app'); if (!root) return;
-  const l = navList(root), i = l.indexOf(el), n = l[i + dir];
+  const l = navList(root), i = l.indexOf(el);
+  let n = l[i + dir];
+  if (dir === 1 && /\.f4$/.test(el.dataset.fk || '')) {
+    const row = el.closest('.row'), nr = row && row.nextElementSibling;
+    const f0 = nr && nr.querySelector('[data-fk$=".f0"]');
+    if (f0) n = f0;
+  }
   if (n) { n.focus(); if (n.select) n.select(); return true; }
   return false;
 }
@@ -522,6 +717,9 @@ function nextNo(s) {
 let noSpawn = false, dragO = null;
 const totalTil = k => k.owners.reduce((s, o) => s + toTil(o.v), 0);
 const blockEl = k => blocksEl.querySelector('[data-kid="' + k.id + '"]');
+/* মোট ১৬ আনার বেশি হতে দেওয়া হবে না */
+const LIMIT_MSG = '⚠ মোট ১৬ আনার বেশি দেওয়া যাবে না';
+const isOver = k => totalTil(k) > FULL;
 
 function renumber() {
   [...blocksEl.children].forEach((b, i) => { const si = b.querySelector('.si'); if (si) si.textContent = 'SI-' + bn(i + 1); });
@@ -541,13 +739,9 @@ function renderBlock(k) {
   blk._k = k;
   const kno = h('input', { class: 'kno nav copyable', value: k.no, placeholder: '০০০০', dataset: { fk: 'k' + k.id + '.no' } });
   kno.addEventListener('input', () => { k.no = kno.value; save(); touch('main'); });
-  const del = h('button', { class: 'kdel', text: 'Delete', title: 'এই খতিয়ান মুছুন' });
-  let arm = 0;
-  del.onclick = () => {
-    if (!arm) { arm = 1; del.textContent = 'নিশ্চিত?'; setTimeout(() => { arm = 0; del.textContent = 'Delete'; }, 2500); return; }
-    deleteK(k);
-  };
-  // Reset button sits next to Delete; only the first block shows it (see .krst CSS)
+  const del = h('button', { class: 'kdel', text: 'Reset All', title: 'এই খতিয়ান মুছুন' });
+  del.onclick = () => deleteK(k);   // এক ক্লিকেই মুছবে (ভুল হলে Undo)
+  // Reset বাটন আগের মতোই একদম ডান পাশে; শুধু প্রথম খতিয়ানে দেখায়
   const rst = h('button', { class: 'kdel krst kfirst', text: 'Reset', title: 'সব ইনপুট ঘর খালি করুন', dataset: { a: 'reset' } });
   // Icon-only buttons next to Reset (first block only): Hide/Show, Mini/Full Window, Calculator
   const mkIc = (a, txt, cls, title, extra) => {
@@ -558,7 +752,7 @@ function renderBlock(k) {
   const icCust = mkIc('custom', '👁', 'sl', 'Hide / Show');
   const icLock = mkIc('lock', pipWin ? '🖥' : '📌', pipWin ? 'or' : 'ind', pipWin ? 'Back to Full Window' : 'Mini Window', 'lockbtn');
   const icCalc = mkIc('calc', '🧮', 'nv', 'Calculator');
-  const head = h('div', { class: 'kh' }, h('b', { text: 'খতিয়ান নং' }), kno, h('span', { class: 'si' }), del, icCust, icLock, icCalc,
+  const head = h('div', { class: 'kh' }, h('b', { text: 'খতিয়ান নং' }), kno, h('span', { class: 'si' }), icCust, icLock, icCalc, del,
     h('span', { class: 'kok', text: '✅ পূর্ণ ১৬ আনা' }), h('span', { class: 'tmpmsg' }), rst);
   const th = h('div', { class: 'th' }, h('div', { class: 'th-nm', text: 'মালিক' }), ...UN.map(u => h('div', { text: u })),
     h('div', { text: 'অংশ' }), h('div', { class: 'th-ld', text: 'জমির পরিমাণ' }), h('div', { text: '①' }));
@@ -591,8 +785,8 @@ function rebuildRows(blk, k) {
 function syncCell(c, o) {
   const i = c.i, mx = Math.max(MAXV[i], o.v[i]);
   c.sel.textContent = '';
-  c.sel.append(h('option', { value: '', text: '▼ ' + UN[i] }));
-  for (let n = 1; n <= mx; n++) { const s = (SYM[i] || {})[n]; c.sel.append(h('option', { value: String(n), text: bn(n) + ' ' + UN[i] + (s ? '-' + s : '') })); }
+  c.sel.append(h('option', { value: '', text: '▼' }));
+  for (let n = 1; n <= mx; n++) { const s = (SYM[i] || {})[n]; c.sel.append(h('option', { value: String(n), text: bn(n) + (s ? ' ' + s : '') })); }
   c.sel.value = o.v[i] ? String(o.v[i]) : '';
   const want = o.v[i] ? String(o.v[i]) : '';
   if (c.inp.value !== want) c.inp.value = want;
@@ -646,7 +840,11 @@ function buildRow(blk, k, o, idx) {
     inp.addEventListener('input', () => {
       const s = en(inp.value).replace(/\D/g, '').slice(0, 2);
       if (s !== inp.value) inp.value = s;
+      const prev = o.v.slice();
       o.v[i] = s === '' ? 0 : parseInt(s, 10);
+      if (isOver(k)) {            // মোট ১৬ আনার বেশি হলে আগের মানে ফিরে যাবে
+        o.v = prev; syncRow(row); toast(LIMIT_MSG); return;
+      }
       syncCell(c, o);
       afterEdit(blk, k, o, { val: true, adv: shouldAdvance(i, s) ? i : -1 });
     });
@@ -656,15 +854,21 @@ function buildRow(blk, k, o, idx) {
       afterEdit(blk, k, o, { adv: -1 });
     });
     sel.addEventListener('change', () => {
-      o.v[i] = parseInt(sel.value, 10) || 0; o.v = norm(toTil(o.v)); syncRow(row);
+      const prev = o.v.slice();
+      o.v[i] = parseInt(sel.value, 10) || 0; o.v = norm(toTil(o.v));
+      if (isOver(k)) {
+        o.v = prev; syncRow(row); toast(LIMIT_MSG); return;
+      }
+      syncRow(row);
       afterEdit(blk, k, o, { val: true, adv: -1 });
     });
     syncCell(c, o);
-    return h('div', { class: 'f' }, sel, inp);
+    return h('div', { class: 'f', dataset: { l: UN[i] } }, sel, inp);
   });
 
   const dup = h('button', { class: 'gadd', title: 'এই সারির ঠিক নিচে নতুন সারি (মান সহ কপি)', text: '+' });
   dup.onclick = () => {
+    if (totalTil(k) + toTil(o.v) > FULL) { toast(LIMIT_MSG); return; }
     const c = JSON.parse(JSON.stringify(o, repl)); c.id = newId();
     k.owners.splice(k.owners.indexOf(o) + 1, 0, c);
     rebuildRows(blk, k); save(); touch('main');
@@ -703,7 +907,7 @@ function calcBlock(blk) {
   else { tsh.textContent = bn((T / FULL).toFixed(5)); tsh.dataset.copy = (T / FULL).toFixed(5); }
   const tl = L * T / FULL, tld = blk.querySelector('.tld'); tld.textContent = bn(tl.toFixed(5)); tld.dataset.copy = tl.toFixed(5);
   const nb = blk.querySelector('.nb'); nb.className = 'nb ' + st;
-  nb.textContent = st === 'bad' ? bn('NB: ' + unitsText(norm(FULL - T)) + ' প্রয়োজন!') : st === 'over' ? bn('NB: ' + unitsText(norm(T - FULL)) + ' বেশি হয়েছে!') : '';
+  nb.textContent = st === 'bad' ? bn('NB: ' + unitsText(norm(FULL - T)) + ' প্রয়োজন!') : st === 'over' ? bn('NB: ' + unitsText(norm(T - FULL)) + ' বেশি হয়েছে! (কোনো ঘর কমিয়ে ঠিক করুন)') : '';
   maybeSpawn(blk, st === 'ok');
 }
 function maybeSpawn(blk, ok) {
@@ -973,7 +1177,8 @@ const GUIDE = `এই নির্দেশিকায় মূল খতি�
 প্রথম সারিতে মালিকের নাম লিখুন। নামের পাশের রঙিন + চাপলে পিতা বা স্বামী নির্বাচন করে সংশ্লিষ্ট নাম লিখতে পারবেন।
 মালিকের অংশ আনা, গণ্ডা, কড়া, ক্রান্তি ও তিল ঘরে লিখুন বা উপরের ড্রপডাউন থেকে নির্বাচন করুন। প্রতিটি ঘরের সংখ্যার সঙ্গে ড্রপডাউন স্বয়ংক্রিয়ভাবে মিলবে।
 টেবিলের সর্বশেষ ডান পাশের মোট জমির পরিমাণ ঘরে ওই খতিয়ানের মোট জমি লিখুন। এরপর প্রতিটি মালিকের জমির পরিমাণ তার অংশ অনুযায়ী স্বয়ংক্রিয়ভাবে বের হবে।
-মোট অংশ ১৬ আনা না হওয়া পর্যন্ত NB: বার্তায় কত আনা/গণ্ডা/কড়া/ক্রান্তি/তিল প্রয়োজন বা বেশি হয়েছে তা দেখাবে। ঠিক ১৬ আনা হলে মোট অংশে “১ (পূর্ণ ১৬ আনা)” দেখাবে।
+মোট অংশ ১৬ আনা না হওয়া পর্যন্ত NB: বার্তায় কত আনা/গণ্ডা/কড়া/ক্রান্তি/তিল প্রয়োজন তা দেখাবে। ঠিক ১৬ আনা হলে মোট অংশে “১ (পূর্ণ ১৬ আনা)” দেখাবে।
+গুরুত্বপূর্ণ: সব মালিকের মোট অংশ ১৬ আনার বেশি দেওয়া যাবে না। কোনো ঘরে লিখলে বা ড্রপডাউন থেকে বাছলে যদি মোট ১৬ আনা পার হয়ে যায়, তাহলে সেই পরিবর্তন বসবে না, আগের মান ফিরে আসবে এবং সতর্কবার্তা দেখাবে।
 টিপ: সর্বশেষ মালিকের অংশ পূরণ করলে এবং মোট ১৬ আনা না হলে প্রয়োজন অনুযায়ী পরবর্তী খালি মালিকের সারি স্বয়ংক্রিয়ভাবে তৈরি হয়।
 ২. অংশের একক ও হিসাবের নিয়ম
 ১৬ আনা = পূর্ণ ১ অংশ
@@ -988,14 +1193,14 @@ const GUIDE = `এই নির্দেশিকায় মূল খতি�
 ৩. মালিক, সারি, Duplicate, Delete ও Drag
 মালিক কলামের নিচের সবুজ +: নতুন মালিকের সারি যোগ করে।
 মালিকের নামের পাশের +: পিতা/স্বামী নির্বাচন করে সম্পর্কের নামের ঘর খোলে। পাশের × চাপলে সম্পর্কের তথ্য মুছে যায়।
-Duplicate (+): বর্তমান সারির মালিক, সম্পর্ক এবং আনা–তিলের মানসহ একটি কপি সারি ঠিক তার নিচে তৈরি করে।
+Duplicate (+): বর্তমান সারির মালিক, সম্পর্ক এবং আনা–তিলের মানসহ একটি কপি সারি ঠিক তার নিচে তৈরি করে। কপি করলে মোট ১৬ আনা পার হয়ে গেলে কপি হবে না।
 Delete (−): সেই সারি মুছে দেয়। যদি একটিমাত্র সারি থাকে, সেটি পুরো মুছে না গিয়ে খালি হয়ে যায়।
 Drag: মালিকের সিরিয়াল নম্বর মাউস দিয়ে ধরে উপরে/নিচে টেনে ক্রম পরিবর্তন করা যায়; সিরিয়াল আবার স্বয়ংক্রিয়ভাবে সাজে।
 ৪. পূর্ণ ১৬ আনা হলে কী হবে
 মোট অংশ ঠিক ১৬ আনা হলে সফলতার চিহ্ন দেখাবে এবং আনা–তিলের নিচের ম্যানুয়াল সংখ্যার ইনপুটগুলো লুকিয়ে যাবে।
 এরপর পরবর্তী খতিয়ানের একটি সাময়িক খালি ব্লক স্বয়ংক্রিয়ভাবে খুলতে পারে। সেখানে ১০ সেকেন্ডের কাউন্টডাউন থাকবে।
 সাময়িক খতিয়ানে কোনো মান লিখলে সেটি স্থায়ী হয়ে যাবে। কিছু না করলে কাউন্টডাউন শেষে সেটি নিজে থেকে সরবে।
-মোট অংশ ১৬ আনার বেশি হলে লাল সতর্কতা/চিহ্ন দেখাবে এবং NB বার্তায় কতটুকু বেশি হয়েছে তা জানাবে।
+মোট অংশ ১৬ আনার বেশি দেওয়া যায় না। আগে থেকে সেভ করা কোনো খতিয়ানে যদি ১৬ আনার বেশি থেকে থাকে, তাহলে NB বার্তায় কতটুকু বেশি তা দেখাবে; কোনো ঘর কমিয়ে বা Reset করে ঠিক করুন।
 ৫. নতুন খতিয়ান, খতিয়ান Delete ও সর্বোচ্চ সীমা
 খতিয়ান +: নতুন খতিয়ান যোগ করে। আগের সর্বশেষ খতিয়ান নম্বরের শেষে সংখ্যা থাকলে পরবর্তী নম্বর স্বয়ংক্রিয়ভাবে বসানোর চেষ্টা করে।
 কোনো খতিয়ান নম্বর হাতে পরিবর্তন করলে অন্য খতিয়ানের নম্বর স্বয়ংক্রিয়ভাবে পরিবর্তন করা হয় না।
@@ -1389,7 +1594,7 @@ function restoreApp() {
 async function toggleLock() {
   if (pipWin) { try { pipWin.close(); } catch (e) {} setTimeout(() => { if (pipWin) restoreApp(); }, 300); return; }
   if (!('documentPictureInPicture' in window)) { toast('এই পেজে মিনি উইন্ডো চলে না — ফাইলটি ডাউনলোড করে সরাসরি Chrome/Edge/Opera-তে খুলুন'); return; }
-  try { pipWin = await documentPictureInPicture.requestWindow({ width: 440, height: 460 }); } catch (e) { toast('লক চালু করা যায়নি'); return; }
+  try { pipWin = await documentPictureInPicture.requestWindow({ width: 560, height: 440 }); } catch (e) { toast('লক চালু করা যায়নি'); return; }
   copyStyles(pipWin);
   pipWin.document.body.style.margin = '0';
   pipWin.document.documentElement.classList.toggle('dark', !!S.dark);
@@ -1455,6 +1660,137 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') escClose(); 
 loadState(); applySettings(); applyFont(); applyAP(); applyDark(); applyHidden(); applyPdf(); renderAll(); applyAC(); updateBtns(); snapNow();
 setInterval(() => { if (pipWin && pipWin.closed) restoreApp(); }, 1000);
 window.addEventListener('focus', () => { if (pipWin && pipWin.closed) restoreApp(); });
+
+/* ===== কমফোর্ট আপডেট: আইকন + অক্ষর স্পষ্টতা ===== */
+(function () {
+  const P = {
+    plus:'<path d="M12 5v14M5 12h14"/>',
+    filePlus:'<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M12 11v6M9 14h6"/>',
+    undo:'<path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/>',
+    redo:'<path d="m15 14 5-5-5-5"/><path d="M20 9H10a6 6 0 0 0 0 12h3"/>',
+    clip:'<rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/>',
+    fileUp:'<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M12 17v-6M9 13l3-3 3 3"/>',
+    note:'<path d="M5 3h11l3 3v15H5z"/><path d="M9 9h6M9 13h6M9 17h3"/>',
+    percent:'<path d="M19 5 5 19"/><circle cx="7" cy="7" r="2.5"/><circle cx="17" cy="17" r="2.5"/>',
+    scissors:'<circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.1 15.9M14.5 14.5 20 20M8.1 8.1 12 12"/>',
+    convert:'<path d="M7 7h13l-4-4M17 17H4l4 4"/>',
+    users:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14a6.5 6.5 0 0 1 3.5 6"/>',
+    book:'<path d="M2 5a1 1 0 0 1 1-1h6a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H3a1 1 0 0 1-1-1z"/><path d="M22 5a1 1 0 0 0-1-1h-6a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h7a1 1 0 0 0 1-1z"/>',
+    sliders:'<path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/>',
+    eye:'<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+    eyeoff:'<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/><path d="M3 3l18 18"/>',
+    copy:'<rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>',
+    printer:'<path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M7 14h10v7H7z"/>',
+    moon:'<path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5z"/>',
+    sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+    reset:'<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/>',
+    trash:'<path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14M10 10v6M14 10v6"/>',
+    pin:'<path d="M12 17v5M9 3h6l-1 6 3 3v2H7v-2l3-3z"/>',
+    win:'<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/>',
+    calc:'<rect x="5" y="2" width="14" height="20" rx="2"/><path d="M8 6h8M8 11h.01M12 11h.01M16 11h.01M8 15h.01M12 15h.01M16 15h.01M8 19h.01M12 19h.01M16 19h.01"/>'
+  };
+  const M = { kadd:'plus', newfield:'filePlus', undo:'undo', redo:'redo', ap:'clip', pdf:'fileUp', note:'note', ab:'percent', dk:'scissors',
+    conv:'convert', heir:'users', guide:'book', settings:'sliders', visible:'eye', autocopy:'copy', print:'printer', reset:'reset', custom:'eyeoff', calc:'calc' };
+  const iconKey = b => {
+    const a = b.dataset.a;
+    if (a === 'lock') return b.classList.contains('or') ? 'win' : 'pin';
+    if (a === 'dark') return /Light/.test(b.textContent) ? 'sun' : 'moon';
+    if (a) return M[a];
+    if (b.classList.contains('kdel') && !b.classList.contains('krst')) return 'trash';
+  };
+  function decorate(root) {
+    root.querySelectorAll('button').forEach(b => {
+      if (b.querySelector('svg')) return;
+      const k = iconKey(b); if (!k) return;
+      const t = b.textContent.replace(/^[^\p{L}\p{N}]+/u, '').trim();
+      b.textContent = '';
+      b.insertAdjacentHTML('beforeend', '<svg viewBox="0 0 24 24" aria-hidden="true">' + P[k] + '</svg>');
+      if (t) { const s = document.createElement('span'); s.textContent = t; b.append(s); }
+    });
+  }
+  const cfg = { childList: true, subtree: true };
+  const obs = new MutationObserver(() => { obs.disconnect(); decorate(app); obs.observe(app, cfg); });
+  decorate(app); obs.observe(app, cfg);
+
+  const CL = [[400,'#64748b','none'],[600,'#334155','none'],[700,'#0f172a','none'],[700,'#020617','0 0 .4px currentColor'],[700,'#000','0 0 .9px currentColor']];
+  if (!Number.isInteger(S.clr) || S.clr < 0 || S.clr > 4) S.clr = 2;
+  function applyClr() {
+    const c = CL[S.clr];
+    app.style.setProperty('--iw', c[0]); app.style.setProperty('--ic', c[1]); app.style.setProperty('--is', c[2]);
+    const v = $('#clrv'); if (v) v.textContent = bn(S.clr + 1) + '/৫';
+  }
+  const fp = app.querySelector('#bar [data-a="fontp"]');
+  fp.after(h('span', { class: 'clrg' },
+    h('button', { class: 'tb sl', dataset: { a: 'clrm' }, title: 'অক্ষর কম চকচকে (রাতের জন্য)', text: 'Aa −' }),
+    h('span', { class: 'fsv', id: 'clrv' }),
+    h('button', { class: 'tb sl', dataset: { a: 'clrp' }, title: 'অক্ষর আরও চকচকে (দিনের জন্য)', text: 'Aa +' })));
+  ACT.clrm = () => { S.clr = Math.max(0, S.clr - 1); applyClr(); save(); };
+  ACT.clrp = () => { S.clr = Math.min(4, S.clr + 1); applyClr(); save(); };
+  applyClr();
+})();
+
+/* ===== স্মার্ট ফোকাস: অসম্ভব ঘর বাদ, ০ বা বেশি দিলে ঘর ফাঁকা থেকে পরের ঘরে ===== */
+(function () {
+  const FK = /^o(.+)\.f(\d)$/;
+  // এই ঘরে সর্বোচ্চ কত বসানো যায় (বাকি অংশ অনুযায়ী)
+  const roomFor = (k, o, i) => Math.floor((FULL - (totalTil(k) - o.v[i] * U[i])) / U[i]);
+  const ctx = el => {
+    const m = FK.exec((el && el.dataset && el.dataset.fk) || ''); if (!m) return null;
+    const row = el.closest('.row'), blk = row && row.closest('.kb');
+    if (!row || !blk || !row._o || !blk._k) return null;
+    return { row, blk, o: row._o, k: blk._k, i: +m[2] };
+  };
+  const fillable = el => { const c = ctx(el); return !c || roomFor(c.k, c.o, c.i) >= 1; };
+
+  const baseFocus = focusNext;
+  focusNext = function (el, dir) {
+    if (dir !== 1) return baseFocus(el, dir);
+    const root = el.closest('.fw') || el.closest('#app'); if (!root) return false;
+    const l = navList(root), i = l.indexOf(el);
+    if (i < 0) return baseFocus(el, dir);
+    let start = i + 1;
+    if (/\.f4$/.test(el.dataset.fk || '')) {          // তিল শেষ → পরের সারির প্রথম ঘর
+      const row = el.closest('.row'), nr = row && row.nextElementSibling;
+      const f0 = nr && nr.querySelector('[data-fk$=".f0"]');
+      if (f0 && l.indexOf(f0) >= 0) start = l.indexOf(f0);
+    }
+    for (let j = start; j < l.length; j++) {
+      if (!fillable(l[j])) continue;                   // যে ঘরে আর কিছু বসানো যায় না, সেটা বাদ
+      l[j].focus(); if (l[j].select) l[j].select();
+      return true;
+    }
+    return baseFocus(el, dir);
+  };
+
+  // ০ দিলে বা বেশি/অসম্ভব মান দিলে: ঘর ফাঁকা থাকবে, পরের ঘরে চলে যাবে
+  app.addEventListener('input', e => {
+    const t = e.target, c = t && t.matches && t.matches('input.n') ? ctx(t) : null;
+    if (!c) return;
+    const s = en(t.value).replace(/\D/g, '').slice(0, 2);
+    if (s === '') return;
+    const n = parseInt(s, 10);
+    const over = totalTil(c.k) - c.o.v[c.i] * U[c.i] + n * U[c.i] > FULL;
+    if (n !== 0 && !over) return;                      // ঠিক মান: আগের নিয়মেই চলবে
+    e.stopImmediatePropagation();
+    c.o.v[c.i] = 0; t.value = '';
+    syncRow(c.row);
+    markPermanent(c.blk, c.k);
+    if (over) toast(LIMIT_MSG);
+    afterEdit(c.blk, c.k, c.o, { val: true, adv: c.i });
+  }, true);
+
+  // আর কোনো সংখ্যা বসানো সম্ভব না হলে (যেমন বাকি মাত্র ৫ আনা, ১ লিখলে) নিজে পরের ঘরে যাবে
+  app.addEventListener('input', e => {
+    const t = e.target, c = t && t.matches && t.matches('input.n') ? ctx(t) : null;
+    if (!c) return;
+    const n = parseInt(en(t.value).replace(/\D/g, ''), 10);
+    if (!n) return;
+    const a = app.ownerDocument.activeElement;
+    if (!a || !a.dataset || a.dataset.fk !== t.dataset.fk) return;   // আগের কোড ইতিমধ্যে সরিয়ে নিয়েছে
+    const c2 = ctx(a); if (!c2) return;
+    if (n * 10 > roomFor(c2.k, c2.o, c2.i)) focusNext(a, 1);
+  });
+})();
 </script>
 </body>
 </html>
