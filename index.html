@@ -28,7 +28,10 @@ html.dark{filter:invert(1) hue-rotate(180deg)}
 html.dark iframe{filter:invert(1) hue-rotate(180deg)}
 #layout{display:flex;align-items:flex-start;min-height:100vh}
 #app{flex:1;min-width:0;font-size:var(--fs,12px);position:relative}
-button{font:inherit;cursor:pointer;border:0;color:#fff;border-radius:.5em;padding:.35em .6em;font-weight:700;white-space:nowrap}
+button{font:inherit;cursor:pointer;border:0;color:#fff;border-radius:.5em;padding:.35em .6em;font-weight:700;white-space:nowrap;box-shadow:0 1px 2px rgba(15,23,42,.25);transition:filter .15s,transform .1s,box-shadow .15s}
+button:not(:disabled):hover{filter:brightness(1.12);box-shadow:0 2px 6px rgba(15,23,42,.28)}
+button:not(:disabled):active{transform:translateY(1px);filter:brightness(.94);box-shadow:none}
+button:focus-visible{outline:2px solid #facc15;outline-offset:2px}
 button:disabled{opacity:.45;cursor:not-allowed}
 input,select{font:inherit;color:#0f172a;background:#fff;border:1px solid #cbd5e1;border-radius:.4em;padding:.25em .3em;min-width:0;width:100%}
 input:focus,select:focus{outline:2px solid var(--blue);border-color:transparent}
@@ -41,7 +44,11 @@ input.copied,.pill.copied,.nt.copied{background:#bbf7d0!important;color:#14532d!
 .kh{display:flex;align-items:center;gap:.4em;padding:.2em .25em;flex-wrap:wrap}
 .kno{width:7em;text-align:center;font-weight:700}
 .si{background:#e0ecf8;border:1px solid #9bb8d4;border-radius:.4em;padding:.1em .5em;font-weight:700}
-.kdel{background:#c0392b;border-radius:2em;font-size:.8em}
+.kdel{background:#b91c1c;border-radius:2em;font-size:.8em}
+.krst{background:#7f1d1d;margin-left:auto;padding:.3em 1em;font-size:.9em}
+.kic{border-radius:.5em;padding:.1em .45em;font-size:.95em;line-height:1.3}
+.kb:not(:first-child) .kfirst{display:none}
+#app.mini #bar{display:none}
 .kok{display:none;color:#15803d;font-weight:700}
 .kb.full .kok{display:inline}
 .tmpmsg{color:#b45309;font-weight:700;font-size:.9em}
@@ -108,7 +115,11 @@ input.copied,.pill.copied,.nt.copied{background:#bbf7d0!important;color:#14532d!
 /* ---- নিচের টুলবার ---- */
 #bar{position:sticky;bottom:0;z-index:15;display:flex;flex-wrap:wrap;gap:.25em;background:#fff;padding:.25em;border-top:1px solid #d5dde6;justify-content:center;align-items:center}
 .tb{font-size:.85em;padding:.4em .6em}
-.g{background:#16a34a}.r{background:#dc2626}.bl{background:#2f7fb8}.ind{background:#6366f1}.sl{background:#64748b}.tl2{background:#0f766e}.nv{background:#334155}.cy{background:#0891b2}.or{background:#d97706}.pk{background:#be185d}
+/* Color system: green = add/confirm, amber = caution, red = destructive, blue/teal/violet/rose = calculation tools, slate = utilities, indigo = views, sky = help */
+.g{background:#15803d}.r{background:#b91c1c}.or{background:#b45309}
+.bl{background:#1d4ed8}.tl2{background:#0f766e}.vi{background:#6d28d9}.pk{background:#be185d}
+.sl{background:#475569}.nv{background:#1e293b}.ind{background:#4f46e5}.cy{background:#0369a1}
+.tgon{background:#15803d}.tgoff{background:#6b7280}
 .tb.on{outline:2px solid #fde047}
 .hid{display:none!important}
 .tb.copied{background:#bbf7d0!important;color:#14532d!important}
@@ -124,6 +135,26 @@ input.copied,.pill.copied,.nt.copied{background:#bbf7d0!important;color:#14532d!
 #app.mini.no-land .t-sh{grid-column:2/4}
 #app.mini .row{padding:.1em 0}
 #app.mini .f{gap:.1em}
+/* Mini Window: one compact line per owner: serial, 5 unit inputs, + and - buttons */
+#app.mini .nmw,#app.mini .c-sh,#app.mini .c-ld{display:none}
+/* Mini Window: dropdown lives inside each input cell (arrow at the right edge) so one line stays one line */
+#app.mini .f{position:relative}
+#app.mini .row .sel{display:block;position:absolute;top:0;right:0;width:1.8em;height:100%;opacity:0;cursor:pointer;z-index:2;padding:0}
+#app.mini .row .f::after{content:'▾';position:absolute;right:.35em;top:50%;transform:translateY(-50%);pointer-events:none;color:#64748b;font-size:.9em;z-index:1}
+#app.mini .row .f .n{padding-left:1.1em;padding-right:1.1em}
+#app.mini .row,#app.mini .th{display:grid;grid-template-columns:2em repeat(5,minmax(0,1fr)) 3.9em;gap:.15em;align-items:center}
+#app.mini .c-nm,#app.mini .f,#app.mini .c-act{grid-row:1;grid-column:auto}
+#app.mini .sn{min-width:0}
+#app.mini .c-act{gap:.2em;justify-content:flex-end}
+#app.mini .c-act .gadd,#app.mini .c-act .gdel{width:1.7em;height:1.7em;font-size:1em}
+#app.mini .f{display:block!important}
+#app.mini .f .n{display:block!important;width:100%;text-align:center}
+#app.mini .f .n::placeholder{color:#94a3b8;opacity:1}
+#app.mini .th{padding:.15em 0;font-size:.85em;text-align:center}
+#app.mini .th>div{padding:.1em .15em;text-align:center}
+#app.mini .th>div:nth-child(n+7){display:none}
+#app.mini .th-nm{font-size:0}
+#app.mini .th-nm::before{content:'নং';font-size:11px}
 .slot{display:inline-flex}
 .bslot{background:#0d9488;border-radius:.5em 0 0 .5em;font-size:.85em}
 .bslotx{background:#115e59;border-radius:0 .5em .5em 0;padding:.35em .4em;font-size:.85em}
@@ -187,7 +218,7 @@ input.copied,.pill.copied,.nt.copied{background:#bbf7d0!important;color:#14532d!
 #pdfFrame{flex:1;width:100%;border:0}
 @media(max-width:819px){#layout{flex-direction:column}#pdfPane.show{width:100%;height:70vh;position:static}#divider.show{display:none}}
 #ph{display:none;padding:14px;text-align:center}
-#ph button{background:#dc2626;margin-top:6px;padding:.5em 1em}
+#ph button{background:#1d4ed8;margin-top:6px;padding:.5em 1em}
 /* ---- SEO আর্টিকেল ---- */
 #seo{max-width:58em;margin:0 auto;padding:1.5em 1em 4em;font-size:16px;line-height:1.85;background:#fff;border-top:3px solid var(--blue)}
 #seo h1{font-size:1.6em;color:#1d4ed8;margin-bottom:.4em;line-height:1.4}
@@ -219,26 +250,23 @@ input.copied,.pill.copied,.nt.copied{background:#bbf7d0!important;color:#14532d!
   <div id="app">
     <div id="blocks"></div>
     <div id="bar">
-      <button class="tb sl" id="custBtn" data-a="custom" title="কোন বাটন/লেখা দেখাবে বা লুকাবে ঠিক করুন">🙈 Hide / Show</button>
       <button class="tb g" id="kaddBtn" data-a="kadd">খতিয়ান +</button>
       <button class="tb or" id="newBtn" data-a="newfield">New Field</button>
       <button class="tb sl" id="undoBtn" data-a="undo" title="শেষ পরিবর্তন ফিরিয়ে আনুন">↶ Undo</button>
       <button class="tb sl" id="redoBtn" data-a="redo" title="আবার করুন">↷ Redo</button>
-      <button class="tb g" id="apBtn" data-a="ap">Auto Paste ON</button>
+      <button class="tb tgon" id="apBtn" data-a="ap">Auto Paste ON</button>
       <button class="tb ind" data-a="pdf">Upload PDF</button>
-      <button class="tb r" id="noteBtn" data-a="note">Notepad: OFF</button>
+      <button class="tb tgoff" id="noteBtn" data-a="note">Notepad: OFF</button>
       <button class="tb bl" data-a="ab">অংশ বের করুন</button>
       <button class="tb tl2" data-a="dk">দাগে জমি কর্তন</button>
-      <button class="tb pk" data-a="conv">Converter</button>
+      <button class="tb vi" data-a="conv">Converter</button>
       <button class="tb pk" data-a="heir">ওয়ারিশ ভাগ</button>
-      <button class="tb nv" data-a="calc">🧮 Calculator</button>
       <button class="tb cy" data-a="guide">Guideline</button>
       <button class="tb sl" data-a="settings">⚙</button>
       <button class="tb ind" id="visBtn" data-a="visible">👁 Visible</button>
-      <button class="tb r" id="acBtn" data-a="autocopy" title="ON থাকলে ইন্টারফেসের সব তথ্য নিজে থেকে কপি হবে">Auto Copy OFF</button>
+      <button class="tb tgoff" id="acBtn" data-a="autocopy" title="ON থাকলে ইন্টারফেসের সব তথ্য নিজে থেকে কপি হবে">Auto Copy OFF</button>
       <button class="tb nv" data-a="print">🖨 Print/PDF</button>
       <button class="tb sl" id="darkBtn" data-a="dark">🌙 Dark</button>
-      <button class="tb ind" id="lockBtn" data-a="lock" title="ব্রাউজারের বাইরে সবার উপরে ছোট উইন্ডোতে রাখুন">📌 Mini Window</button>
       <button class="tb sl" data-a="fontm">Font −</button><span class="fsv" id="fsv">12px</span><button class="tb sl" data-a="fontp">Font +</button>
     </div>
     <div id="toast"></div>
@@ -351,8 +379,7 @@ const SYM = {
 const BND = '০১২৩৪৫৬৭৮৯';
 const bn = s => String(s).replace(/\d/g, d => BND[d]);
 const en = s => String(s).replace(/[০-৯]/g, d => BND.indexOf(d));
-const pad2 = n => String(n).padStart(2, '0');
-const toTil = v => v.reduce((s, x, i) => s + x * U[i], 0);
+const pad2 = n => String(n).padStart(2, '0');const toTil = v => v.reduce((s, x, i) => s + x * U[i], 0);
 const norm = t => U.map(u => { const q = Math.floor(t / u); t %= u; return q; });
 const num = s => { const n = parseFloat(en(String(s == null ? '' : s)).replace(/,/g, '')); return isNaN(n) ? 0 : n; };
 const newId = () => Math.random().toString(36).slice(2, 9);
@@ -520,8 +547,19 @@ function renderBlock(k) {
     if (!arm) { arm = 1; del.textContent = 'নিশ্চিত?'; setTimeout(() => { arm = 0; del.textContent = 'Delete'; }, 2500); return; }
     deleteK(k);
   };
-  const head = h('div', { class: 'kh' }, h('b', { text: 'খতিয়ান নং' }), kno, h('span', { class: 'si' }), del,
-    h('span', { class: 'kok', text: '✅ পূর্ণ ১৬ আনা' }), h('span', { class: 'tmpmsg' }));
+  // Reset button sits next to Delete; only the first block shows it (see .krst CSS)
+  const rst = h('button', { class: 'kdel krst kfirst', text: 'Reset', title: 'সব ইনপুট ঘর খালি করুন', dataset: { a: 'reset' } });
+  // Icon-only buttons next to Reset (first block only): Hide/Show, Mini/Full Window, Calculator
+  const mkIc = (a, txt, cls, title, extra) => {
+    const b = h('button', { class: 'kic kfirst ' + cls + (extra ? ' ' + extra : ''), text: txt, title, dataset: { a } });
+    if (S.hidden[a]) b.classList.add('hid');
+    return b;
+  };
+  const icCust = mkIc('custom', '👁', 'sl', 'Hide / Show');
+  const icLock = mkIc('lock', pipWin ? '🖥' : '📌', pipWin ? 'or' : 'ind', pipWin ? 'Back to Full Window' : 'Mini Window', 'lockbtn');
+  const icCalc = mkIc('calc', '🧮', 'nv', 'Calculator');
+  const head = h('div', { class: 'kh' }, h('b', { text: 'খতিয়ান নং' }), kno, h('span', { class: 'si' }), del, icCust, icLock, icCalc,
+    h('span', { class: 'kok', text: '✅ পূর্ণ ১৬ আনা' }), h('span', { class: 'tmpmsg' }), rst);
   const th = h('div', { class: 'th' }, h('div', { class: 'th-nm', text: 'মালিক' }), ...UN.map(u => h('div', { text: u })),
     h('div', { text: 'অংশ' }), h('div', { class: 'th-ld', text: 'জমির পরিমাণ' }), h('div', { text: '①' }));
   const rows = h('div', { class: 'rows' });
@@ -737,6 +775,27 @@ function newField() {
   S.khotians = [blankK()]; renderAll(); save(); touch('main');
 }
 
+/* ================= Reset (input fields only) ================= */
+function resetAll() {
+  // Single click, no confirmation. Clears only the input values of every khotian
+  // (khotian no, owner names, relation names, anna-til values, total land)
+  // but keeps every khotian block and every owner row, so no row is deleted.
+  // Settings, notes, Ongsho/Dag tools, PDF, theme and Hide/Show stay untouched.
+  S.khotians.forEach(k => clearInterval(k._iv));
+  S.khotians = S.khotians.filter(k => !k.temp);
+  if (!S.khotians.length) S.khotians = [blankK()];
+  S.khotians.forEach(k => {
+    k.no = '';
+    k.land = '';
+    k.owners = k.owners.map(() => blankOwner());
+  });
+  renderAll();
+  save();
+  snapNow();
+  touch('main');
+  toast('🔄 ইনপুট ঘরগুলো রিসেট হয়েছে');
+}
+
 /* ================= কপি সব ================= */
 function buildAllText() {
   const out = [];
@@ -764,7 +823,7 @@ async function autoCopyNow(force) {
   if (ok) { acLast = t; const b = $('#acBtn'); if (b) { b.classList.add('copied'); setTimeout(() => b.classList.remove('copied'), 600); } }
   else toast('Auto Copy ব্যর্থ — Clipboard অনুমতি দিন');
 }
-function applyAC() { const b = $('#acBtn'); b.textContent = 'Auto Copy ' + (S.autoCopy ? 'ON' : 'OFF'); b.className = 'tb ' + (S.autoCopy ? 'g' : 'r'); }
+function applyAC() { const b = $('#acBtn'); b.textContent = 'Auto Copy ' + (S.autoCopy ? 'ON' : 'OFF'); b.className = 'tb ' + (S.autoCopy ? 'tgon' : 'tgoff'); }
 function toggleAC() { S.autoCopy = !S.autoCopy; applyAC(); save(); if (S.autoCopy) autoCopyNow(true); toast('Auto Copy ' + (S.autoCopy ? 'ON' : 'OFF')); }
 
 /* ================= সেটিংস / ফন্ট / Auto Paste / ডার্ক ================= */
@@ -774,7 +833,7 @@ function applySettings() {
 }
 function applyFont() { app.style.setProperty('--fs', S.font + 'px'); $('#fsv').textContent = S.font + 'px'; }
 function fontStep(d) { S.font = Math.min(20, Math.max(1, S.font + d)); applyFont(); save(); }
-function applyAP() { const b = $('#apBtn'); b.textContent = 'Auto Paste ' + (S.autoPaste ? 'ON' : 'OFF'); b.className = 'tb ' + (S.autoPaste ? 'g' : 'r'); }
+function applyAP() { const b = $('#apBtn'); b.textContent = 'Auto Paste ' + (S.autoPaste ? 'ON' : 'OFF'); b.className = 'tb ' + (S.autoPaste ? 'tgon' : 'tgoff'); }
 function toggleAP() { S.autoPaste = !S.autoPaste; applyAP(); save(); extMsg('AUTO_PASTE_SWITCH', { on: S.autoPaste }); toast('Auto Paste ' + (S.autoPaste ? 'ON (সব জায়গায়)' : 'OFF (সব জায়গায়)')); }
 function applyDark() { document.documentElement.classList.toggle('dark', !!S.dark); if (typeof pipWin !== 'undefined' && pipWin) pipWin.document.documentElement.classList.toggle('dark', !!S.dark); $('#darkBtn').textContent = S.dark ? '☀ Light' : '🌙 Dark'; }
 function toggleDark() { S.dark = !S.dark; applyDark(); save(); }
@@ -948,8 +1007,9 @@ Auto Paste ON (Global): এটি একটি Master Switch। ON থাকল�
 Auto Paste OFF (Global): OFF করলে মূল ক্যালকুলেটর, “অংশ বের করুন” এবং “দাগে জমি কর্তন”—সব জায়গার Auto Paste একসাথে বন্ধ হবে। কপি সুবিধা চালু থাকবে, কিন্তু কোনো স্বয়ংক্রিয় পেস্ট বা auto-paste event/message যাবে না। সুইচ OFF হলে লাল, ON হলে সবুজ দেখায়।
 ⚙ Settings → Paste on Blocked Field চালু থাকলে এক্সটেনশন সক্রিয় ওয়েবপেজে paste/copy/text-select/right-click ব্লক সরানোর চেষ্টা করবে। ব্রাউজারের সুরক্ষিত বা সিস্টেম পেজে এটি কাজ নাও করতে পারে।
 গুরুত্বপূর্ণ: Clipboard, Auto Paste, popup এবং Picture-in-Picture ব্রাউজারের permission/security policy-এর ওপর নির্ভরশীল। কোনো ফিচার কাজ না করলে সংশ্লিষ্ট সাইটে Clipboard/Popup অনুমতি পরীক্ষা করুন।
-৭. New Field ও অটো-সেভ
+৭. New Field, Reset ও অটো-সেভ
 New Field: নিশ্চিতকরণের পর বর্তমান কাজের জায়গা নতুন খালি হিসাব দিয়ে শুরু করে। ভুল হলে Undo দিয়ে ফেরানো যায়।
+Reset (সবার উপরের খতিয়ানের লাইনে একদম ডান পাশে, Delete থেকে আলাদা): একবার ক্লিক করলেই (কোনো নিশ্চিতকরণ ছাড়া) শুধু ইনপুট ঘরগুলো খালি হয়: খতিয়ান নং, মালিক ও পিতা/স্বামীর নাম, আনা–তিলের সংখ্যা এবং মোট জমির পরিমাণ। কোনো খতিয়ান বা মালিকের সারি মুছে যায় না। সারিসহ পুরো খতিয়ান মুছতে চাইলে Delete বাটন ব্যবহার করুন। “অংশ বের করুন”, “দাগে জমি কর্তন”, Notepad, Settings, Hide/Show পছন্দ, PDF ও Dark mode আগের মতোই থাকে। ভুল হলে Undo দিয়ে ফেরানো যায়।
 অটো-সেভ: আপনার সব লেখা নিজে থেকেই ব্রাউজারের local storage-এ সেভ হয়, আলাদা Save বাটন লাগে না। ব্রাউজারের site data/storage পরিষ্কার করলে তথ্য হারাতে পারে।
 ৮. Visible
 Visible চাপলে সমর্থিত ব্রাউজারে Always-on-top/Picture-in-Picture ধরনের ছোট উইন্ডো খোলার চেষ্টা করবে; না হলে আলাদা popup window খুলবে।
@@ -1013,7 +1073,7 @@ Visible: synchronized compact view খোলে। Visible view-এ মূল �
 এই সাব-ক্যালকুলেটরের তথ্যও browser local storage-এ সংরক্ষিত থাকে এবং পরে আবার খুললে আগের state ফিরে আসতে পারে।
 ইনপুট ফরম্যাট মনে রাখুন: “দাগে জমি কর্তন” ক্যালকুলেটরে decimal point-এর বাম অংশ একর এবং ডান অংশ শতাংশ হিসেবে ধরা হয়। তাই ১ একর ৫ শতাংশ লিখতে 1.05 ব্যবহার করুন।
 ১৫. লক ও সব কপি
-📌 Mini Window (আগের লক): পুরো ক্যালকুলেটর একটি ছোট ভাসমান (Always-on-top) উইন্ডোতে চলে যায়, অন্য স্ক্রিনে ক্লিক করলেও সেটি উপরেই থাকে। উইন্ডো টেনে সরানো ও ছোট-বড় করা যায়। শুধু কম্পিউটারের Chrome/Edge এ চলে। আবার চাপলে (Back to Full Window) আগের জায়গায় ফিরে আসে।
+📌 Mini Window (আগের লক): পুরো ক্যালকুলেটর একটি ছোট ভাসমান (Always-on-top) উইন্ডোতে চলে যায়, অন্য স্ক্রিনে ক্লিক করলেও সেটি উপরেই থাকে। উইন্ডো টেনে সরানো ও ছোট-বড় করা যায়। শুধু কম্পিউটারের Chrome/Edge এ চলে। আবার চাপলে (Back to Full Window) আগের জায়গায় ফিরে আসে। Mini Window-এ মালিকের নাম লুকানো থাকে; প্রতিটি মালিক এক লাইনে দেখায়: ক্রম (১, ২, ৩…), আনা–তিলের ঘর এবং + / − বাটন। Mini Window-এর প্রতিটি ঘরে লিখেও দেওয়া যায়, আবার ঘরের ডান পাশের ▾ চিহ্নে ক্লিক করে ড্রপডাউন থেকেও বেছে নেওয়া যায়। Mini Window-এ নিচের বাটনবার থাকে না। Hide / Show (👁), Mini/Full Window (📌 / 🖥) ও Calculator (🧮) বাটন সবার উপরের খতিয়ানে Reset-এর পাশে শুধু আইকন হিসেবে আছে।
 📋 Auto Copy ON/OFF: ON থাকলে আপনি কিছু লিখলে বা বদলালে (থামার প্রায় ০.৫ সেকেন্ড পর) ইন্টারফেসের সব খতিয়ান, মালিকের নাম, অংশ ও জমি নিজে থেকে কপি হয়ে যায়; তারপর যেকোনো জায়গায় Ctrl+V। OFF করলে অটো-কপি বন্ধ।
 ১৬. সমস্যা হলে দ্রুত পরীক্ষা করুন
 কপি/পেস্ট হচ্ছে না → Clipboard permission এবং Auto Paste setting পরীক্ষা করুন।
@@ -1067,7 +1127,7 @@ function hideEls(k) {
   if (k === 'font') return [...app.querySelectorAll('#bar [data-a="fontm"], #bar #fsv, #bar [data-a="fontp"]')];
   if (k === 'article') return [$('#seo')];
   if (k === 'h1') return [$('#top')];
-  return [...app.querySelectorAll('#bar [data-a="' + k + '"]')];
+  return [...app.querySelectorAll('[data-a="' + k + '"]')];
 }
 function applyHidden() { HIDE_ITEMS.forEach(([k]) => hideEls(k).forEach(e => e && e.classList.toggle('hid', !!S.hidden[k]))); }
 function openCustom() {
@@ -1245,7 +1305,7 @@ async function openWindow(w, hh, title) {
 }
 function updateBtns() {
   const on = !!viewers.note, nb = $('#noteBtn');
-  nb.textContent = 'Notepad: ' + (on ? 'ON' : 'OFF'); nb.className = 'tb ' + (on ? 'g' : 'r');
+  nb.textContent = 'Notepad: ' + (on ? 'ON' : 'OFF'); nb.className = 'tb ' + (on ? 'tgon' : 'tgoff');
   $('#visBtn').classList.toggle('on', !!(viewers.main || viewers.ab || viewers.dk));
 }
 async function openViewer(kind, title, w, hh) {
@@ -1314,7 +1374,14 @@ const vBuild = {
 
 /* ================= লক (পুরো অ্যাপ সবার উপরে) ================= */
 let pipWin = null;
-function setLockUI(on) { const b = $('#lockBtn'); b.textContent = on ? '🔓 Back to Full Window' : '📌 Mini Window'; b.className = 'tb ' + (on ? 'r' : 'ind'); ph.style.display = on ? 'block' : 'none'; }
+function setLockUI(on) {
+  app.querySelectorAll('.lockbtn').forEach(b => {
+    b.textContent = on ? '🖥' : '📌';
+    b.title = on ? 'Back to Full Window' : 'Mini Window';
+    b.classList.toggle('or', on); b.classList.toggle('ind', !on);
+  });
+  ph.style.display = on ? 'block' : 'none';
+}
 function restoreApp() {
   if (app.ownerDocument !== document) $('#layout').prepend(app);
   app.classList.remove('mini'); pipWin = null; setLockUI(false);
@@ -1356,7 +1423,7 @@ $('#divider').addEventListener('dblclick', () => { S.pdfW = 45; applyPdf(); save
 
 /* ================= ইভেন্ট সংযোগ ================= */
 const ACT = {
-  kadd: addK, newfield: newField, ap: toggleAP, pdf: pdfBtn, note: () => toggleViewer('note'),
+  kadd: addK, newfield: newField, reset: resetAll, ap: toggleAP, pdf: pdfBtn, note: () => toggleViewer('note'),
   ab: openAb, dk: openDk, calc: openCalc, guide: openGuide, settings: openSettings, visible: () => toggleViewer('main'),
   custom: openCustom, conv: openConv, heir: openHeir, undo: undo, redo: redo, print: doPrint, dark: toggleDark,
   lock: toggleLock, autocopy: toggleAC, fontm: () => fontStep(-1), fontp: () => fontStep(1),
