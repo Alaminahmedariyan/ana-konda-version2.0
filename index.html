@@ -430,6 +430,45 @@ html.dark{filter:invert(1) hue-rotate(180deg)}
 }
 /* NB বার্তাও লালচে (ঐচ্ছিক) */
 #app .nb.bad{background:#fee2e2;color:#7f1d1d;border-color:#ef4444}
+
+/* ===== v3 fixes ===== */
+
+/* Mini: icon button ছোট */
+#app.mini .kic{padding:.05em .28em;font-size:.78em}
+#app.mini .kic svg{width:1em;height:1em}
+
+/* Mini: dropdown বাদ, ঘরের লেখা বামে ও একটু ছোট */
+#app.mini .row .sel{display:none!important}
+#app.mini .row .f::after{display:none!important}
+#app.mini .row .f .n{text-align:left;padding:.2em .25em;font-size:.95em}
+#app.mini .row .f .n::placeholder{text-align:left}
+
+/* Mini: অংশ ও হেডার ছোট */
+#app.mini .c-sh .pill{font-size:1.2em}
+#app.mini .th{font-size:.85em}
+
+/* Mini: + / − সামান্য ছোট (এখনো সহজে ক্লিক করা যাবে) */
+#app.mini .c-act .gadd,#app.mini .c-act .gdel{width:1.4em;height:1.4em;font-size:1.15em}
+#app.mini .row,#app.mini .th,#app.mini.no-land .row,#app.mini.no-land .th{
+  grid-template-columns:2em repeat(5,minmax(0,1fr)) 6.5em 4.3em;
+}
+
+/* Mini: নিচের বাটনবার আবার দেখানো (ছোট সাইজে) */
+#app.mini #bar{display:flex!important}
+#app.mini #bar .tb{font-size:.75em;padding:.3em .45em}
+
+/* Full: "মোট ১ (পূর্ণ ১৬ আনা)" আর উপর-নিচ হবে না */
+@media(min-width:820px){
+  #app{--cols:var(--cnm,14em) repeat(5,minmax(0,1fr)) 10.5em var(--cld,8em) 8.5em}
+}
+#app .t-sh .pill{font-size:1.05em;white-space:nowrap}
+#app.mini .tf .pill{font-size:1em;white-space:nowrap}
+
+/* Notepad */
+.nbody{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.nmeta{display:flex;gap:6px;align-items:center;font-size:.75em;color:#64748b}
+.nchip{background:#e0e7ff;color:#3730a3;border-radius:4px;padding:0 5px;font-weight:700}
+.nsel{margin-bottom:4px}
 </style>
 </head>
 <body>
@@ -618,6 +657,8 @@ function loadState() {
       if (!S.hidden || typeof S.hidden !== 'object') S.hidden = {};
       if (!S.ab || !Array.isArray(S.ab.rows) || !S.ab.rows.length) S.ab = defaults().ab;
       if (!S.dk || !Array.isArray(S.dk.holdings) || !S.dk.holdings.length) S.dk = defaults().dk;
+      // পুরনো নোট (শুধু লেখা) নতুন ফরম্যাটে (খতিয়ান ট্যাগ + সময়) রূপান্তর
+      S.notes = (Array.isArray(S.notes) ? S.notes : []).map(n => typeof n === 'string' ? { id: newId(), t: n, kno: '', si: 0, ts: 0 } : n);
     }
   } catch (e) {}
 }
@@ -1065,7 +1106,13 @@ function openFloat(id, title, build, cls) {
   w.style.left = Math.max(4, (vw - w.offsetWidth) / 2) + 'px'; w.style.top = '40px';
   makeDrag(w, head); floats[id] = w; return w;
 }
-function closeFloat(id) { if (floats[id]) { floats[id].remove(); delete floats[id]; } }
+function closeFloat(id) {
+  if (floats[id]) {
+    floats[id].remove(); delete floats[id];
+    const k = id.startsWith('v_') ? id.slice(2) : null;
+    if (k && viewers[k] && viewers[k].inl) { delete viewers[k]; updateBtns(); }
+  }
+}
 const escClose = () => ['guide', 'calc', 'conv', 'heir'].forEach(closeFloat);
 function rerender(id) { const w = floats[id]; if (!w) return; withFocus(() => { w._body.textContent = ''; w._build(w._body); }); }
 const btn = (t, c, f) => h('button', { class: 'tb ' + c, text: t, onclick: f });
@@ -1223,10 +1270,11 @@ Visible-এ অংশে ক্লিক করে কপি করা যায
 Popup blocked দেখালে ব্রাউজারে এই ফাইল/সাইটের popup অনুমতি দিয়ে আবার Visible চাপুন।
 ৯. Quick Copy Notepad
 Notepad: OFF (লাল) বাটনে ক্লিক করলে সমর্থিত ব্রাউজারে ছোট Always-on-top notepad খোলে এবং বাটন Notepad: ON (সবুজ) হয়।
-উপরের ইনপুটে লেখা লিখে Enter চাপলে নতুন নোট তালিকার উপরে যোগ হবে।
+উপরের ড্রপডাউন থেকে বেছে নিন নোটটি কোন খতিয়ানের জন্য (ডিফল্টে আপনি যে খতিয়ানে কাজ করছেন সেটি), তারপর লিখে Enter চাপুন বা “যোগ” চাপুন। নতুন নোট তালিকার উপরে খতিয়ান ট্যাগ ও সময়সহ যোগ হবে।
+তালিকার উপরের ফিল্টার দিয়ে শুধু একটি খতিয়ানের নোট দেখা যায়।
 কোনো নোটে ক্লিক করলে লেখা কপি হবে; নোটের × চাপলে সেটি মুছে যাবে।
 নোটপ্যাডের − / + দিয়ে সংরক্ষিত লেখার ফন্ট ১–১০০px পর্যন্ত পরিবর্তন করা যায়। উইন্ডোর কোণা ধরে ছোট-বড় করা যায়।
-নোটগুলোর তালিকা এবং ফন্ট সাইজ local storage-এ সংরক্ষিত থাকে।
+নোটগুলো নিজে থেকেই সেভ হয় (local storage), Reset বা New Field করলেও মুছে যায় না। Mini Window চালু থাকলে Notepad/Visible সেখানেই ভেতরে ভাসমান প্যানেলে খোলে।
 ১০. Upload PDF / PDF Preview
 Upload PDF চাপলে একটি PDF নির্বাচন করুন। PDF ডান পাশে preview pane-এ দেখা যাবে।
 ক্যালকুলেটর ও PDF-এর মাঝের divider ডানে-বামে টেনে PDF অংশের প্রস্থ পরিবর্তন করা যায়; divider-এ double-click করলে ডিফল্ট প্রস্থে ফেরে।
@@ -1278,7 +1326,7 @@ Visible: synchronized compact view খোলে। Visible view-এ মূল �
 এই সাব-ক্যালকুলেটরের তথ্যও browser local storage-এ সংরক্ষিত থাকে এবং পরে আবার খুললে আগের state ফিরে আসতে পারে।
 ইনপুট ফরম্যাট মনে রাখুন: “দাগে জমি কর্তন” ক্যালকুলেটরে decimal point-এর বাম অংশ একর এবং ডান অংশ শতাংশ হিসেবে ধরা হয়। তাই ১ একর ৫ শতাংশ লিখতে 1.05 ব্যবহার করুন।
 ১৫. লক ও সব কপি
-📌 Mini Window (আগের লক): পুরো ক্যালকুলেটর একটি ছোট ভাসমান (Always-on-top) উইন্ডোতে চলে যায়, অন্য স্ক্রিনে ক্লিক করলেও সেটি উপরেই থাকে। উইন্ডো টেনে সরানো ও ছোট-বড় করা যায়। শুধু কম্পিউটারের Chrome/Edge এ চলে। আবার চাপলে (Back to Full Window) আগের জায়গায় ফিরে আসে। Mini Window-এ মালিকের নাম লুকানো থাকে; প্রতিটি মালিক এক লাইনে দেখায়: ক্রম (১, ২, ৩…), আনা–তিলের ঘর এবং + / − বাটন। Mini Window-এর প্রতিটি ঘরে লিখেও দেওয়া যায়, আবার ঘরের ডান পাশের ▾ চিহ্নে ক্লিক করে ড্রপডাউন থেকেও বেছে নেওয়া যায়। Mini Window-এ নিচের বাটনবার থাকে না। Hide / Show (👁), Mini/Full Window (📌 / 🖥) ও Calculator (🧮) বাটন সবার উপরের খতিয়ানে Reset-এর পাশে শুধু আইকন হিসেবে আছে।
+📌 Mini Window (আগের লক): পুরো ক্যালকুলেটর একটি ছোট ভাসমান (Always-on-top) উইন্ডোতে চলে যায়, অন্য স্ক্রিনে ক্লিক করলেও সেটি উপরেই থাকে। উইন্ডো টেনে সরানো ও ছোট-বড় করা যায়। শুধু কম্পিউটারের Chrome/Edge এ চলে। আবার চাপলে (Back to Full Window) আগের জায়গায় ফিরে আসে। Mini Window-এ মালিকের নাম লুকানো থাকে; প্রতিটি মালিক এক লাইনে দেখায়: ক্রম (১, ২, ৩…), আনা–তিলের ঘর, অংশ এবং + / − বাটন। Mini Window-এর ঘরগুলোতে সরাসরি লিখতে হয় (ড্রপডাউন নেই) এবং লেখা বাম পাশে দেখায়। নিচের বাটনবার Mini Window-এও আছে; Visible/Notepad সেখানে ভেতরেই ভাসমান প্যানেলে খোলে। Hide / Show (👁), Mini/Full Window (📌 / 🖥) ও Calculator (🧮) বাটন সবার উপরের খতিয়ানে Reset-এর পাশে শুধু আইকন হিসেবে আছে।
 📋 Auto Copy ON/OFF: ON থাকলে আপনি কিছু লিখলে বা বদলালে (থামার প্রায় ০.৫ সেকেন্ড পর) ইন্টারফেসের সব খতিয়ান, মালিকের নাম, অংশ ও জমি নিজে থেকে কপি হয়ে যায়; তারপর যেকোনো জায়গায় Ctrl+V। OFF করলে অটো-কপি বন্ধ।
 ১৬. সমস্যা হলে দ্রুত পরীক্ষা করুন
 কপি/পেস্ট হচ্ছে না → Clipboard permission এবং Auto Paste setting পরীক্ষা করুন।
@@ -1522,9 +1570,17 @@ async function openViewer(kind, title, w, hh) {
   updateBtns();
 }
 function toggleViewer(kind) {
+  const fid = 'v_' + kind;
   if (viewers[kind]) { try { viewers[kind].win.close(); } catch (e) {} delete viewers[kind]; updateBtns(); return; }
   const t = { main: 'Visible', ab: 'Visible — অংশ বের করুন', dk: 'Visible — জমি কর্তন', note: 'Quick Copy Notepad' }[kind];
-  openViewer(kind, t, kind === 'note' ? 300 : 340, 420);
+  if (pipWin) {   // Mini Window চালু: পপআপ খুললে Mini উইন্ডো বদলে যেত, তাই ভেতরেই ভাসমান প্যানেলে খুলবে
+    const v = { kind, inl: true, win: { close: () => closeFloat(fid) } };
+    v.refresh = () => { const w = floats[fid]; if (w) { w._body.textContent = ''; vBuild[kind](w._body, v); } };
+    const w = openFloat(fid, t, body => vBuild[kind](body, v), 'mid');
+    if (w) { viewers[kind] = v; updateBtns(); }
+    return;
+  }
+  openViewer(kind, t, 340, kind === 'note' ? 460 : 420);
 }
 const vline = (label, val, cls, copy) => h('div', { class: 'vl' }, h('span', { class: 'vn', text: label }),
   h('span', { class: 'pill copyable ' + (cls || 'w'), text: val, dataset: { copy: copy != null ? copy : val }, onclick: e => copyEl(e.currentTarget, e.currentTarget.dataset.copy) }));
@@ -1562,18 +1618,56 @@ const vBuild = {
   },
   note(root) {
     root.textContent = '';
-    const inp = h('input', { class: 'ninp', placeholder: 'লিখে Enter চাপুন…' }), list = h('div', { class: 'nlist' });
+    const ks = () => S.khotians.filter(k => !k.temp);
+    const inp = h('input', { class: 'ninp', placeholder: 'নোট লিখে Enter চাপুন…' });
+    const ksel = h('select', { class: 'nsel', title: 'কোন খতিয়ানের নোট' });
+    const fsel = h('select', { class: 'nsel', title: 'নোট ফিল্টার' });
+    const list = h('div', { class: 'nlist' });
     const fz = h('span', { text: S.noteFont + 'px' });
-    const draw = () => {
-      list.textContent = ''; list.style.fontSize = S.noteFont + 'px'; fz.textContent = S.noteFont + 'px';
-      S.notes.forEach((t, i) => list.append(h('div', { class: 'nitem' },
-        h('span', { class: 'nt', text: t, onclick: e => copyEl(e.currentTarget, t) }),
-        h('button', { class: 'nx', text: '×', onclick: () => { S.notes.splice(i, 1); save(); draw(); } }))));
+    let manual = false, flt = '*';
+    const lab = n => n.kno ? 'খতিয়ান ' + n.kno : n.si ? 'SI-' + bn(n.si) : 'সাধারণ';
+    const when = ts => { if (!ts) return ''; const d = new Date(ts); return bn(pad2(d.getDate()) + '/' + pad2(d.getMonth() + 1) + ' ' + pad2(d.getHours()) + ':' + pad2(d.getMinutes())); };
+    const has = v => [...ksel.options].some(o => o.value === v);
+    const fillK = want => {
+      const prev = want !== undefined ? want : ksel.value;
+      ksel.textContent = '';
+      ks().forEach(k => ksel.append(h('option', { value: k.id, text: 'SI-' + bn(S.khotians.indexOf(k) + 1) + ' · খতিয়ান ' + (k.no || '—') })));
+      ksel.append(h('option', { value: '', text: 'সাধারণ নোট (খতিয়ান ছাড়া)' }));
+      ksel.value = prev && has(prev) ? prev : (manual && prev === '' ? '' : (ks()[0] ? ks()[0].id : ''));
     };
-    inp.addEventListener('keydown', e => { if (e.key === 'Enter' && inp.value.trim()) { S.notes.unshift(inp.value.trim()); inp.value = ''; save(); draw(); } });
-    const bar = h('div', { class: 'vbar' }, h('button', { class: 'sl', text: '−', onclick: () => { S.noteFont = Math.max(1, S.noteFont - 1); save(); draw(); } }), fz,
+    const draw = () => {
+      const labels = [...new Set(S.notes.map(lab))], prevF = flt;
+      fsel.textContent = '';
+      fsel.append(h('option', { value: '*', text: 'সব নোট (' + bn(S.notes.length) + ')' }));
+      labels.forEach(l => fsel.append(h('option', { value: 'k:' + l, text: l })));
+      fsel.value = [...fsel.options].some(o => o.value === prevF) ? prevF : '*'; flt = fsel.value;
+      list.textContent = ''; list.style.fontSize = S.noteFont + 'px'; fz.textContent = S.noteFont + 'px';
+      const shown = S.notes.filter(n => flt === '*' || 'k:' + lab(n) === flt);
+      if (!shown.length) list.append(h('div', { class: 'small', text: 'কোনো নোট নেই' }));
+      shown.forEach(n => list.append(h('div', { class: 'nitem' },
+        h('div', { class: 'nbody' },
+          h('div', { class: 'nmeta' }, h('span', { class: 'nchip', text: lab(n) }), h('span', { text: when(n.ts) })),
+          h('span', { class: 'nt', text: n.t, onclick: e => copyEl(e.currentTarget, n.t) })),
+        h('button', { class: 'nx', text: '×', title: 'নোট মুছুন', onclick: () => { S.notes = S.notes.filter(x => x !== n); save(); draw(); } }))));
+    };
+    const add = () => {
+      const t = inp.value.trim(); if (!t) return;
+      const k = S.khotians.find(x => x.id === ksel.value);
+      S.notes.unshift({ id: newId(), t, kno: k ? String(k.no || '') : '', si: k ? S.khotians.indexOf(k) + 1 : 0, ts: Date.now() });
+      inp.value = ''; save(); draw();
+    };
+    inp.addEventListener('keydown', e => { if (e.key === 'Enter') add(); });
+    ksel.addEventListener('change', () => { manual = true; });
+    ksel.addEventListener('mousedown', () => fillK());
+    fsel.addEventListener('change', () => { flt = fsel.value; draw(); });
+    const w = root.ownerDocument.defaultView;
+    if (w) w.addEventListener('focus', () => { if (!manual) fillK(curKid || undefined); });
+    const bar = h('div', { class: 'vbar' },
+      h('button', { class: 'sl', text: '−', onclick: () => { S.noteFont = Math.max(1, S.noteFont - 1); save(); draw(); } }), fz,
       h('button', { class: 'sl', text: '+', onclick: () => { S.noteFont = Math.min(100, S.noteFont + 1); save(); draw(); } }));
-    root.append(inp, list, bar); draw();
+    fillK(curKid || undefined);
+    root.append(ksel, h('div', { style: 'display:flex;gap:4px;margin-bottom:4px' }, inp, h('button', { class: 'sl', text: 'যোগ', onclick: add })), fsel, list, bar);
+    draw();
   }
 };
 
@@ -1594,7 +1688,7 @@ function restoreApp() {
 async function toggleLock() {
   if (pipWin) { try { pipWin.close(); } catch (e) {} setTimeout(() => { if (pipWin) restoreApp(); }, 300); return; }
   if (!('documentPictureInPicture' in window)) { toast('এই পেজে মিনি উইন্ডো চলে না — ফাইলটি ডাউনলোড করে সরাসরি Chrome/Edge/Opera-তে খুলুন'); return; }
-  try { pipWin = await documentPictureInPicture.requestWindow({ width: 560, height: 440 }); } catch (e) { toast('লক চালু করা যায়নি'); return; }
+  try { pipWin = await documentPictureInPicture.requestWindow({ width: 560, height: 520 }); } catch (e) { toast('লক চালু করা যায়নি'); return; }
   copyStyles(pipWin);
   pipWin.document.body.style.margin = '0';
   pipWin.document.documentElement.classList.toggle('dark', !!S.dark);
@@ -1655,6 +1749,13 @@ app.addEventListener('keydown', e => {
   else if (e.key === 'Escape') escClose();
 });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') escClose(); });
+
+/* কোন খতিয়ানে কাজ চলছে (Notepad-এর ডিফল্ট খতিয়ান ট্যাগের জন্য) */
+let curKid = '';
+app.addEventListener('focusin', e => {
+  const b = e.target.closest && e.target.closest('.kb');
+  if (b && b._k) curKid = b._k.id;
+});
 
 /* ================= শুরু ================= */
 loadState(); applySettings(); applyFont(); applyAP(); applyDark(); applyHidden(); applyPdf(); renderAll(); applyAC(); updateBtns(); snapNow();
