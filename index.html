@@ -1091,39 +1091,52 @@ function winSize(kind, dw, dh) {
   const v = S.win && S.win[kind];
   return v && v.w >= 200 && v.h >= 150 ? [Math.round(v.w), Math.round(v.h)] : [dw, dh];
 }
+const WIN_V = 2; // bump this to discard old saved positions
 function placeWin(win, kind) {
-  try {
-    const sc = win.screen || screen, aL = sc.availLeft || 0, aT = sc.availTop || 0, aW = sc.availWidth || 1200, aH = sc.availHeight || 800;
-    const oh = win.outerHeight || 500, sv = S.win && S.win.mini;
-    const hasMini = sv && Number.isFinite(sv.x) && Number.isFinite(sv.y);
-    let x, y;
-    if (kind === 'mini') {
-      if (hasMini) { x = sv.x; y = sv.y; } else { x = aL; y = aT + aH - oh; }
-    } else if (pipWin && pipWin !== win) {
-      x = pipWin.screenX; y = pipWin.screenY - oh;
-    } else if (hasMini) {
-      x = sv.x; y = sv.y - oh;
-    } else {
-      x = aL; y = aT + aH - oh - ((sv && sv.h || 520) + 40);
-    }
-    x = Math.min(Math.max(x, aL), aL + aW - 120);
-    y = Math.min(Math.max(y, aT), aT + aH - 120);
-    win.moveTo(x, y);
-  } catch (e) {}
+  const run = () => {
+    try {
+      if (win.closed) return;
+      const sc = win.screen || screen, aL = sc.availLeft || 0, aT = sc.availTop || 0,
+            aW = sc.availWidth || 1200, aH = sc.availHeight || 800;
+      const oh = win.outerHeight || (win.innerHeight + 40);
+      const sv = S.win && S.win.mini;
+      const saved = sv && sv.v === WIN_V && Number.isFinite(sv.x) && Number.isFinite(sv.y);
+      let x, y;
+      if (kind === 'mini') {
+        x = saved ? sv.x : aL;                 // default: bottom-left corner
+        y = saved ? sv.y : aT + aH - oh;
+      } else if (pipWin && pipWin !== win) {
+        x = pipWin.screenX; y = pipWin.screenY - oh;
+      } else if (saved) {
+        x = sv.x; y = sv.y - oh;
+      } else {
+        x = aL; y = aT + aH - oh - ((sv && sv.h || 520) + 40);
+      }
+      x = Math.min(Math.max(x, aL), aL + aW - 120);
+      y = Math.min(Math.max(y, aT), aT + aH - 120);
+      win.moveTo(x, y);
+    } catch (e) {}
+  };
+  run();
+  [60, 250, 700].forEach(t => setTimeout(run, t)); // retry until the window size is known
 }
 function trackWin(win, kind) {
-  let last = '';
-  const iv = setInterval(() => {
-    let r;
-    try {
-      if (win.closed) { clearInterval(iv); return; }
-      r = { w: win.innerWidth, h: win.innerHeight, x: win.screenX, y: win.screenY };
-    } catch (e) { clearInterval(iv); return; }
-    const sg = r.w + ',' + r.h + ',' + r.x + ',' + r.y;
-    if (sg === last) return;
-    last = sg;
-    if (r.w >= 200 && r.h >= 150) { S.win[kind] = r; save(); }
-  }, 800);
+  let last = null;
+  // start tracking after placement; save only when the user really moves/resizes
+  setTimeout(() => {
+    const iv = setInterval(() => {
+      let r;
+      try {
+        if (win.closed) { clearInterval(iv); return; }
+        r = { w: win.innerWidth, h: win.innerHeight, x: win.screenX, y: win.screenY, v: WIN_V };
+      } catch (e) { clearInterval(iv); return; }
+      const sg = r.w + ',' + r.h + ',' + r.x + ',' + r.y;
+      if (last === null) { last = sg; return; }
+      if (sg === last) return;
+      last = sg;
+      if (r.w >= 200 && r.h >= 150) { S.win[kind] = r; save(); }
+    }, 800);
+  }, 1500);
 }
 const floats = {};
 function makeDrag(w, handle) {
@@ -1137,11 +1150,6 @@ function makeDrag(w, handle) {
 }
 function openFloat(id, title, build, cls) {
   if (floats[id]) { closeFloat(id); return null; }
-  if (pipWin) {   // Mini Window চালু: নতুন আলাদা উইন্ডোতে খুলবে
-    const pw = openPopFloat(id, title, build, cls);
-    if (pw) return pw;
-    toast('Popup blocked — ব্রাউজারে popup অনুমতি দিন (এখন ভেতরেই খুলছে)');
-  }
   const body = h('div', { class: 'fwb' });
   const w = h('div', { class: 'fw ' + (cls || ''), dataset: { fid: id } });
   const head = h('div', { class: 'fwh' }, h('b', { text: title }), h('button', { class: 'fwx', text: '×', onclick: () => closeFloat(id) }));
@@ -1767,6 +1775,7 @@ function setLockUI(on) {
 function restoreApp() {
   if (app.ownerDocument !== document) $('#layout').prepend(app);
   app.classList.remove('mini'); pipWin = null; setLockUI(false);
+  Object.values(floats).forEach(w => { if (w.style) { w.style.left = '40px'; w.style.top = '40px'; } });
 }
 async function toggleLock() {
   if (pipWin) { try { pipWin.close(); } catch (e) {} setTimeout(() => { if (pipWin) restoreApp(); }, 300); return; }
