@@ -639,7 +639,7 @@ const blankHolding = () => ({ id: newId(), no: '', dags: [blankDag()] });
 const defaults = () => ({
   khotians: [blankK()], saves: [null, null, null, null, null],
   settings: { hideOwner: false, hideLand: false, pasteBlocked: false },
-  autoPaste: true, font: 12, notes: [], noteFont: 14, vf: 14, pdfW: 45, dark: false, hidden: {}, autoCopy: false,
+  autoPaste: true, font: 12, notes: [], noteFont: 14, vf: 14, pdfW: 45, dark: false, hidden: {}, autoCopy: false, win: {},
   ab: { rows: [blankAb()], font: 12 }, dk: { holdings: [blankHolding()], font: 12 }
 });
 let S;
@@ -655,6 +655,7 @@ function loadState() {
       if (!S.khotians.length) S.khotians = [blankK()];
       while (S.saves.length < 5) S.saves.push(null);
       if (!S.hidden || typeof S.hidden !== 'object') S.hidden = {};
+      if (!S.win || typeof S.win !== 'object') S.win = {};
       if (!S.ab || !Array.isArray(S.ab.rows) || !S.ab.rows.length) S.ab = defaults().ab;
       if (!S.dk || !Array.isArray(S.dk.holdings) || !S.dk.holdings.length) S.dk = defaults().dk;
       // পুরনো নোট (শুধু লেখা) নতুন ফরম্যাটে (খতিয়ান ট্যাগ + সময়) রূপান্তর
@@ -1085,6 +1086,45 @@ function toggleDark() { S.dark = !S.dark; applyDark(); save(); }
 function doPrint() { try { window.print(); } catch (e) { toast('প্রিন্ট চালু করা যায়নি'); } }
 
 /* ================= ভাসমান ছোট উইন্ডো (app-এর ভেতরে) ================= */
+/* ===== উইন্ডোর সাইজ ও জায়গা মনে রাখা: Mini বাম-নিচের কোণায়, বাকিগুলো ঠিক তার উপরে একই সাইজে ===== */
+function winSize(kind, dw, dh) {
+  const v = S.win && S.win[kind];
+  return v && v.w >= 200 && v.h >= 150 ? [Math.round(v.w), Math.round(v.h)] : [dw, dh];
+}
+function placeWin(win, kind) {
+  try {
+    const sc = win.screen || screen, aL = sc.availLeft || 0, aT = sc.availTop || 0, aW = sc.availWidth || 1200, aH = sc.availHeight || 800;
+    const oh = win.outerHeight || 500, sv = S.win && S.win.mini;
+    const hasMini = sv && Number.isFinite(sv.x) && Number.isFinite(sv.y);
+    let x, y;
+    if (kind === 'mini') {
+      if (hasMini) { x = sv.x; y = sv.y; } else { x = aL; y = aT + aH - oh; }
+    } else if (pipWin && pipWin !== win) {
+      x = pipWin.screenX; y = pipWin.screenY - oh;
+    } else if (hasMini) {
+      x = sv.x; y = sv.y - oh;
+    } else {
+      x = aL; y = aT + aH - oh - ((sv && sv.h || 520) + 40);
+    }
+    x = Math.min(Math.max(x, aL), aL + aW - 120);
+    y = Math.min(Math.max(y, aT), aT + aH - 120);
+    win.moveTo(x, y);
+  } catch (e) {}
+}
+function trackWin(win, kind) {
+  let last = '';
+  const iv = setInterval(() => {
+    let r;
+    try {
+      if (win.closed) { clearInterval(iv); return; }
+      r = { w: win.innerWidth, h: win.innerHeight, x: win.screenX, y: win.screenY };
+    } catch (e) { clearInterval(iv); return; }
+    const sg = r.w + ',' + r.h + ',' + r.x + ',' + r.y;
+    if (sg === last) return;
+    last = sg;
+    if (r.w >= 200 && r.h >= 150) { S.win[kind] = r; save(); }
+  }, 800);
+}
 const floats = {};
 function makeDrag(w, handle) {
   handle.addEventListener('pointerdown', e => {
@@ -1112,7 +1152,7 @@ function openFloat(id, title, build, cls) {
   makeDrag(w, head); floats[id] = w; return w;
 }
 function openPopFloat(id, title, build, cls) {
-  const W = cls === 'big' ? 920 : 400, H = cls === 'big' ? 620 : 540, feat = 'popup=yes,width=' + W + ',height=' + H;
+  const [W, H] = winSize('pop', cls === 'big' ? 920 : 400, cls === 'big' ? 620 : 540), feat = 'popup=yes,width=' + W + ',height=' + H;
   let win = null;
   try { win = pipWin.open('', '_blank', feat); } catch (e) {}
   if (!win) { try { win = window.open('', '_blank', feat); } catch (e) {} }
@@ -1121,6 +1161,7 @@ function openPopFloat(id, title, build, cls) {
   win.document.write('<!doctype html><html lang="bn"><head><meta charset="utf-8"><title>' + title.replace(/</g, '') + '</title></head><body></body></html>');
   win.document.close();
   copyStyles(win);
+  placeWin(win, 'pop'); trackWin(win, 'pop');
   win.document.body.style.margin = '0';
   win.document.documentElement.classList.toggle('dark', !!S.dark);
   const wrap = h('div', { id: 'app' }); wrap.style.cssText = app.style.cssText;
@@ -1361,7 +1402,7 @@ Visible: synchronized compact view খোলে। Visible view-এ মূল �
 এই সাব-ক্যালকুলেটরের তথ্যও browser local storage-এ সংরক্ষিত থাকে এবং পরে আবার খুললে আগের state ফিরে আসতে পারে।
 ইনপুট ফরম্যাট মনে রাখুন: “দাগে জমি কর্তন” ক্যালকুলেটরে decimal point-এর বাম অংশ একর এবং ডান অংশ শতাংশ হিসেবে ধরা হয়। তাই ১ একর ৫ শতাংশ লিখতে 1.05 ব্যবহার করুন।
 ১৫. লক ও সব কপি
-📌 Mini Window (আগের লক): পুরো ক্যালকুলেটর একটি ছোট ভাসমান (Always-on-top) উইন্ডোতে চলে যায়, অন্য স্ক্রিনে ক্লিক করলেও সেটি উপরেই থাকে। উইন্ডো টেনে সরানো ও ছোট-বড় করা যায়। শুধু কম্পিউটারের Chrome/Edge এ চলে। আবার চাপলে (Back to Full Window) আগের জায়গায় ফিরে আসে। Mini Window-এ মালিকের নাম লুকানো থাকে; প্রতিটি মালিক এক লাইনে দেখায়: ক্রম (১, ২, ৩…), আনা–তিলের ঘর, অংশ এবং + / − বাটন। Mini Window-এর ঘরগুলোতে সরাসরি লিখতে হয় (ড্রপডাউন নেই) এবং লেখা বাম পাশে দেখায়। নিচের বাটনবার Mini Window-এও আছে; Calculator, Notepad, Visible, Converter ইত্যাদি সবকিছু আলাদা নতুন উইন্ডোতে খোলে (popup অনুমতি লাগতে পারে)। Hide / Show (👁), Mini/Full Window (📌 / 🖥) ও Calculator (🧮) বাটন সবার উপরের খতিয়ানে Reset-এর পাশে শুধু আইকন হিসেবে আছে।
+📌 Mini Window (আগের লক): পুরো ক্যালকুলেটর একটি ছোট ভাসমান (Always-on-top) উইন্ডোতে চলে যায়, অন্য স্ক্রিনে ক্লিক করলেও সেটি উপরেই থাকে। উইন্ডো টেনে সরানো ও ছোট-বড় করা যায়। শুধু কম্পিউটারের Chrome/Edge এ চলে। আবার চাপলে (Back to Full Window) আগের জায়গায় ফিরে আসে। Mini Window-এ মালিকের নাম লুকানো থাকে; প্রতিটি মালিক এক লাইনে দেখায়: ক্রম (১, ২, ৩…), আনা–তিলের ঘর, অংশ এবং + / − বাটন। Mini Window-এর ঘরগুলোতে সরাসরি লিখতে হয় (ড্রপডাউন নেই) এবং লেখা বাম পাশে দেখায়। নিচের বাটনবার Mini Window-এও আছে; Calculator, Notepad, Visible, Converter ইত্যাদি সবকিছু আলাদা নতুন উইন্ডোতে খোলে (popup অনুমতি লাগতে পারে)। উইন্ডোর সাইজ ও জায়গা মনে রাখা হয়: Mini বাম-নিচের কোণায় খোলে, বাকিগুলো ঠিক তার উপরে একই সাইজে খোলে। Hide / Show (👁), Mini/Full Window (📌 / 🖥) ও Calculator (🧮) বাটন সবার উপরের খতিয়ানে Reset-এর পাশে শুধু আইকন হিসেবে আছে।
 📋 Auto Copy ON/OFF: ON থাকলে আপনি কিছু লিখলে বা বদলালে (থামার প্রায় ০.৫ সেকেন্ড পর) ইন্টারফেসের সব খতিয়ান, মালিকের নাম, অংশ ও জমি নিজে থেকে কপি হয়ে যায়; তারপর যেকোনো জায়গায় Ctrl+V। OFF করলে অটো-কপি বন্ধ।
 ১৬. সমস্যা হলে দ্রুত পরীক্ষা করুন
 কপি/পেস্ট হচ্ছে না → Clipboard permission এবং Auto Paste setting পরীক্ষা করুন।
@@ -1580,7 +1621,8 @@ function copyStyles(win) {
   document.head.querySelectorAll('style,link[rel=stylesheet]').forEach(n => d.head.append(n.cloneNode(true)));
   d.documentElement.lang = 'bn';
 }
-async function openWindow(w, hh, title) {
+async function openWindow(w0, hh0, title) {
+  const [w, hh] = winSize('pop', w0, hh0);
   let win = null;
   if ('documentPictureInPicture' in window) { try { win = await documentPictureInPicture.requestWindow({ width: w, height: hh }); } catch (e) { win = null; } }
   if (!win) {
@@ -1588,7 +1630,7 @@ async function openWindow(w, hh, title) {
     if (!win) { toast('Popup blocked — ব্রাউজারে popup অনুমতি দিন'); return null; }
     win.document.open(); win.document.write('<!doctype html><html lang="bn"><head><meta charset="utf-8"><title>' + title + '</title></head><body></body></html>'); win.document.close();
   }
-  copyStyles(win); try { win.moveTo(0, 60); } catch (e) {}
+  copyStyles(win); placeWin(win, 'pop'); trackWin(win, 'pop');
   return win;
 }
 function updateBtns() {
@@ -1729,13 +1771,14 @@ function restoreApp() {
 async function toggleLock() {
   if (pipWin) { try { pipWin.close(); } catch (e) {} setTimeout(() => { if (pipWin) restoreApp(); }, 300); return; }
   if (!('documentPictureInPicture' in window)) { toast('এই পেজে মিনি উইন্ডো চলে না — ফাইলটি ডাউনলোড করে সরাসরি Chrome/Edge/Opera-তে খুলুন'); return; }
-  try { pipWin = await documentPictureInPicture.requestWindow({ width: 560, height: 520 }); } catch (e) { toast('লক চালু করা যায়নি'); return; }
+  const [mw, mh] = winSize('mini', 560, 520);
+  try { pipWin = await documentPictureInPicture.requestWindow({ width: mw, height: mh }); } catch (e) { toast('লক চালু করা যায়নি'); return; }
   copyStyles(pipWin);
   pipWin.document.body.style.margin = '0';
   pipWin.document.documentElement.classList.toggle('dark', !!S.dark);
   pipWin.document.body.append(app);
   app.classList.add('mini');
-  try { pipWin.moveTo(0, 60); } catch (e) {}
+  placeWin(pipWin, 'mini'); trackWin(pipWin, 'mini');
   const w = pipWin;
   w.addEventListener('pagehide', () => { if (pipWin === w) restoreApp(); });
   setLockUI(true);
