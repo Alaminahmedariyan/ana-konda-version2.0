@@ -1086,7 +1086,10 @@ function toggleDark() { S.dark = !S.dark; applyDark(); save(); }
 function doPrint() { try { window.print(); } catch (e) { toast('প্রিন্ট চালু করা যায়নি'); } }
 
 /* ================= ভাসমান ছোট উইন্ডো (app-এর ভেতরে) ================= */
-/* ===== উইন্ডোর সাইজ ও জায়গা মনে রাখা: Mini বাম-নিচের কোণায়, বাকিগুলো ঠিক তার উপরে একই সাইজে ===== */
+/* Window size and position memory.
+   - Mini window: bottom-left corner the first time, then wherever the user leaves it.
+   - Every other tool opened while Mini is on gets its own separate window, remembered per tool
+     (key 'pop:<tool id>'). First time it opens right above the mini window. */
 function winSize(kind, dw, dh) {
   const v = S.win && S.win[kind];
   return v && v.w >= 200 && v.h >= 150 ? [Math.round(v.w), Math.round(v.h)] : [dw, dh];
@@ -1099,15 +1102,17 @@ function placeWin(win, kind) {
       const sc = win.screen || screen, aL = sc.availLeft || 0, aT = sc.availTop || 0,
             aW = sc.availWidth || 1200, aH = sc.availHeight || 800;
       const oh = win.outerHeight || (win.innerHeight + 40);
-      const sv = S.win && S.win.mini;
-      const saved = sv && sv.v === WIN_V && Number.isFinite(sv.x) && Number.isFinite(sv.y);
+      const ok = v => v && v.v === WIN_V && Number.isFinite(v.x) && Number.isFinite(v.y);
+      const sv = S.win && S.win.mini, me = S.win && S.win[kind];
       let x, y;
       if (kind === 'mini') {
-        x = saved ? sv.x : aL;                 // default: bottom-left corner
-        y = saved ? sv.y : aT + aH - oh;
-      } else if (pipWin && pipWin !== win) {
+        x = ok(sv) ? sv.x : aL;                 // default: bottom-left corner
+        y = ok(sv) ? sv.y : aT + aH - oh;
+      } else if (ok(me)) {                       // remembered position of this tool
+        x = me.x; y = me.y;
+      } else if (pipWin && pipWin !== win) {     // first time: right above the mini window
         x = pipWin.screenX; y = pipWin.screenY - oh;
-      } else if (saved) {
+      } else if (ok(sv)) {
         x = sv.x; y = sv.y - oh;
       } else {
         x = aL; y = aT + aH - oh - ((sv && sv.h || 520) + 40);
@@ -1150,6 +1155,11 @@ function makeDrag(w, handle) {
 }
 function openFloat(id, title, build, cls) {
   if (floats[id]) { closeFloat(id); return null; }
+  if (pipWin) {   // Mini is on: open this tool in its own separate window
+    const pw = openPopFloat(id, title, build, cls);
+    if (pw) return pw;
+    toast('Popup blocked — ব্রাউজারে popup অনুমতি দিন (এখন ভেতরেই খুলছে)');
+  }
   const body = h('div', { class: 'fwb' });
   const w = h('div', { class: 'fw ' + (cls || ''), dataset: { fid: id } });
   const head = h('div', { class: 'fwh' }, h('b', { text: title }), h('button', { class: 'fwx', text: '×', onclick: () => closeFloat(id) }));
@@ -1160,7 +1170,8 @@ function openFloat(id, title, build, cls) {
   makeDrag(w, head); floats[id] = w; return w;
 }
 function openPopFloat(id, title, build, cls) {
-  const [W, H] = winSize('pop', cls === 'big' ? 920 : 400, cls === 'big' ? 620 : 540), feat = 'popup=yes,width=' + W + ',height=' + H;
+  const key = 'pop:' + id;   // each tool remembers its own size and position
+  const [W, H] = winSize(key, cls === 'big' ? 920 : 400, cls === 'big' ? 620 : 540), feat = 'popup=yes,width=' + W + ',height=' + H;
   let win = null;
   try { win = pipWin.open('', '_blank', feat); } catch (e) {}
   if (!win) { try { win = window.open('', '_blank', feat); } catch (e) {} }
@@ -1169,7 +1180,7 @@ function openPopFloat(id, title, build, cls) {
   win.document.write('<!doctype html><html lang="bn"><head><meta charset="utf-8"><title>' + title.replace(/</g, '') + '</title></head><body></body></html>');
   win.document.close();
   copyStyles(win);
-  placeWin(win, 'pop'); trackWin(win, 'pop');
+  placeWin(win, key); trackWin(win, key);
   win.document.body.style.margin = '0';
   win.document.documentElement.classList.toggle('dark', !!S.dark);
   const wrap = h('div', { id: 'app' }); wrap.style.cssText = app.style.cssText;
@@ -1358,7 +1369,7 @@ Notepad: OFF (লাল) বাটনে ক্লিক করলে সমর�
 তালিকার উপরের ফিল্টার দিয়ে শুধু একটি খতিয়ানের নোট দেখা যায়।
 কোনো নোটে ক্লিক করলে লেখা কপি হবে; নোটের × চাপলে সেটি মুছে যাবে।
 নোটপ্যাডের − / + দিয়ে সংরক্ষিত লেখার ফন্ট ১–১০০px পর্যন্ত পরিবর্তন করা যায়। উইন্ডোর কোণা ধরে ছোট-বড় করা যায়।
-নোটগুলো নিজে থেকেই সেভ হয় (local storage), Reset বা New Field করলেও মুছে যায় না। Mini Window চালু থাকলে Notepad আলাদা নতুন উইন্ডোতে খোলে।
+নোটগুলো নিজে থেকেই সেভ হয় (local storage), Reset বা New Field করলেও মুছে যায় না। Mini Window চালু থাকলে Notepad আলাদা নতুন উইন্ডোতে Mini-র ঠিক উপরে খোলে; আপনি যেখানে ও যে মাপে রাখবেন, পরেরবার সেভাবেই খুলবে।
 ১০. Upload PDF / PDF Preview
 Upload PDF চাপলে একটি PDF নির্বাচন করুন। PDF ডান পাশে preview pane-এ দেখা যাবে।
 ক্যালকুলেটর ও PDF-এর মাঝের divider ডানে-বামে টেনে PDF অংশের প্রস্থ পরিবর্তন করা যায়; divider-এ double-click করলে ডিফল্ট প্রস্থে ফেরে।
@@ -1410,7 +1421,7 @@ Visible: synchronized compact view খোলে। Visible view-এ মূল �
 এই সাব-ক্যালকুলেটরের তথ্যও browser local storage-এ সংরক্ষিত থাকে এবং পরে আবার খুললে আগের state ফিরে আসতে পারে।
 ইনপুট ফরম্যাট মনে রাখুন: “দাগে জমি কর্তন” ক্যালকুলেটরে decimal point-এর বাম অংশ একর এবং ডান অংশ শতাংশ হিসেবে ধরা হয়। তাই ১ একর ৫ শতাংশ লিখতে 1.05 ব্যবহার করুন।
 ১৫. লক ও সব কপি
-📌 Mini Window (আগের লক): পুরো ক্যালকুলেটর একটি ছোট ভাসমান (Always-on-top) উইন্ডোতে চলে যায়, অন্য স্ক্রিনে ক্লিক করলেও সেটি উপরেই থাকে। উইন্ডো টেনে সরানো ও ছোট-বড় করা যায়। শুধু কম্পিউটারের Chrome/Edge এ চলে। আবার চাপলে (Back to Full Window) আগের জায়গায় ফিরে আসে। Mini Window-এ মালিকের নাম লুকানো থাকে; প্রতিটি মালিক এক লাইনে দেখায়: ক্রম (১, ২, ৩…), আনা–তিলের ঘর, অংশ এবং + / − বাটন। Mini Window-এর ঘরগুলোতে সরাসরি লিখতে হয় (ড্রপডাউন নেই) এবং লেখা বাম পাশে দেখায়। নিচের বাটনবার Mini Window-এও আছে; Calculator, Notepad, Visible, Converter ইত্যাদি সবকিছু আলাদা নতুন উইন্ডোতে খোলে (popup অনুমতি লাগতে পারে)। উইন্ডোর সাইজ ও জায়গা মনে রাখা হয়: Mini বাম-নিচের কোণায় খোলে, বাকিগুলো ঠিক তার উপরে একই সাইজে খোলে। Hide / Show (👁), Mini/Full Window (📌 / 🖥) ও Calculator (🧮) বাটন সবার উপরের খতিয়ানে Reset-এর পাশে শুধু আইকন হিসেবে আছে।
+📌 Mini Window (আগের লক): পুরো ক্যালকুলেটর একটি ছোট ভাসমান (Always-on-top) উইন্ডোতে চলে যায়, অন্য স্ক্রিনে ক্লিক করলেও সেটি উপরেই থাকে। উইন্ডো টেনে সরানো ও ছোট-বড় করা যায়। শুধু কম্পিউটারের Chrome/Edge এ চলে। আবার চাপলে (Back to Full Window) আগের জায়গায় ফিরে আসে। Mini Window-এ মালিকের নাম লুকানো থাকে; প্রতিটি মালিক এক লাইনে দেখায়: ক্রম (১, ২, ৩…), আনা–তিলের ঘর, অংশ এবং + / − বাটন। Mini Window-এর ঘরগুলোতে সরাসরি লিখতে হয় (ড্রপডাউন নেই) এবং লেখা বাম পাশে দেখায়। নিচের বাটনবার Mini Window-এও আছে; Calculator, Notepad, Visible, Converter ইত্যাদি সবকিছু আলাদা নতুন উইন্ডোতে খোলে (popup অনুমতি লাগতে পারে)। Mini প্রথমবার বাম-নিচের কোণায় খোলে, বাকি টুলগুলো প্রথমবার Mini-র ঠিক উপরে খোলে। আপনি যেখানে ও যে মাপে রাখবেন, প্রতিটি টুলের জায়গা ও মাপ আলাদাভাবে মনে রাখা হয় এবং পরেরবার সেভাবেই খোলে। Full Window-তে সব টুল আগের মতোই একই পেজের ভেতরে ভাসমান প্যানেলে খোলে। Hide / Show (👁), Mini/Full Window (📌 / 🖥) ও Calculator (🧮) বাটন সবার উপরের খতিয়ানে Reset-এর পাশে শুধু আইকন হিসেবে আছে।
 📋 Auto Copy ON/OFF: ON থাকলে আপনি কিছু লিখলে বা বদলালে (থামার প্রায় ০.৫ সেকেন্ড পর) ইন্টারফেসের সব খতিয়ান, মালিকের নাম, অংশ ও জমি নিজে থেকে কপি হয়ে যায়; তারপর যেকোনো জায়গায় Ctrl+V। OFF করলে অটো-কপি বন্ধ।
 ১৬. সমস্যা হলে দ্রুত পরীক্ষা করুন
 কপি/পেস্ট হচ্ছে না → Clipboard permission এবং Auto Paste setting পরীক্ষা করুন।
@@ -1629,16 +1640,29 @@ function copyStyles(win) {
   document.head.querySelectorAll('style,link[rel=stylesheet]').forEach(n => d.head.append(n.cloneNode(true)));
   d.documentElement.lang = 'bn';
 }
-async function openWindow(w0, hh0, title) {
-  const [w, hh] = winSize('pop', w0, hh0);
-  let win = null;
-  if ('documentPictureInPicture' in window) { try { win = await documentPictureInPicture.requestWindow({ width: w, height: hh }); } catch (e) { win = null; } }
-  if (!win) {
-    win = window.open('', '_blank', 'popup=yes,width=' + w + ',height=' + hh);
-    if (!win) { toast('Popup blocked — ব্রাউজারে popup অনুমতি দিন'); return null; }
-    win.document.open(); win.document.write('<!doctype html><html lang="bn"><head><meta charset="utf-8"><title>' + title + '</title></head><body></body></html>'); win.document.close();
+async function openWindow(w0, hh0, title, key) {
+  const k = key || 'pop';
+  const [w, hh] = winSize(k, w0, hh0);
+  const feat = 'popup=yes,width=' + w + ',height=' + hh;
+  let win = null, pip = false;
+  if (pipWin) {
+    // Mini is on: Chrome allows only one Picture-in-Picture window and Mini owns it,
+    // so this tool opens as a normal popup window.
+    try { win = pipWin.open('', '_blank', feat); } catch (e) {}
+    if (!win) { try { win = window.open('', '_blank', feat); } catch (e) {} }
+  } else if ('documentPictureInPicture' in window) {
+    try { win = await documentPictureInPicture.requestWindow({ width: w, height: hh }); pip = !!win; } catch (e) { win = null; }
   }
-  copyStyles(win); placeWin(win, 'pop'); trackWin(win, 'pop');
+  if (!win) {
+    win = window.open('', '_blank', feat);
+  }
+  if (!win) { toast('Popup blocked — ব্রাউজারে popup অনুমতি দিন'); return null; }
+  if (!pip) {
+    win.document.open();
+    win.document.write('<!doctype html><html lang="bn"><head><meta charset="utf-8"><title>' + title + '</title></head><body></body></html>');
+    win.document.close();
+  }
+  copyStyles(win); placeWin(win, k); trackWin(win, k);
   return win;
 }
 function updateBtns() {
@@ -1647,7 +1671,7 @@ function updateBtns() {
   $('#visBtn').classList.toggle('on', !!(viewers.main || viewers.ab || viewers.dk));
 }
 async function openViewer(kind, title, w, hh) {
-  const win = await openWindow(w, hh, title); if (!win) return;
+  const win = await openWindow(w, hh, title, 'pop:v_' + kind); if (!win) return;
   const root = h('div', { class: 'vroot' }); win.document.body.style.margin = '0'; win.document.body.append(root);
   const v = { kind, win, root, refresh: () => vBuild[kind](root, v) };
   viewers[kind] = v; v.refresh();
@@ -1655,16 +1679,8 @@ async function openViewer(kind, title, w, hh) {
   updateBtns();
 }
 function toggleViewer(kind) {
-  const fid = 'v_' + kind;
   if (viewers[kind]) { try { viewers[kind].win.close(); } catch (e) {} delete viewers[kind]; updateBtns(); return; }
   const t = { main: 'Visible', ab: 'Visible — অংশ বের করুন', dk: 'Visible — জমি কর্তন', note: 'Quick Copy Notepad' }[kind];
-  if (pipWin) {   // Mini Window চালু: পপআপ খুললে Mini উইন্ডো বদলে যেত, তাই ভেতরেই ভাসমান প্যানেলে খুলবে
-    const v = { kind, inl: true, win: { close: () => closeFloat(fid) } };
-    v.refresh = () => { const w = floats[fid]; if (w) { w._body.textContent = ''; vBuild[kind](w._body, v); } };
-    const w = openFloat(fid, t, body => vBuild[kind](body, v), 'mid');
-    if (w) { viewers[kind] = v; updateBtns(); }
-    return;
-  }
   openViewer(kind, t, 340, kind === 'note' ? 460 : 420);
 }
 const vline = (label, val, cls, copy) => h('div', { class: 'vl' }, h('span', { class: 'vn', text: label }),
